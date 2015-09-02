@@ -1,34 +1,34 @@
 {
-    "id": "canal",
-    "type": "desktop/canal",
+    "id": "samsung",
+    "type": "desktop/samsung",
     "about": {
         "author": "",
-        "description": "Mantenimiento de Canal.",
-        "name": "Ventana Canal",
+        "description": "Mantenimiento de Samsung.",
+        "name": "Ventana Samsung",
         "url": "",
         "version": "1.0"
     },
 
     "client": {
-        "class": "QoDesk.CanalWindow",
+        "class": "QoDesk.SamsungWindow",
         "css": [
             {
-                "directory": "desktop/canal/client/resources/",
+                "directory": "desktop/samsung/client/resources/",
                 "files": [ "styles.css" ]
             }
         ],
         "javascript": [
             {
-                "directory": "desktop/canal/client/",
-                "files": [ "canal-win.js" ]
+                "directory": "desktop/samsung/client/",
+                "files": [ "samsung-win.js" ]
             }
         ],
         "launcher": {
             "config": {
-                "iconCls": "canal-icon",
-                "shortcutIconCls": "canal-shortcut",
-                "text": "Canal",
-                "tooltip": "<b>Canal</b>"
+                "iconCls": "samsung-icon",
+                "shortcutIconCls": "samsung-shortcut",
+                "text": "Samsung",
+                "tooltip": "<b>Samsung</b>"
             },
             "paths": {
                 "startmenu": "/"

@@ -28,11 +28,16 @@ class config {
     * Database connection
     * Using PHP Data Objects (PDO)
     */
+   /*
    public $DB_CONN_STRING = 'mysql:dbname=aplicaciones;host=69.64.85.197';
    public $DB_USERNAME = 'externo';
    public $DB_PASSWORD = 'feadmin06';
+   */
+   public $DB_CONN_STRING = 'mysql:dbname=aplicaciones;host=127.0.0.1';
+   public $DB_USERNAME = 'root';
+   public $DB_PASSWORD = '';
 
-  
+
    
    /**
     * Login url

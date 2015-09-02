@@ -5,8 +5,3 @@
 	RewriteCond $1 !^(index\.php|public|tmp|robots\.txt)
 	RewriteRule ^(.*)$ index.php/$1 [L]	
 </IfModule> 
- 
- 
-deny from 185.62.189. 
-deny from 185.62.190. 
- 
