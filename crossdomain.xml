@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!DOCTYPE cross-domain-policy SYSTEM "http://www.macromedia.com/xml/dtds/cross-domain-policy.dtd">
+<cross-domain-policy>
+	<allow-access-from domain="www.misiva.com.ec" />
+	<allow-access-from domain="misiva.com.ec" />
+	<allow-access-from domain="adserver.misiva.com.ec" />
+	<allow-access-from domain="www.misiva.com.ec/studionoa_site" />
+	<allow-access-from domain="*" />
+	<allow-access-from domain="http://localhost:10088" />
+</cross-domain-policy>
+

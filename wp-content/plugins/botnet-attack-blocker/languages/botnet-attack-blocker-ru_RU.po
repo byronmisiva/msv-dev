@@ -1,0 +1,121 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Botnet Attack Blocker 1.1\n"
+"POT-Creation-Date: 2013-04-30 14:39-0000\n"
+"PO-Revision-Date: 2013-05-01 08:48-0000\n"
+"Last-Translator: Misha von Bennigsen <misha@cheesefather.com>\n"
+"Language-Team: cheesefather <misha@cheesefather.com>\n"
+"Language: en_UK\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.5\n"
+"X-Poedit-KeywordsList: __;_e\n"
+"X-Poedit-Basepath: .\n"
+"Plural-Forms: nplurals=2; plural=n == 1 ? 0 : 1;\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-SearchPath-0: ..\n"
+
+#: ../botnet-attack-blocker.php:59
+msgid "Too many login failures, you are temporarily blocked"
+msgstr "Слишком много неудач логина, Вам временно закрыт"
+
+#: ../botnet-attack-blocker.php:107
+msgid ""
+"Distributed botnet attacks can come from multiple IP addresses and "
+"locations, so conventional IP-based lockouts are not effective."
+msgstr ""
+"Распределенных атак ботнетов могут поступать из нескольких адресов IP и "
+"места, так что обычные IP-основе локауты не являются эффективными."
+
+#: ../botnet-attack-blocker.php:109
+msgid ""
+"Please set the following options as required to increase your security "
+"against these types of attacks."
+msgstr ""
+"Пожалуйста, установите следующие параметры как это требуется для повышения "
+"его безопасности против этих типов атак."
+
+#: ../botnet-attack-blocker.php:113
+msgid "After"
+msgstr "После неудачи"
+
+#: ../botnet-attack-blocker.php:121
+msgid "login failures"
+msgstr "входа"
+
+#: ../botnet-attack-blocker.php:123
+msgid "each within"
+msgstr "каждый в течение"
+
+#: ../botnet-attack-blocker.php:131
+msgid "minutes of each other"
+msgstr "минут друг от друга"
+
+#: ../botnet-attack-blocker.php:133
+msgid "block all login attempts for"
+msgstr "блокировать все попытки входа в течение"
+
+#: ../botnet-attack-blocker.php:139
+msgid "minutes"
+msgstr "минут"
+
+#: ../botnet-attack-blocker.php:146
+msgid "hours"
+msgstr "час"
+
+#: ../botnet-attack-blocker.php:147
+msgid "hour"
+msgstr "часа"
+
+#: ../botnet-attack-blocker.php:151
+msgid "except from IP address(es)"
+msgstr "кроме как от IP-адрес(а)"
+
+#: ../botnet-attack-blocker.php:155
+msgid "UPDATE"
+msgstr "ОБНОВИТЬ"
+
+#: ../botnet-attack-blocker.php:158
+msgid "Current status"
+msgstr "Текущее состояние"
+
+#: ../botnet-attack-blocker.php:163
+msgid "blocked"
+msgstr "заблокирован"
+
+#: ../botnet-attack-blocker.php:165
+msgid "will be released in"
+msgstr "выйдет в"
+
+#: ../botnet-attack-blocker.php:167 ../botnet-attack-blocker.php:177
+msgid "seconds"
+msgstr "секунд"
+
+#: ../botnet-attack-blocker.php:172
+msgid "not blocked"
+msgstr "не заблокирован"
+
+#: ../botnet-attack-blocker.php:175
+msgid "no failed attempts in last"
+msgstr "Нет неудачных попыток в последние"
+
+#: ../botnet-attack-blocker.php:182
+msgid "failed attempts"
+msgstr "неудачных попыток"
+
+#: ../botnet-attack-blocker.php:184
+msgid "last one"
+msgstr "Последний"
+
+#: ../botnet-attack-blocker.php:186
+msgid "seconds ago"
+msgstr "секунд назад"
+
+#: ../botnet-attack-blocker.php:205
+msgid "settings updated"
+msgstr "настройки были обновлены"
+
+#: ../botnet-attack-blocker.php:210
+msgid "update failed"
+msgstr "на сбой обновления"

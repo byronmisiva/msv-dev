@@ -1,0 +1,38 @@
+{
+    "id": "canal",
+    "type": "desktop/canal",
+    "about": {
+        "author": "",
+        "description": "Mantenimiento de Canal.",
+        "name": "Ventana Canal",
+        "url": "",
+        "version": "1.0"
+    },
+
+    "client": {
+        "class": "QoDesk.CanalWindow",
+        "css": [
+            {
+                "directory": "desktop/canal/client/resources/",
+                "files": [ "styles.css" ]
+            }
+        ],
+        "javascript": [
+            {
+                "directory": "desktop/canal/client/",
+                "files": [ "canal-win.js" ]
+            }
+        ],
+        "launcher": {
+            "config": {
+                "iconCls": "canal-icon",
+                "shortcutIconCls": "canal-shortcut",
+                "text": "Canal",
+                "tooltip": "<b>Canal</b>"
+            },
+            "paths": {
+                "startmenu": "/"
+            }
+        }
+    }
+}
