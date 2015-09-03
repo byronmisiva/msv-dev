@@ -1,4 +1,7 @@
 <?php
+
+//http://medoo.in/api/select
+
 require_once '../../../../server/os.php';
 
 $os = new os();
@@ -6,100 +9,70 @@ if (!$os->session_exists()) {
     die('No existe sesión!');
 }
 
-function selectGanadores()
+require_once 'medoo.min.php';
+$databaseSamsung = new medoo([
+    // required
+    'database_type' => 'mysql',
+    'database_name' => 'appss',
+    'server' => '127.0.0.1',
+    'username' => 'root',
+    'password' => '',
+    'charset' => 'utf8',
+
+]);
+
+function selectSamsungKaraoke()
 {
     global $os;
+    global $databaseSamsung;
 
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT doky_registro.id,
-                doky_registro.nombre,
-                doky_registro.cedula,
-                doky_registro.telefono,
-                doky_registro.direccion,
-                doky_premios.nombre AS nombrepremio,
-                doky_registro.creado,
-                doky_registro.mail,
-                doky_registro.ciudad,
-                doky_registro.consumidor,
-                doky_registro.`consumidor-donde`,
-                doky_registro.donde
-            FROM doky_registro INNER JOIN doky_premios ON doky_registro.id_premio = doky_premios.id ORDER BY creado desc";
+    $datas = $databaseSamsung->select("samsung_karaoke_galaxya", [
+        "id",
+        "id_user",
+        "fbid",
+        "filenameimage",
+        "filename",
+        "creado",
+        "aprobado",
+        "nombre"
+    ], ["ORDER" => "creado DESC"    ]);
 
-    $result = $os->db->conn->query($sql);
-    $data = array();
-    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-        $data[] = $row;
-    }
     echo json_encode(array(
             "success" => true,
-            "data" => $data)
+            "data" => $datas)
     );
 }
 
-function selectSorteo()
+function updateSamsungKaraoke()
 {
     global $os;
+    global $databaseSamsung;
 
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT doky_registro.id,
-	doky_registro.nombre,
-	doky_registro.cedula,
-	doky_registro.telefono,
-	doky_registro.direccion,
+    $datas = $databaseSamsung->select("samsung_karaoke_galaxya", [
+        "id",
+        "id_user",
+        "fbid",
+        "filenameimage",
+        "filename",
+        "creado",
+        "aprobado",
+        "nombre"
+    ]);
 
-	doky_registro.creado,
-	doky_registro.mail,
-	doky_registro.ciudad,
-	doky_registro.consumidor,
-	doky_registro.`consumidor-donde`,
-	doky_registro.donde
-FROM doky_registro
-where doky_registro.id_ganador = 1001 ORDER BY creado desc";
-
-    $result = $os->db->conn->query($sql);
-    $data = array();
-    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-        $data[] = $row;
-    }
     echo json_encode(array(
             "success" => true,
-            "data" => $data)
-    );
-}
-
-function selectComentarios()
-{
-    global $os;
-
-    $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT doky_contactanos.id,
-	doky_contactanos.nombre,
-	doky_contactanos.telefono,
-	doky_contactanos.creado,
-	doky_contactanos.correo,
-	doky_contactanos.mensaje
-FROM doky_contactanos ORDER BY creado desc";
-
-    $result = $os->db->conn->query($sql);
-    $data = array();
-    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-        $data[] = $row;
-    }
-    echo json_encode(array(
-            "success" => true,
-            "data" => $data)
+            "data" => $datas)
     );
 }
 
 
 switch ($_GET['operation']) {
-    case 'selectganadores' :
-        selectGanadores();
+    case 'selectSamsungKaraoke' :
+        selectSamsungKaraoke();
         break;
-    case 'selectSorteo' :
-        selectSorteo();
-        break;
-    case 'selectComentarios' :
-        selectComentarios();
+    case 'updateSamsungKaraoke' :
+        updateSamsungKaraoke();
         break;
 }

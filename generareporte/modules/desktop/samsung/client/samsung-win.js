@@ -151,8 +151,8 @@ QoDesk.SamsungWindow = Ext.extend(Ext.app.Module, {
         var proxySamsungKaraoke = new Ext.data.HttpProxy({
             api: {
                 create: urlSamsung + "crudSamsung.php?operation=insert",
-                read: urlSamsung + "crudSamsung.php?operation=selectganadores",
-                update: urlSamsung + "crudSamsung.php?operation=update",
+                read: urlSamsung + "crudSamsung.php?operation=selectSamsungKaraoke",
+                update: urlSamsung + "crudSamsung.php?operation=updateSamsungKaraoke",
                 destroy: urlSamsung + "crudSamsung.php?operation=delete"
             }
         });
@@ -164,18 +164,14 @@ QoDesk.SamsungWindow = Ext.extend(Ext.app.Module, {
             idProperty: 'id',
             root: 'data',
             fields: [
-
                 {name: 'id', allowBlank: false},
-                {name: 'nombre', allowBlank: false},
-                {name: 'telefono', allowBlank: false},
-                {name: 'direccion', allowBlank: false},
-                {name: 'nombrepremio', allowBlank: false},
+                {name: 'id_user', allowBlank: false},
+                {name: 'fbid', allowBlank: false},
+                {name: 'filenameimage', allowBlank: false},
+                {name: 'filename', allowBlank: false},
                 {name: 'creado', type: 'date', dateFormat: 'c', allowBlank: true},
-                {name: 'mail', allowBlank: false},
-                {name: 'ciudad', allowBlank: false},
-                {name: 'consumidor', allowBlank: false},
-                {name: 'consumidor-donde', allowBlank: true},
-                {name: 'donde', allowBlank: false}
+                {name: 'aprobado', allowBlank: false},
+                {name: 'nombre', allowBlank: false}
             ]
         });
         var writerSamsungKaraoke = new Ext.data.JsonWriter({
@@ -194,18 +190,48 @@ QoDesk.SamsungWindow = Ext.extend(Ext.app.Module, {
             height: winHeight - 94,
             store: this.storeSamsungKaraoke, columns: [
                 new Ext.grid.RowNumberer()
-                , {header: 'id', dataIndex: 'id', sortable: true, width: 50}
-                , {header: 'Nombre', dataIndex: 'nombre', sortable: true, width: 150}
-                , {header: 'Teléfono', dataIndex: 'telefono', sortable: true, width: 50}
-                , {header: 'Dirección', dataIndex: 'direccion', sortable: true, width: 150}
-                , {header: 'Premio', dataIndex: 'nombrepremio', sortable: true, width: 70}
-                , {header: 'Creado', dataIndex: 'creado', sortable: true, width: 50, renderer: formatDate}
-                , {header: 'Email', dataIndex: 'mail', sortable: true, width: 25, scope: this}
-                , {header: 'Ciudad', dataIndex: 'ciudad', sortable: true, width: 30}
-                , {header: 'Consumidor', dataIndex: 'consumidor', sortable: true, width: 80}
-                , {header: 'Consumidor-donde', dataIndex: 'consumidor-donde', sortable: true, width: 80}
-                , {header: 'Donde', dataIndex: 'donde', sortable: true, width: 30, scope: this}
-
+                , {header: 'id', dataIndex: 'id', sortable: true, width: 20}
+                , {
+                    header: 'aprobado',
+                    dataIndex: 'aprobado',
+                    sortable: true,
+                    width: 30,
+                    scope: this,
+                    editor: new Ext.form.TextField({allowBlank: false})
+                }
+                , {
+                    header: 'Nombre',
+                    dataIndex: 'nombre',
+                    sortable: true,
+                    width: 90,
+                    renderer: function (val, meta, record) {
+                        return '<a href="https://www.facebook.com/' + record.data.fbid + '" target="_blank">' + val + '</a>';
+                    }
+                }
+                , {
+                    header: 'id_user',
+                    dataIndex: 'id_user',
+                    sortable: true,
+                    width: 50
+                }
+                /*, {header: 'fbid', dataIndex: 'fbid', sortable: true, width: 70}*/
+                , {header: 'filenameimage', dataIndex: 'filenameimage', sortable: true, width: 100,
+                    renderer: function (val, meta, record) {
+                        return '<div style="overflow: hidden; width: 120px"><img src="http://appss.misiva.com.ec/videos/' + val + '" width="100px"></div>';
+                    }}
+                , {
+                    header: 'filename',
+                    dataIndex: 'filename',
+                    sortable: true,
+                    width: 80,
+                    renderer: function (val, meta, record) {
+                        return '<video width="200px" controls=""  >' +
+                            '<source src="http://appss.misiva.com.ec/videos/' + val + '" type="video/mp4">'+
+                            'Su navegador no soporta video HTML5.'+
+                        '</video>' ;
+                    }
+                }
+                , {header: 'Creado', dataIndex: 'creado', sortable: true, width: 30, renderer: formatDate}
             ],
             viewConfig: {forceFit: true},
             sm: new Ext.grid.RowSelectionModel({singleSelect: false}),
@@ -266,7 +292,7 @@ QoDesk.SamsungWindow = Ext.extend(Ext.app.Module, {
         win.show();
     },
 
-    /*  deletesamsung: function () {
+    /*deletesamsung: function () {
      Ext.Msg.show({
      title: 'Confirmación',
      msg: 'Está seguro de querer borrar?',
@@ -299,59 +325,8 @@ QoDesk.SamsungWindow = Ext.extend(Ext.app.Module, {
      this.gridSamsung.stopEditing();
      this.storeSamsung.insert(0, samsung);
      this.gridSamsung.startEditing(0, 1);
-     }, deletesamsungCampo: function () {
-     Ext.Msg.show({
-     title: 'Confirmación',
-     msg: 'Está seguro de querer borrar?',
-     scope: this,
-     buttons: Ext.Msg.YESNO,
-     fn: function (btn) {
-     if (btn == 'yes') {
-     var rows = this.gridSamsungCampoAT.getSelectionModel().getSelections();
-     if (rows.length === 0) {
-     return false;
-     }
-     this.storeSamsungCampoAT.remove(rows);
-     }
-     }
-     });
-     }, addsamsungCampo: function () {
-     var samsungcampo = new this.storeSamsungCampoAT.recordType({
-     nombre: ''
-     });
-     this.gridSamsungCampoAT.stopEditing();
-     this.storeSamsungCampoAT.insert(0, samsungcampo);
-     this.gridSamsungCampoAT.startEditing(0, 1);
-     },
-
-     deletesamsungCargo: function () {
-     Ext.Msg.show({
-     title: 'Confirmación',
-     msg: 'Está seguro de querer borrar?',
-     scope: this,
-     buttons: Ext.Msg.YESNO,
-     fn: function (btn) {
-     if (btn == 'yes') {
-     var rows = this.gridSamsungCargo.getSelectionModel().getSelections();
-     if (rows.length === 0) {
-     return false;
-     }
-     this.storeSamsungCargo.remove(rows);
-     }
-     }
-     });
-     }, addsamsungCargo: function () {
-     var samsungcargo = new this.storeSamsungCargo.recordType({
-     nombre: ''
-     });
-     this.gridSamsungCargo.stopEditing();
-     this.storeSamsungCargo.insert(0, samsungcargo);
-     this.gridSamsungCargo.startEditing(0, 1);
-     }
-
-     ,
-     */
-
+     },  */
+    //botones reload, exportar
     requestSamsungKaraokeData: function () {
         this.storeSamsungKaraoke.load();
     },
