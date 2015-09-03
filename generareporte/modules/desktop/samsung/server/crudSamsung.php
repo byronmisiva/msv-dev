@@ -14,9 +14,9 @@ $databaseSamsung = new medoo([
     // required
     'database_type' => 'mysql',
     'database_name' => 'appss',
-    'server' => '127.0.0.1',
-    'username' => 'root',
-    'password' => '111111',
+    'server' => '69.64.85.197',
+    'username' => 'externo',
+    'password' => 'feadmin06',
     'charset' => 'utf8',
 
 ]);
@@ -46,8 +46,8 @@ function selectSamsungKaraoke()
 
 function updateSamsungKaraoke()
 {
-    global $os;
     global $databaseSamsung;
+
     $data = json_decode(stripslashes($_POST["data"]));
     $databaseSamsung->update("samsung_karaoke_galaxya", [
         "aprobado" => $data->aprobado
