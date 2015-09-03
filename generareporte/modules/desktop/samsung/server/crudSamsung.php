@@ -16,7 +16,7 @@ $databaseSamsung = new medoo([
     'database_name' => 'appss',
     'server' => '127.0.0.1',
     'username' => 'root',
-    'password' => '',
+    'password' => '111111',
     'charset' => 'utf8',
 
 ]);
@@ -48,23 +48,18 @@ function updateSamsungKaraoke()
 {
     global $os;
     global $databaseSamsung;
-
-    $os->db->conn->query("SET NAMES 'utf8'");
-    $datas = $databaseSamsung->select("samsung_karaoke_galaxya", [
-        "id",
-        "id_user",
-        "fbid",
-        "filenameimage",
-        "filename",
-        "creado",
-        "aprobado",
-        "nombre"
+    $data = json_decode(stripslashes($_POST["data"]));
+    $databaseSamsung->update("samsung_karaoke_galaxya", [
+        "aprobado" => $data->aprobado
+    ], [
+        "id" => $data->id
     ]);
 
+
     echo json_encode(array(
-            "success" => true,
-            "data" => $datas)
-    );
+        "success" => $databaseSamsung->error() == 0,
+        "msg" => $databaseSamsung->error() == 0 ? " actualizado exitosamente" : $databaseSamsung->error()
+    ));
 }
 
 
