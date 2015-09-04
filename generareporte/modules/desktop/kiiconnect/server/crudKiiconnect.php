@@ -15,6 +15,21 @@ include("mysql.class.php");
 
 $databaseSamsung = new MySQL();
 
+function categorias()
+{
+    global $databaseSamsung;
+
+    if ($databaseSamsung->Query("SELECT * FROM samsung_kiiconnect_categoria ORDER BY nombre")) {
+        // echo $databaseSamsung->GetJSON();
+        $data = $databaseSamsung->RecordsArray();
+    } else {
+        echo "<p>Query Failed</p>";
+    }
+    echo json_encode(array(
+            "success" => true,
+            "data" => $data)
+    );
+}
 function selectKiiconnect()
 {
     global $databaseSamsung;
@@ -123,5 +138,8 @@ switch ($_GET['operation']) {
         break;
     case 'delete' :
         deleteKiiconnect();
+        break;
+    case 'categorias' :
+        categorias();
         break;
 }

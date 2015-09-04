@@ -19,7 +19,65 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
         var winWidth = desktop.getWinWidth() / 1.2;
         var winHeight = desktop.getWinHeight() / 1.2;
 
+        //inicio combo activo
 
+        storeOFAC = new Ext.data.JsonStore({
+            root: 'users',
+            fields: [ 'id', 'nombre' ],
+            autoLoad: true,
+            data: { users: [
+                { "id": 1, "nombre":"Si"},
+                { "id": 0, "nombre":"No"}
+
+            ]}
+        });
+
+        var comboOFAC = new Ext.form.ComboBox({
+            id: 'comboOFAC',
+            store:  storeOFAC,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function kiiconnectActivo(id) {
+            var index =  storeOFAC.find('id', id);
+            if (index > -1) {
+                var record =  storeOFAC.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //fin combo activo
+
+        //inicio combo Producto
+        storePrFa = new Ext.data.JsonStore({
+            root:'data',
+            fields:['id', 'nombre'],
+            url: urlKiiconnect +  "crudKiiconnect.php?operation=categorias"
+        });
+        storePrFa.load();
+
+        var comboPrFa = new Ext.form.ComboBox({
+            store:storePrFa,
+            valueField:'id',
+            displayField:'nombre',
+            triggerAction:'all',
+            mode:'local'
+        });
+
+        function kiiconnectCategoria(id) {
+            var index =  storePrFa.find('id', id);
+            if (index > -1) {
+                var record = storePrFa.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //fin combo Producto
+
+        //item kiiconnect
 
         var proxyKiiconnect = new Ext.data.HttpProxy({
             api:{
@@ -102,7 +160,7 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
                     dataIndex:'activo',
                     sortable:true,
                     width:80,
-                    editor:new Ext.form.TextField({allowBlank:false})
+                    editor:comboOFAC, renderer:kiiconnectActivo
                 },
                 {
                     header:'Orden',
@@ -116,7 +174,7 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
                     dataIndex:'id_categoria',
                     sortable:true,
                     width:80,
-                    editor:new Ext.form.TextField({allowBlank:false})
+                    editor:comboPrFa, renderer:kiiconnectCategoria
                 }
 
             ],
@@ -125,6 +183,8 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
             border:false,
             stripeRows:true
         });
+
+        // fin kiiconnect
 
         if (!win) {
             win = desktop.createWindow({
