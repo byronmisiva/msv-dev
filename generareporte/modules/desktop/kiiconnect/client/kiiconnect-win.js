@@ -1,11 +1,11 @@
-QoDesk.SamsungWindow = Ext.extend(Ext.app.Module, {
-    id: 'samsung',
-    type: 'desktop/samsung',
+QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
+    id: 'kiiconnect',
+    type: 'desktop/kiiconnect',
 
     init: function () {
         this.launcher = {
-            text: 'Samsung',
-            iconCls: 'samsung-icon',
+            text: 'Kiiconnect',
+            iconCls: 'kiiconnect-icon',
             handler: this.createWindow,
             scope: this
         }
@@ -13,8 +13,8 @@ QoDesk.SamsungWindow = Ext.extend(Ext.app.Module, {
 
     createWindow: function () {
         var desktop = this.app.getDesktop();
-        var win = desktop.getWindow('grid-win-samsung');
-        var urlSamsung = "modules/desktop/samsung/server/";
+        var win = desktop.getWindow('grid-win-kiiconnect');
+        var urlKiiconnect = "modules/desktop/kiiconnect/server/";
         var winWidth = desktop.getWinWidth() / 1.2;
         var winHeight = desktop.getWinHeight() / 1.2;
 
@@ -51,7 +51,7 @@ QoDesk.SamsungWindow = Ext.extend(Ext.app.Module, {
          mode: 'local'
          });
 
-         function samsungSexo(id) {
+         function kiiconnectSexo(id) {
          var index = this.storeOFSE.find('id', id);
          if (index > -1) {
          var record = this.storeOFSE.getAt(index);
@@ -82,7 +82,7 @@ QoDesk.SamsungWindow = Ext.extend(Ext.app.Module, {
          mode: 'local'
          });
 
-         function samsungActivo(id) {
+         function kiiconnectActivo(id) {
          var index = this.storeOFAC.find('id', id);
          if (index > -1) {
          var record = this.storeOFAC.getAt(index);
@@ -110,7 +110,7 @@ QoDesk.SamsungWindow = Ext.extend(Ext.app.Module, {
          mode: 'local'
          });
 
-         function samsungCargo(id) {
+         function kiiconnectCargo(id) {
          var index = this.storeFA.find('id', id);
          if (index > -1) {
          var record = this.storeFA.getAt(index);
@@ -136,7 +136,7 @@ QoDesk.SamsungWindow = Ext.extend(Ext.app.Module, {
          mode: 'local'
          });
 
-         function samsungCampo(id) {
+         function kiiconnectCampo(id) {
          var index = this.storePrFa.find('id', id);
          if (index > -1) {
          var record = this.storePrFa.getAt(index);
@@ -147,17 +147,17 @@ QoDesk.SamsungWindow = Ext.extend(Ext.app.Module, {
          //fin combo campo
          */
 
-        //Samsung tab
-        var proxySamsungKaraoke = new Ext.data.HttpProxy({
+        //Kiiconnect tab
+        var proxyKiiconnectKaraoke = new Ext.data.HttpProxy({
             api: {
-                create: urlSamsung + "crudSamsung.php?operation=insert",
-                read: urlSamsung + "crudSamsung.php?operation=selectSamsungKaraoke",
-                update: urlSamsung + "crudSamsung.php?operation=updateSamsungKaraoke",
-                destroy: urlSamsung + "crudSamsung.php?operation=delete"
+                create: urlKiiconnect + "crudKiiconnect.php?operation=insert",
+                read: urlKiiconnect + "crudKiiconnect.php?operation=selectKiiconnect",
+                update: urlKiiconnect + "crudKiiconnect.php?operation=updateKiiconnect",
+                destroy: urlKiiconnect + "crudKiiconnect.php?operation=delete"
             }
         });
 
-        var readerSamsungKaraoke = new Ext.data.JsonReader({
+        var readerKiiconnectKaraoke = new Ext.data.JsonReader({
             totalProperty: 'total',
             successProperty: 'success',
             messageProperty: 'message',
@@ -165,35 +165,35 @@ QoDesk.SamsungWindow = Ext.extend(Ext.app.Module, {
             root: 'data',
             fields: [
                 {name: 'id', allowBlank: false},
-                {name: 'id_user', allowBlank: false},
-                {name: 'fbid', allowBlank: false},
-                {name: 'filenameimage', allowBlank: false},
-                {name: 'filename', allowBlank: false},
-                {name: 'creado', type: 'date', dateFormat: 'c', allowBlank: true},
-                {name: 'aprobado', allowBlank: false},
-                {name: 'nombre', allowBlank: false}
+                {name: 'nombre', allowBlank: false},
+                {name: 'descripcion', allowBlank: false},
+                {name: 'slogan', allowBlank: false},
+                {name: 'icono', allowBlank: false},
+                {name: 'link', allowBlank: false},
+                {name: 'activo', allowBlank: false},
+                {name: 'creado', type: 'date', dateFormat: 'c', allowBlank: true}
             ]
         });
-        var writerSamsungKaraoke = new Ext.data.JsonWriter({
+        var writerKiiconnectKaraoke = new Ext.data.JsonWriter({
             encode: true,
             writeAllFields: true
         });
-        this.storeSamsungKaraoke = new Ext.data.Store({
+        this.storeKiiconnectKaraoke = new Ext.data.Store({
             id: "id",
-            proxy: proxySamsungKaraoke,
-            reader: readerSamsungKaraoke,
-            writer: writerSamsungKaraoke,
+            proxy: proxyKiiconnectKaraoke,
+            reader: readerKiiconnectKaraoke,
+            writer: writerKiiconnectKaraoke,
             autoSave: true
         });
-        this.storeSamsungKaraoke.load();
-        this.gridSamsungKaraoke = new Ext.grid.EditorGridPanel({
+        this.storeKiiconnectKaraoke.load();
+        this.gridKiiconnectKaraoke = new Ext.grid.EditorGridPanel({
             height: winHeight - 94,
-            store: this.storeSamsungKaraoke, columns: [
+            store: this.storeKiiconnectKaraoke, columns: [
                 new Ext.grid.RowNumberer()
                 , {header: 'id', dataIndex: 'id', sortable: true, width: 20}
                 , {
-                    header: 'aprobado',
-                    dataIndex: 'aprobado',
+                    header: 'Activo',
+                    dataIndex: 'activo',
                     sortable: true,
                     width: 30,
                     scope: this,
@@ -203,34 +203,43 @@ QoDesk.SamsungWindow = Ext.extend(Ext.app.Module, {
                     header: 'Nombre',
                     dataIndex: 'nombre',
                     sortable: true,
-                    width: 90,
-                    renderer: function (val, meta, record) {
-                        return '<a href="https://www.facebook.com/' + record.data.fbid + '" target="_blank">' + val + '</a>';
-                    }
+                    width: 40,
+                    scope: this,
+                    editor: new Ext.form.TextField({allowBlank: false})
                 }
                 , {
-                    header: 'id_user',
-                    dataIndex: 'id_user',
+                    header: 'Descripción',
+                    dataIndex: 'descripcion',
                     sortable: true,
-                    width: 50
+                    width: 60,
+                    scope: this,
+                    editor: new Ext.form.TextField({allowBlank: false})
                 }
-                /*, {header: 'fbid', dataIndex: 'fbid', sortable: true, width: 70}*/
-                , {header: 'filenameimage', dataIndex: 'filenameimage', sortable: true, width: 100,
-                    renderer: function (val, meta, record) {
-                        return '<div style="overflow: hidden; width: 120px"><img src="http://appss.misiva.com.ec/videos/' + val + '" width="100px"></div>';
-                    }}
                 , {
-                    header: 'filename',
-                    dataIndex: 'filename',
+                    header: 'Slogan',
+                    dataIndex: 'slogan',
                     sortable: true,
-                    width: 80,
-                    renderer: function (val, meta, record) {
-                        return '<video width="200px" controls=""  >' +
-                            '<source src="http://appss.misiva.com.ec/videos/' + val + '" type="video/mp4">'+
-                            'Su navegador no soporta video HTML5.'+
-                        '</video>' ;
-                    }
+                    width: 60,
+                    scope: this,
+                    editor: new Ext.form.TextField({allowBlank: false})
                 }
+                , {
+                    header: 'Icono',
+                    dataIndex: 'icono',
+                    sortable: true,
+                    width: 60,
+                    scope: this,
+                    editor: new Ext.form.TextField({allowBlank: false})
+                }
+                , {
+                    header: 'URL',
+                    dataIndex: 'link',
+                    sortable: true,
+                    width: 60,
+                    scope: this,
+                    editor: new Ext.form.TextField({allowBlank: false})
+                }
+
                 , {header: 'Creado', dataIndex: 'creado', sortable: true, width: 30, renderer: formatDate}
             ],
             viewConfig: {forceFit: true},
@@ -238,18 +247,18 @@ QoDesk.SamsungWindow = Ext.extend(Ext.app.Module, {
             border: false,
             stripeRows: true
         });
-        //fin Samsung tab
+        //fin Kiiconnect tab
 
         var desktop = this.app.getDesktop();
         var win = desktop.getWindow('layout-win');
 
         if (!win) {
             win = desktop.createWindow({
-                id: 'grid-win-samsung',
+                id: 'grid-win-kiiconnect',
                 title: 'Trabajos disponibles',
                 width: winWidth,
                 height: winHeight,
-                iconCls: 'samsung-icon',
+                iconCls: 'kiiconnect-icon',
                 shim: false,
                 animCollapse: false,
                 constrainHeader: true,
@@ -261,14 +270,14 @@ QoDesk.SamsungWindow = Ext.extend(Ext.app.Module, {
                     items: [
                         {
                             autoScroll: true,
-                            title: 'Samsung Karaoke Galaxy A',
-                            iconCls: 'samsung-icon',
+                            title: 'Kiiconnect Karaoke Galaxy A',
+                            iconCls: 'kiiconnect-icon',
                             closable: true,
                             tbar: [
 
                                 {
                                     iconCls: 'demo-grid-add',
-                                    handler: this.requestSamsungKaraokeData,
+                                    handler: this.requestKiiconnectKaraokeData,
                                     scope: this,
                                     text: 'Recargar Datos',
                                     tooltip: 'Recargar datos en la grilla'
@@ -276,13 +285,13 @@ QoDesk.SamsungWindow = Ext.extend(Ext.app.Module, {
                                 '-',
                                 {
                                     iconCls: 'demo-grid-add',
-                                    handler: this.requestSamsungKaraokeDataExport,
+                                    handler: this.requestKiiconnectKaraokeDataExport,
                                     scope: this,
                                     text: 'Exportar Datos',
                                     tooltip: 'Exportar datos en la grilla'
                                 }
                             ],
-                            items: this.gridSamsungKaraoke
+                            items: this.gridKiiconnectKaraoke
                         }
                     ]
                 })
@@ -292,7 +301,7 @@ QoDesk.SamsungWindow = Ext.extend(Ext.app.Module, {
         win.show();
     },
 
-    /*deletesamsung: function () {
+    /*deletekiiconnect: function () {
      Ext.Msg.show({
      title: 'Confirmación',
      msg: 'Está seguro de querer borrar?',
@@ -300,16 +309,16 @@ QoDesk.SamsungWindow = Ext.extend(Ext.app.Module, {
      buttons: Ext.Msg.YESNO,
      fn: function (btn) {
      if (btn == 'yes') {
-     var rows = this.gridSamsung.getSelectionModel().getSelections();
+     var rows = this.gridKiiconnect.getSelectionModel().getSelections();
      if (rows.length === 0) {
      return false;
      }
-     this.storeSamsung.remove(rows);
+     this.storeKiiconnect.remove(rows);
      }
      }
      });
-     }, addsamsung: function () {
-     var samsung = new this.storeSamsung.recordType({
+     }, addkiiconnect: function () {
+     var kiiconnect = new this.storeKiiconnect.recordType({
      cargo: '',
      area: '',
      tipo_puesto: '',
@@ -322,15 +331,15 @@ QoDesk.SamsungWindow = Ext.extend(Ext.app.Module, {
      creado: ''
 
      });
-     this.gridSamsung.stopEditing();
-     this.storeSamsung.insert(0, samsung);
-     this.gridSamsung.startEditing(0, 1);
+     this.gridKiiconnect.stopEditing();
+     this.storeKiiconnect.insert(0, kiiconnect);
+     this.gridKiiconnect.startEditing(0, 1);
      },  */
     //botones reload, exportar
-    requestSamsungKaraokeData: function () {
-        this.storeSamsungKaraoke.load();
+    requestKiiconnectKaraokeData: function () {
+        this.storeKiiconnectKaraoke.load();
     },
-    requestSamsungKaraokeDataExport: function () {
+    requestKiiconnectKaraokeDataExport: function () {
         Ext.Msg.show({
             title: 'Advertencia',
             msg: 'Descargue el archivo xls  .<br>¿Desea continuar?',
@@ -339,7 +348,7 @@ QoDesk.SamsungWindow = Ext.extend(Ext.app.Module, {
             buttons: Ext.Msg.YESNO,
             fn: function (btn) {
                 if (btn == 'yes') {
-                    window.location.href = 'modules/desktop/samsung/server/SamsungKaraoke.php';
+                    window.location.href = 'modules/desktop/kiiconnect/server/KiiconnectKaraoke.php';
                 }
             }
         });

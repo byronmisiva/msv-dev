@@ -57,7 +57,7 @@ class config {
     * 2. show only warnings
     * 3. show no errors
     */
-   private $error_reporting = 'show only warnings';
+   private $error_reporting = 'show all';
 
    // End editable code
 
