@@ -19,6 +19,7 @@ class config {
     */
    public $DOMAIN = 'www.qwikioffice.com';
 
+
    /**
     * Email address
     */
