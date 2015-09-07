@@ -14,10 +14,42 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
     createWindow:function () {
         var desktop = this.app.getDesktop();
         var win = desktop.getWindow('grid-win-kiiconnect');
+        var pathimagenes = "../../../../imagenes/kiiconnect/";
+        var urlver = "imagenes/kiiconnect/";
 
         var urlKiiconnect = "modules/desktop/kiiconnect/server/";
         var winWidth = desktop.getWinWidth() / 1.2;
         var winHeight = desktop.getWinHeight() / 1.2;
+
+        //inicio combo KIICONNECTFILE
+        this.storeKIICONNECTFILE = new Ext.data.JsonStore({
+            id: 'storeKIICONNECTFILE',
+            root: 'data',
+            fields: ['id', 'nombre'],
+            url: urlKiiconnect + "crudKiiconnect.php?operation=itemsTienda&path=" + pathimagenes + "&urlver=" + urlver
+        });
+        this.storeKIICONNECTFILE.load();
+        storeKIICONNECTFILE= this.storeKIICONNECTFILE;
+
+
+        var comboKIICONNECTFILE = new Ext.form.ComboBox({
+            id: 'comboKIICONNECTFILE',
+            store: this.storeKIICONNECTFILE,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function kiiconnectImagenes(id) {
+            var index =  storeKIICONNECTFILE.find('id', id);
+            if (index > -1) {
+                var record =  storeKIICONNECTFILE.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //fin combo KIICONNECTFILE
 
         //inicio combo activo
 
@@ -145,7 +177,7 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
                     dataIndex:'icono',
                     sortable:true,
                     width:80,
-                    editor:new Ext.form.TextField({allowBlank:false})
+                    editor: comboKIICONNECTFILE, renderer: kiiconnectImagenes
                 }
                 ,
                 {
@@ -170,7 +202,7 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
                     editor:new Ext.form.TextField({allowBlank:false})
                 },
                 {
-                    header:'id_categoria',
+                    header:'Categoria',
                     dataIndex:'id_categoria',
                     sortable:true,
                     width:80,
@@ -200,7 +232,57 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
                 tbar:[
                     {text:'Nuevo', scope:this, handler:this.addkiiconnect, iconCls:'save-icon'},
                     '-',
-                    {text:"Eliminar", scope:this, handler:this.deletekiiconnect, iconCls:'delete-icon'}
+                    {text:"Eliminar", scope:this, handler:this.deletekiiconnect, iconCls:'delete-icon'},
+                    '-',{
+                        iconCls: 'demo-grid-add',
+                        handler: this.requestKiiconnectData,
+                        scope: this,
+                        text: 'Recargar Datos'
+                    },  '->',
+                    {
+                        xtype: 'form',
+                        fileUpload: true,
+                        width: 400,
+                        frame: true,
+                        autoHeight: true,
+                        defaults: {
+                            anchor: '95%',
+                            allowBlank: false
+
+                        },
+
+                        id: "fp",
+                        items: [
+                            {
+                                xtype: 'fileuploadfield',
+                                id: 'form-file',
+                                emptyText: 'Seleccione imagen a subir',
+                                fieldLabel: 'Imagen',
+                                name: 'photo-path',
+                                regex: /^.*.(jpg|JPG|jpeg|JPEG|gif|GIF|png|PNG)$/,
+                                regexText:'Solo imagenes ',
+                                buttonText: '',
+                                buttonCfg: {
+                                    iconCls: 'upload-icon'
+                                }
+                            }
+                        ], buttons: [
+                        {
+                            text: 'Subir',
+                            handler: function () {
+                                if (Ext.getCmp('fp').getForm().isValid()) {
+                                    Ext.getCmp('fp').getForm().submit({
+                                        url: urlKiiconnect + 'file-upload.php',
+                                        waitMsg: 'Subiendo Imagen...',
+                                        success: function (fp, o) {
+                                            this.storeKIICONNECTFILE.load();
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    ]
+                    }
                 ],
                 items:this.gridKiiconnect
             });
@@ -235,6 +317,11 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
         this.gridKiiconnect.stopEditing();
         this.storeKiiconnect.insert(0, kiiconnect);
         this.gridKiiconnect.startEditing(0, 1);
+    },
+    requestKiiconnectData: function () {
+        this.storeKiiconnect.load();
+        storePrFa.load();
+        this.storeKIICONNECTFILE.load();
     }
 
 });

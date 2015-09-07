@@ -121,7 +121,42 @@ function deleteKiiconnect()
         "msg"	=> $databaseSamsung->ErrorNumber() == 0?"Nota de entrega eliminado exitosamente":$databaseSamsung->ErrorNumber()
     ));
 }
+function itemsTienda($path, $url)
+{
 
+    $tipos = array("gif", "jpg", "png", "JPG", "GIF", "PNG");
+    listar_ficheros($tipos, $path, $url);
+}
+
+function listar_ficheros($tipos, $carpeta, $url)
+{
+    //Comprobamos que la carpeta existe
+
+    if (is_dir($carpeta)) {
+        //Escaneamos la carpeta usando scandir
+        $scanarray = scandir($carpeta);
+
+        for ($i = 0; $i < count($scanarray); $i++) {
+            //Eliminamos  "." and ".." del listado de ficheros
+            if ($scanarray[$i] != "." && $scanarray[$i] != "..") {
+                //No mostramos los subdirectorios
+                if (is_file($carpeta . "/" . $scanarray[$i])) {
+                    //Verificamos que la extension se encuentre en $tipos
+                    $thepath = pathinfo($carpeta . "/" . $scanarray[$i]);
+                    if (in_array($thepath['extension'], $tipos)) {
+                        $data[] = array("id" => $url . $scanarray[$i], "nombre" => $scanarray[$i]);
+                    }
+                }
+            }
+        }
+        echo json_encode(array(
+                "success" => true,
+                "data" => $data)
+        );
+    } else {
+        echo "La carpeta no existe";
+    }
+}
 
 switch ($_GET['operation']) {
     case 'selectjson' :
@@ -141,5 +176,9 @@ switch ($_GET['operation']) {
         break;
     case 'categorias' :
         categorias();
+        break;
+
+    case 'itemsTienda' :
+        itemsTienda($_GET['path'], $_GET['urlver']);
         break;
 }
