@@ -18,6 +18,41 @@ QoDesk.SamsungWindow = Ext.extend(Ext.app.Module, {
         var winWidth = desktop.getWinWidth() / 1.2;
         var winHeight = desktop.getWinHeight() / 1.2;
 
+
+        //inicio combo activo
+
+        storeSASINO = new Ext.data.JsonStore({
+            root: 'users',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            data: {
+                users: [
+                    {"id": 1, "nombre": "Si"},
+                    {"id": 0, "nombre": "No"}
+
+                ]
+            }
+        });
+
+        var comboSASINO = new Ext.form.ComboBox({
+            id: 'comboSASINO',
+            store: storeSASINO,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function samsungActivo(id) {
+            var index = storeSASINO.find('id', id);
+            if (index > -1) {
+                var record = storeSASINO.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //fin combo activo
+
         var textField = new Ext.form.TextField({allowBlank: false});
 
         function formatDate(value) {
@@ -147,7 +182,33 @@ QoDesk.SamsungWindow = Ext.extend(Ext.app.Module, {
          //fin combo campo
          */
 
-        //Samsung tab
+
+        function renderGeneraImagen(value, id, r) {
+            return '<input type="button" value="Genera Imagen' + value+' " id="' + value + '"/>';
+        }
+
+        function llenaVideo(canvasId, videoSubidoId) {
+            var canvas = document.getElementById(canvasId);
+            var video = document.getElementById(videoSubidoId);
+            canvas.width = 200;
+            canvas.height = 157;
+            canvas.getContext('2d').drawImage(video, 0, 0, 300, 150);
+
+            Ext.Ajax.request({
+                url: 'sample.json',
+                success: function(response, opts) {
+                    var obj = Ext.decode(response.responseText);
+                    console.dir(obj);
+                },
+                failure: function(response, opts) {
+                    console.log('server-side failure with status code ' + response.status);
+                }
+            });
+        }
+
+
+
+            //Samsung tab
         var proxySamsungKaraoke = new Ext.data.HttpProxy({
             api: {
                 create: urlSamsung + "crudSamsung.php?operation=insert",
@@ -178,17 +239,20 @@ QoDesk.SamsungWindow = Ext.extend(Ext.app.Module, {
             encode: true,
             writeAllFields: true
         });
-        this.storeSamsungKaraoke = new Ext.data.Store({
+        var storeSamsungKaraoke = new Ext.data.Store({
             id: "id",
             proxy: proxySamsungKaraoke,
             reader: readerSamsungKaraoke,
             writer: writerSamsungKaraoke,
             autoSave: true
         });
-        this.storeSamsungKaraoke.load();
+        storeSamsungKaraoke.load();
+
+        this.storeSamsungKaraoke = storeSamsungKaraoke;
+
         this.gridSamsungKaraoke = new Ext.grid.EditorGridPanel({
             height: winHeight - 94,
-            store: this.storeSamsungKaraoke, columns: [
+            store: storeSamsungKaraoke, columns: [
                 new Ext.grid.RowNumberer()
                 , {header: 'id', dataIndex: 'id', sortable: true, width: 20}
                 , {
@@ -197,7 +261,8 @@ QoDesk.SamsungWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 30,
                     scope: this,
-                    editor: new Ext.form.TextField({allowBlank: false})
+                    editor: comboSASINO,
+                    renderer: samsungActivo
                 }
                 , {
                     header: 'Nombre',
@@ -215,23 +280,45 @@ QoDesk.SamsungWindow = Ext.extend(Ext.app.Module, {
                     width: 50
                 }
                 /*, {header: 'fbid', dataIndex: 'fbid', sortable: true, width: 70}*/
-                , {header: 'filenameimage', dataIndex: 'filenameimage', sortable: true, width: 100,
+                , {
+                    header: 'filenameimage', dataIndex: 'filenameimage', sortable: true, width: 100,
                     renderer: function (val, meta, record) {
                         return '<div style="overflow: hidden; width: 120px"><img src="http://appss.misiva.com.ec/videos/' + val + '" width="100px"></div>';
-                    }}
+                    }
+                }
                 , {
                     header: 'filename',
                     dataIndex: 'filename',
                     sortable: true,
                     width: 80,
                     renderer: function (val, meta, record) {
-                        return '<video width="200px" controls=""  >' +
-                            '<source src="http://appss.misiva.com.ec/videos/' + val + '" type="video/mp4">'+
-                            'Su navegador no soporta video HTML5.'+
-                        '</video>' ;
+
+                        return  '<div class="video_'+ record.data.id +'">' +
+                        '<video id="video_'+ record.data.id +'" width="200px" controls=""  >' +
+                            '<source src="http://appss.misiva.com.ec/videos/' + val + '" type="video/mp4">' +
+                            'Su navegador no soporta video HTML5.' +
+                            '</video>' +
+                            '</div><canvas id="canvas_' + record.data.id + '"  style="width: 480px; height: 360"></canvas>';
                     }
                 }
                 , {header: 'Creado', dataIndex: 'creado', sortable: true, width: 30, renderer: formatDate}
+                ,
+                {
+                    header: 'Genera Imagen',
+                    dataIndex: 'filename' ,
+                    xtype: 'buttoncolumn',
+                    width: 70,
+                    items: [{
+                        text: 'generar',
+                        tooltip: 'Generar Thumbnail',
+                        handler: function(grid, rowIndex, colIndex) {
+                            var rec = storeSamsungKaraoke.getAt(rowIndex);
+                            llenaVideo('canvas_' + rec.get('id'),'video_' +  rec.get('id'))
+                            //llenaVideo(canvasId, videoSubidoId)
+//                            console.log (rec.get('id'));
+                        }
+                    }]
+                }
             ],
             viewConfig: {forceFit: true},
             sm: new Ext.grid.RowSelectionModel({singleSelect: false}),
@@ -346,4 +433,6 @@ QoDesk.SamsungWindow = Ext.extend(Ext.app.Module, {
     }
 
 });
+
+
 

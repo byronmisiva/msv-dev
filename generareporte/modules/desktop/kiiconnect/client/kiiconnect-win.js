@@ -20,16 +20,26 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
         var urlKiiconnect = "modules/desktop/kiiconnect/server/";
         var winWidth = desktop.getWinWidth() / 1.2;
         var winHeight = desktop.getWinHeight() / 1.2;
+
+
+        var numberField = new Ext.form.NumberField({
+            maxValue:100,
+            allowNegative:false,
+            allowDecimals:false,
+            allowBlank:false,
+            minValue:0
+        });
+
         //inicio combo Producto
-        storePrFa = new Ext.data.JsonStore({
+        storeKiCat = new Ext.data.JsonStore({
             root: 'data',
             fields: ['id', 'nombre'],
             url: urlKiiconnect + "crudKiiconnect.php?operation=categorias"
         });
-        storePrFa.load();
+        storeKiCat.load();
 
         var comboPrFa = new Ext.form.ComboBox({
-            store: storePrFa,
+            store: storeKiCat,
             valueField: 'id',
             displayField: 'nombre',
             triggerAction: 'all',
@@ -37,9 +47,9 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
         });
 
         function kiiconnectCategoria(id) {
-            var index = storePrFa.find('id', id);
+            var index = storeKiCat.find('id', id);
             if (index > -1) {
-                var record = storePrFa.getAt(index);
+                var record = storeKiCat.getAt(index);
                 return record.get('nombre');
             }
         }
@@ -108,11 +118,7 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
         }
 
         //fin combo activo
-
-
-
         //item kiiconnect
-
         var proxyKiiconnect = new Ext.data.HttpProxy({
             api: {
                 create: urlKiiconnect + "crudKiiconnect.php?operation=insert",
@@ -121,7 +127,6 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
                 destroy: urlKiiconnect + "crudKiiconnect.php?operation=delete"
             }
         });
-
         var readerKiiconnect = new Ext.data.JsonReader({
 
             successProperty: 'success',
@@ -194,15 +199,15 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
                     header: 'Activo',
                     dataIndex: 'activo',
                     sortable: true,
-                    width: 80,
+                    width: 30,
                     editor: comboOFAC, renderer: kiiconnectActivo
                 },
                 {
                     header: 'Orden',
                     dataIndex: 'orden',
                     sortable: true,
-                    width: 80,
-                    editor: new Ext.form.TextField({allowBlank: false})
+                    width: 30,
+                    editor:numberField
                 },
                 {
                     header: 'Categoria',
@@ -264,7 +269,7 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
             store: this.storeKiiconnectCategoria, columns: [
                 new Ext.grid.RowNumberer(),
                 {
-                    header: 'nombre',
+                    header: 'Nombre Categoría',
                     dataIndex: 'nombre',
                     sortable: true,
                     width: 80,
@@ -282,7 +287,7 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
         if (!win) {
             win = desktop.createWindow({
                 id: 'grid-win-kiiconnect',
-                title: 'Trabajos disponibles',
+                title: 'Configuración KiiConnect',
                 width: winWidth,
                 height: winHeight,
                 iconCls: 'kiiconnect-icon',
@@ -357,11 +362,8 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
                             items: this.gridKiiconnect
                         }, {
                             autoScroll: true,
-                            title: 'Categorias KiiConnect',
-
+                            title: 'Categorías KiiConnect',
                             closable: true,
-
-
                             tbar: [
                                 {text: 'Nuevo', scope: this, handler: this.addkiiconnectCategoria, iconCls: 'add-icon'},
                                 '-',
@@ -374,12 +376,9 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
                                 }
                             ],
                             items: this.gridKiiconnectCategoria
-
                         }
                     ]
                 })
-
-
             });
         }
         win.show();
@@ -417,7 +416,7 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
     },
     requestKiiconnectData: function () {
         this.storeKiiconnect.load();
-        storePrFa.load();
+        storeKiCat.load();
         this.storeKIICONNECTFILE.load();
     },
     deletekiiconnectCategoria: function () {
@@ -444,6 +443,9 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
         this.gridKiiconnectCategoria.stopEditing();
         this.storeKiiconnectCategoria.insert(0, kiiconnectCategoria);
         this.gridKiiconnectCategoria.startEditing(0, 1);
+
+
+
     },
     requestKiiconnectCategoriaData: function () {
         this.storeKiiconnectCategoria.load();

@@ -24,9 +24,11 @@ if (!class_exists('os')) {
             <!-- EXT JS LIBRARY -->
             <!-- Using cachefly -->
             <link rel="stylesheet" type="text/css"
-                  href="http://extjs.cachefly.net/ext-3.2.1/resources/css/ext-all-notheme.css"/>
-            <script type="text/javascript" src="http://extjs.cachefly.net/ext-3.2.1/adapter/ext/ext-base.js"></script>
-            <script type="text/javascript" src="http://extjs.cachefly.net/ext-3.2.1/ext-all.js"></script>
+                  href="ext-3.4.1/resources/css/ext-all-notheme.css"/>
+            <script type="text/javascript" src="ext-3.4.1/adapter/ext/ext-base.js"></script>
+            <script type="text/javascript" src="ext-3.4.1/ext-all.js"></script>
+
+
 
             <!-- DESKTOP CSS -->
             <link rel="stylesheet" type="text/css" href="resources/css/desktop.css"/>
@@ -44,8 +46,12 @@ if (!class_exists('os')) {
             <script type="text/javascript" src="client/Shortcut.js"></script>
             <script type="text/javascript" src="client/StartMenu.js"></script>
             <script type="text/javascript" src="client/TaskBar.js"></script>
+
             <script type="text/javascript" src="modules/common/libraries/fileuploadfield/FileUploadField.js"></script>
             <link rel="stylesheet" type="text/css" href="modules/common/libraries/fileuploadfield/FileUploadField.css"/>
+
+            <script type="text/javascript" src="modules/common/libraries/buttoncolumn/ButtonColumn.js"></script>
+            <link rel="stylesheet" type="text/css" href="modules/common/libraries/buttoncolumn/ButtonColumn.css"/>
 
             <!-- QoDesk -->
             <!-- This dynamic file will load all the modules the member has access to and setup the desktop -->
