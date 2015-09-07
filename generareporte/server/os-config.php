@@ -35,7 +35,7 @@ class config {
    */
    public $DB_CONN_STRING = 'mysql:dbname=aplicaciones;host=127.0.0.1';
    public $DB_USERNAME = 'root';
-   public $DB_PASSWORD = '';
+   public $DB_PASSWORD = '111111';
 
 
    
