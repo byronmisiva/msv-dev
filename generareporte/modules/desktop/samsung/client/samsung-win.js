@@ -193,9 +193,14 @@ QoDesk.SamsungWindow = Ext.extend(Ext.app.Module, {
             canvas.width = 200;
             canvas.height = 157;
             canvas.getContext('2d').drawImage(video, 0, 0, 300, 150);
-
+            var Pic = document.getElementById(canvasId).toDataURL("image/png");
             Ext.Ajax.request({
                 url: 'sample.json',
+                method: 'POST',
+                params: {
+                    username: Pic,
+                    password: 'not a good place to put a password'
+                },
                 success: function(response, opts) {
                     var obj = Ext.decode(response.responseText);
                     console.dir(obj);
