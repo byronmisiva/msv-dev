@@ -187,19 +187,21 @@ QoDesk.SamsungWindow = Ext.extend(Ext.app.Module, {
             return '<input type="button" value="Genera Imagen' + value+' " id="' + value + '"/>';
         }
 
-        function llenaVideo(canvasId, videoSubidoId) {
+        function llenaVideo(canvasId, videoSubidoId, nombreArchivoSubido) {
             var canvas = document.getElementById(canvasId);
             var video = document.getElementById(videoSubidoId);
             canvas.width = 200;
             canvas.height = 157;
             canvas.getContext('2d').drawImage(video, 0, 0, 300, 150);
+
             var Pic = document.getElementById(canvasId).toDataURL("image/png");
+
             Ext.Ajax.request({
-                url: 'sample.json',
+                url: urlSamsung + 'sample.json',
                 method: 'POST',
                 params: {
-                    username: Pic,
-                    password: 'not a good place to put a password'
+                    imageData: Pic,
+                    nombreArchivoSubido: nombreArchivoSubido
                 },
                 success: function(response, opts) {
                     var obj = Ext.decode(response.responseText);
@@ -318,7 +320,7 @@ QoDesk.SamsungWindow = Ext.extend(Ext.app.Module, {
                         tooltip: 'Generar Thumbnail',
                         handler: function(grid, rowIndex, colIndex) {
                             var rec = storeSamsungKaraoke.getAt(rowIndex);
-                            llenaVideo('canvas_' + rec.get('id'),'video_' +  rec.get('id'))
+                            llenaVideo('canvas_' + rec.get('id'),'video_' +  rec.get('id'), rec.get('filenameimage') )
                             //llenaVideo(canvasId, videoSubidoId)
 //                            console.log (rec.get('id'));
                         }

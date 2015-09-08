@@ -12,15 +12,7 @@ if (array_key_exists('imageData', $_POST)) {
 
     $nombreOriginal = $nombreArchivoSubido;
 
-    $nombreArchivoSubido = str_replace(".mp4", ".png", $nombreArchivoSubido);
-    $nombreArchivoSubido = str_replace(".mpg", ".png", $nombreArchivoSubido);
-    $nombreArchivoSubido = str_replace(".mov", ".png", $nombreArchivoSubido);
-    $nombreArchivoSubido = str_replace(".MOV", ".png", $nombreArchivoSubido);
-    $nombreArchivoSubido = str_replace(".MP4", ".png", $nombreArchivoSubido);
-    $nombreArchivoSubido = str_replace(".MPG", ".png", $nombreArchivoSubido);
-
-    $nombreArchivoSubido = str_replace(".3gp", ".png", $nombreArchivoSubido);
-    $nombreArchivoSubido = str_replace(".3GP", ".png", $nombreArchivoSubido);
+ 
 
 
     // Path where the image is going to be saved

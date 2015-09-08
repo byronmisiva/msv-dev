@@ -53,6 +53,7 @@ function updateKiiconnect()
     $data = json_decode(stripslashes($_POST["data"]));
 
     $update["nombre"] = MySQL::SQLValue($data->nombre);
+    $update["tag"] = MySQL::SQLValue($data->tag);
     $update["descripcion"] = MySQL::SQLValue($data->descripcion);
     $update["icono"] = MySQL::SQLValue($data->icono);
     $update["link"] = MySQL::SQLValue($data->link);
@@ -77,6 +78,7 @@ function insertKiiconnect()
     $data = json_decode(stripslashes($_POST["data"]));
 
     $update["nombre"] = MySQL::SQLValue($data->nombre);
+    $update["tag"] = MySQL::SQLValue($data->tag);
     $update["descripcion"] = MySQL::SQLValue($data->descripcion);
     $update["icono"] = MySQL::SQLValue($data->icono);
     $update["link"] = MySQL::SQLValue($data->link);
@@ -92,6 +94,7 @@ function insertKiiconnect()
             array(
                 "id" => $databaseSamsung->GetLastInsertID(),
                 "nombre"	=> $data->nombre,
+                "tag"	=> $data->tag,
                 "descripcion"	=> $data->descripcion,
                 "icono"	=> $data->icono,
                 "link"	=> $data->link,

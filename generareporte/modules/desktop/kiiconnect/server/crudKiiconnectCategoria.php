@@ -15,7 +15,7 @@ include("mysql.class.php");
 
 $databaseKiiconnect = new MySQL();
 
- 
+
 function selectKiiconnect()
 {
     global $databaseKiiconnect;
@@ -38,7 +38,7 @@ function updateKiiconnect()
     $data = json_decode(stripslashes($_POST["data"]));
 
     $update["nombre"] = MySQL::SQLValue($data->nombre);
-
+    $update["icono"] = MySQL::SQLValue($data->icono);
 
     $where["id"] = MySQL::SQLValue($data->id, "integer");
 
@@ -50,6 +50,7 @@ function updateKiiconnect()
         "msg" => $databaseKiiconnect->ErrorNumber() == 0 ? " actualizado exitosamente" : $databaseKiiconnect->ErrorNumber()
     ));
 }
+
 function insertKiiconnect()
 {
     global $databaseKiiconnect;
@@ -58,20 +59,18 @@ function insertKiiconnect()
 
     $update["nombre"] = MySQL::SQLValue($data->nombre);
 
-
-    $databaseKiiconnect->InsertRow("samsung_kiiconnect_categoria", $update );
+    $databaseKiiconnect->InsertRow("samsung_kiiconnect_categoria", $update);
     echo json_encode(array(
         "success" => $databaseKiiconnect->ErrorNumber() == 0,
-        "msg" => $databaseKiiconnect->ErrorNumber() == 0?"Parametro insertado exitosamente":$databaseKiiconnect->ErrorNumber(),
+        "msg" => $databaseKiiconnect->ErrorNumber() == 0 ? "Parametro insertado exitosamente" : $databaseKiiconnect->ErrorNumber(),
         "data" => array(
             array(
                 "id" => $databaseKiiconnect->GetLastInsertID(),
-                "nombre"	=> $data->nombre
+                "nombre" => $data->nombre,
+                "icono" => $data->icono
             )
         )
     ));
-
-
 }
 
 function deleteKiiconnect()
@@ -80,21 +79,20 @@ function deleteKiiconnect()
     $id = json_decode(stripslashes($_POST["data"]));
     $sql = "DELETE FROM samsung_kiiconnect_categoria WHERE id=$id";
 
-    if ($databaseKiiconnect->Query( $sql)) {
+    if ($databaseKiiconnect->Query($sql)) {
 
     } else {
         echo "<p>Query Failed</p>";
     }
     echo json_encode(array(
         "success" => $databaseKiiconnect->ErrorNumber() == 0,
-        "msg"	=> $databaseKiiconnect->ErrorNumber() == 0?"Nota de entrega eliminado exitosamente":$databaseKiiconnect->ErrorNumber()
+        "msg" => $databaseKiiconnect->ErrorNumber() == 0 ? "Nota de entrega eliminado exitosamente" : $databaseKiiconnect->ErrorNumber()
     ));
 }
- 
 
- 
+
 switch ($_GET['operation']) {
-     
+
     case 'select' :
         selectKiiconnect();
         break;
@@ -107,5 +105,5 @@ switch ($_GET['operation']) {
     case 'delete' :
         deleteKiiconnect();
         break;
-   
+
 }

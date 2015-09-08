@@ -24,11 +24,13 @@ $databaseSamsung = new MySQL();
 global $databaseSamsung;
 if ($databaseSamsung->Query("SELECT
                                     samsung_kiiconnect_setting.nombre,
+                                    samsung_kiiconnect_setting.tag,
                                     samsung_kiiconnect_setting.descripcion,
                                     samsung_kiiconnect_setting.icono,
                                     samsung_kiiconnect_setting.link,
                                     samsung_kiiconnect_categoria.nombre AS categoria,
-                                    samsung_kiiconnect_categoria.id AS id_categoria
+                                    samsung_kiiconnect_categoria.id AS id_categoria,
+                                    samsung_kiiconnect_categoria.icono AS categoria_icono
                                 FROM
                                     samsung_kiiconnect_setting
                                 INNER JOIN samsung_kiiconnect_categoria ON samsung_kiiconnect_setting.id_categoria = samsung_kiiconnect_categoria.id
