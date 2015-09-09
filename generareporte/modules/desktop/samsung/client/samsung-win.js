@@ -195,9 +195,10 @@ QoDesk.SamsungWindow = Ext.extend(Ext.app.Module, {
             canvas.getContext('2d').drawImage(video, 0, 0, 300, 150);
 
             var Pic = document.getElementById(canvasId).toDataURL("image/png");
+            Pic = Pic.replace(/^data:image\/(png|jpg);base64,/, "")
 
             Ext.Ajax.request({
-                url: urlSamsung + 'sample.json',
+                url: urlSamsung + 'uploadimagen.php',
                 method: 'POST',
                 params: {
                     imageData: Pic,
@@ -290,7 +291,7 @@ QoDesk.SamsungWindow = Ext.extend(Ext.app.Module, {
                 , {
                     header: 'filenameimage', dataIndex: 'filenameimage', sortable: true, width: 100,
                     renderer: function (val, meta, record) {
-                        return '<div style="overflow: hidden; width: 120px"><img src="http://appss.misiva.com.ec/videos/' + val + '" width="100px"></div>';
+                        return '<div style="overflow: hidden; width: 120px"><img src="http://localhost/appss/videos/' + val + '" width="100px"></div>';
                     }
                 }
                 , {
@@ -301,11 +302,11 @@ QoDesk.SamsungWindow = Ext.extend(Ext.app.Module, {
                     renderer: function (val, meta, record) {
 
                         return  '<div class="video_'+ record.data.id +'">' +
-                        '<video id="video_'+ record.data.id +'" width="200px" controls=""  >' +
-                            '<source src="http://appss.misiva.com.ec/videos/' + val + '" type="video/mp4">' +
+                        '<video id="video_'+ record.data.id +'" width="100%" controls=""  >' +
+                            '<source src="http://localhost/appss/videos/' + val + '" type="video/mp4">' +
                             'Su navegador no soporta video HTML5.' +
                             '</video>' +
-                            '</div><canvas id="canvas_' + record.data.id + '"  style="width: 480px; height: 360"></canvas>';
+                            '</div><canvas id="canvas_' + record.data.id + '"  style="width: 480px; height: 386px"></canvas>';
                     }
                 }
                 , {header: 'Creado', dataIndex: 'creado', sortable: true, width: 30, renderer: formatDate}

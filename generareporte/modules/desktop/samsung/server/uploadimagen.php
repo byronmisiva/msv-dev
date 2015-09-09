@@ -10,11 +10,6 @@ if (array_key_exists('imageData', $_POST)) {
     $imgData = base64_decode($_REQUEST['imageData']);
     $nombreArchivoSubido = $_REQUEST['nombreArchivoSubido'];
 
-    $nombreOriginal = $nombreArchivoSubido;
-
- 
-
-
     // Path where the image is going to be saved
     // $filePath =  $_SERVER['DOCUMENT_ROOT'] . '/appss/videos/' . $nombreArchivoSubido;
     $filePath = $_SERVER['DOCUMENT_ROOT'] . '/videos/' . $nombreArchivoSubido;
@@ -28,35 +23,8 @@ if (array_key_exists('imageData', $_POST)) {
     $file = fopen($filePath, 'w');
     fwrite($file, $imgData);
     fclose($file);
-    echo '{"video":"' . $nombreOriginal . '", "imagen":"' . $nombreArchivoSubido . '"}';
-    sleep(2);
-    $imageObject = imagecreatefrompng($filePath);
-    imagegif($imageObject, str_replace(".png", ".gif", $filePath));
+    echo '{"imagen":"' . $nombreArchivoSubido . '"}';
 
-    //validar que la imagen se genero correctamente
-
-
-    $numeroazar = rand(1, 3);
-    if ($this->esImagen($filePath)) {
-        if (filesize(str_replace(".png", ".gif", $filePath)) < 500) {
-            $fichero = $_SERVER['DOCUMENT_ROOT'] . '/videos/galeria_' . $numeroazar . '.gif';
-            $nuevo_fichero = str_replace(".png", ".gif", $filePath);
-            copy($fichero, $nuevo_fichero);
-
-            $fichero = $_SERVER['DOCUMENT_ROOT'] . '/videos/galeria_' . $numeroazar . '.png';
-            $nuevo_fichero = $filePath;
-            copy($fichero, $nuevo_fichero);
-        }
-        //echo "es imagen ";
-    } else {
-        $fichero = $_SERVER['DOCUMENT_ROOT'] . '/videos/galeria_' . $numeroazar . '.gif';
-        $nuevo_fichero = str_replace(".png", ".gif", $filePath);
-        copy($fichero, $nuevo_fichero);
-
-        $fichero = $_SERVER['DOCUMENT_ROOT'] . '/videos/galeria_' . $numeroazar . '.png';
-        $nuevo_fichero = $filePath;
-        copy($fichero, $nuevo_fichero);
-    }
 }
 
 
