@@ -291,7 +291,7 @@ QoDesk.SamsungWindow = Ext.extend(Ext.app.Module, {
                 , {
                     header: 'filenameimage', dataIndex: 'filenameimage', sortable: true, width: 100,
                     renderer: function (val, meta, record) {
-                        return '<div style="overflow: hidden; width: 120px"><img src="http://localhost/appss/videos/' + val + '" width="100px"></div>';
+                        return '<div style="overflow: hidden; width: 120px"><img src="http://appss.misiva.com.ec/videos/' + val + '" width="100px"></div>';
                     }
                 }
                 , {
@@ -303,7 +303,7 @@ QoDesk.SamsungWindow = Ext.extend(Ext.app.Module, {
 
                         return  '<div class="video_'+ record.data.id +'">' +
                         '<video id="video_'+ record.data.id +'" width="100%" controls=""  >' +
-                            '<source src="http://localhost/appss/videos/' + val + '" type="video/mp4">' +
+                            '<source src="http://appss.misiva.com.ec/videos/' + val + '" type="video/mp4">' +
                             'Su navegador no soporta video HTML5.' +
                             '</video>' +
                             '</div><canvas id="canvas_' + record.data.id + '"  style="width: 480px; height: 386px; display:none"></canvas>';
