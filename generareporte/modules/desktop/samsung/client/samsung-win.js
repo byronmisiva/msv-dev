@@ -298,7 +298,7 @@ QoDesk.SamsungWindow = Ext.extend(Ext.app.Module, {
                     header: 'filename',
                     dataIndex: 'filename',
                     sortable: true,
-                    width: 80,
+                    width: 180,
                     renderer: function (val, meta, record) {
 
                         return  '<div class="video_'+ record.data.id +'">' +
@@ -306,7 +306,7 @@ QoDesk.SamsungWindow = Ext.extend(Ext.app.Module, {
                             '<source src="http://localhost/appss/videos/' + val + '" type="video/mp4">' +
                             'Su navegador no soporta video HTML5.' +
                             '</video>' +
-                            '</div><canvas id="canvas_' + record.data.id + '"  style="width: 480px; height: 386px"></canvas>';
+                            '</div><canvas id="canvas_' + record.data.id + '"  style="width: 480px; height: 386px; display:none"></canvas>';
                     }
                 }
                 , {header: 'Creado', dataIndex: 'creado', sortable: true, width: 30, renderer: formatDate}
