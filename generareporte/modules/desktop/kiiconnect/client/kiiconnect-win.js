@@ -29,7 +29,39 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
             allowBlank:false,
             minValue:0
         });
+        //inicio combo activo
 
+        storeOFAC = new Ext.data.JsonStore({
+            root: 'users',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            data: {
+                users: [
+                    {"id": 1, "nombre": "Si"},
+                    {"id": 0, "nombre": "No"}
+
+                ]
+            }
+        });
+
+        var comboOFAC = new Ext.form.ComboBox({
+            id: 'comboOFAC',
+            store: storeOFAC,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function kiiconnectActivo(id) {
+            var index = storeOFAC.find('id', id);
+            if (index > -1) {
+                var record = storeOFAC.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //fin combo activo
         //inicio combo Producto
         storeKiCat = new Ext.data.JsonStore({
             root: 'data',
@@ -85,19 +117,18 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
 
         //fin combo KIICONNECTFILE
         //inicio combo KIICONNECTFILE
-        this.storeKIICONNECTFILE2 = new Ext.data.JsonStore({
+        storeKIICONNECTFILE2 = new Ext.data.JsonStore({
             id: 'storeKIICONNECTFILE2',
             root: 'data',
             fields: ['id', 'nombre'],
             url: urlKiiconnect + "crudKiiconnect.php?operation=itemsTienda&path=" + pathimagenes + "&urlver=" + urlver
         });
-        this.storeKIICONNECTFILE2.load();
-        storeKIICONNECTFILE2 = this.storeKIICONNECTFILE2;
+        storeKIICONNECTFILE2.load();
 
 
         var comboKIICONNECTFILE2 = new Ext.form.ComboBox({
             id: 'comboKIICONNECTFILE2',
-            store: this.storeKIICONNECTFILE2,
+            store: storeKIICONNECTFILE2,
             valueField: 'id',
             displayField: 'nombre',
             triggerAction: 'all',
@@ -114,39 +145,7 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
 
         //fin combo KIICONNECTFILE
 
-        //inicio combo activo
 
-        storeOFAC = new Ext.data.JsonStore({
-            root: 'users',
-            fields: ['id', 'nombre'],
-            autoLoad: true,
-            data: {
-                users: [
-                    {"id": 1, "nombre": "Si"},
-                    {"id": 0, "nombre": "No"}
-
-                ]
-            }
-        });
-
-        var comboOFAC = new Ext.form.ComboBox({
-            id: 'comboOFAC',
-            store: storeOFAC,
-            valueField: 'id',
-            displayField: 'nombre',
-            triggerAction: 'all',
-            mode: 'local'
-        });
-
-        function kiiconnectActivo(id) {
-            var index = storeOFAC.find('id', id);
-            if (index > -1) {
-                var record = storeOFAC.getAt(index);
-                return record.get('nombre');
-            }
-        }
-
-        //fin combo activo
         //item kiiconnect
         var proxyKiiconnect = new Ext.data.HttpProxy({
             api: {
@@ -275,7 +274,6 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
         });
 
         var readerKiiconnectCategoria = new Ext.data.JsonReader({
-
             successProperty: 'success',
             messageProperty: 'message',
             idProperty: 'id',
@@ -358,6 +356,11 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
                                     handler: this.requestKiiconnectData,
                                     scope: this,
                                     text: 'Recargar Datos', iconCls: 'x-tbar-loading'
+                                },'-', {
+                                    iconCls: 'demo-grid-add',
+                                    handler: this.requestKiiconnectData,
+                                    scope: this,
+                                    text: 'Enviar Mensaje', iconCls: 'x-tbar-loading'
                                 }, '->',
                                 {
                                     xtype: 'form',
@@ -460,7 +463,7 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
                                                     url: urlKiiconnect + 'file-upload.php',
                                                     waitMsg: 'Subiendo Imagen...',
                                                     success: function (fp, o) {
-                                                        this.storeKIICONNECTFILE2.load();
+                                                        storeKIICONNECTFILE2.load();
                                                     }
                                                 });
                                             }

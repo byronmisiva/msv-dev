@@ -22,7 +22,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 include("mysql.class.php");
 $databaseSamsung = new MySQL();
 global $databaseSamsung;
-if ($databaseSamsung->Query("SELECT
+
+if (!isset($_GET["parametro"])){
+    if ($databaseSamsung->Query("SELECT
                                     samsung_kiiconnect_setting.nombre,
                                     samsung_kiiconnect_setting.tag,
                                     samsung_kiiconnect_setting.descripcion,
@@ -38,9 +40,40 @@ if ($databaseSamsung->Query("SELECT
                                     activo = 1
                                 ORDER BY
                                     orden ASC")
-) {
-    echo $databaseSamsung->GetJSON();
+    ) {
+        echo $databaseSamsung->GetJSON();
 
+    } else {
+        echo "<p>Query Failed</p>";
+    }
 } else {
-    echo "<p>Query Failed</p>";
+
+
+        $temp = $databaseSamsung->QueryArray("SELECT
+                                    samsung_kiiconnect_categoria.nombre AS categoria,
+                                    samsung_kiiconnect_categoria.id AS id_categoria,
+                                    samsung_kiiconnect_categoria.icono AS categoria_icono
+                                FROM
+                                    samsung_kiiconnect_categoria", MYSQL_ASSOC);
+
+
+
+        foreach ($temp as $index=>$categoria){
+            $categoria_id = $categoria['id_categoria'];
+            $itemsCategoria = $databaseSamsung->QueryArray("SELECT
+                                    samsung_kiiconnect_setting.nombre,
+                                    samsung_kiiconnect_setting.tag,
+                                    samsung_kiiconnect_setting.descripcion,
+                                    samsung_kiiconnect_setting.icono,
+                                    samsung_kiiconnect_setting.link
+                                FROM
+                                    samsung_kiiconnect_setting
+                                 WHERE
+                                    activo = 1 AND id_categoria = $categoria_id
+                                ORDER BY
+                                    orden ASC", MYSQL_ASSOC);
+            $temp[$index]['items'] = $itemsCategoria;
+
+        }
+        echo json_encode($temp);
 }

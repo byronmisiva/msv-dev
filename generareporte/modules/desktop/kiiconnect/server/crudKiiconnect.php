@@ -104,8 +104,6 @@ function insertKiiconnect()
             )
         )
     ));
-
-
 }
 
 function deleteKiiconnect()
