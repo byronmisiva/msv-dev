@@ -187,7 +187,6 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
         });
         this.storeKiiconnect.load();
 
-        var textField = new Ext.form.TextField({allowBlank: false});
 
         this.gridKiiconnect = new Ext.grid.EditorGridPanel({
             height: winHeight - 144,
@@ -255,7 +254,7 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
 
             ],
             viewConfig: {forceFit: true},
-            sm: new Ext.grid.RowSelectionModel({singleSelect: false}),
+            sm: new Ext.grid.RowSelectionModel({singleSelect: true}),
             border: false,
             stripeRows: true
         });
@@ -326,6 +325,100 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
         });
 
         // fin kiiconnectCategoria
+        function formatDate(value) {
+            return value ? value.dateFormat('Y-m-d ') : '';
+        }
+        //item kiiconnectMensajes
+
+        var proxyKiiconnectMensajes = new Ext.data.HttpProxy({
+            api: {
+                create: urlKiiconnect + "crudKiiconnectMensajes.php?operation=insert",
+                read: urlKiiconnect + "crudKiiconnectMensajes.php?operation=select",
+                update: urlKiiconnect + "crudKiiconnectMensajes.php?operation=update",
+                destroy: urlKiiconnect + "crudKiiconnectMensajes.php?operation=delete"
+            }
+        });
+
+        var readerKiiconnectMensajes = new Ext.data.JsonReader({
+            successProperty: 'success',
+            messageProperty: 'message',
+            idProperty: 'id',
+            root: 'data',
+            fields: [
+                {name: 'body', allowBlank: true},
+
+                {name: 'l', allowBlank: true},
+                {name: 'tag', allowBlank: true},
+                {name: 'richpage', allowBlank: true},
+                {name: 'activo', allowBlank: false},
+                {name: 'creado', type: 'date', dateFormat: 'c', allowBlank: true},
+            ]
+        });
+
+        var writerKiiconnectMensajes = new Ext.data.JsonWriter({
+            encode: true,
+            writeAllFields: true
+        });
+
+        this.storeKiiconnectMensajes = new Ext.data.Store({
+            id: "id",
+            proxy: proxyKiiconnectMensajes,
+            reader: readerKiiconnectMensajes,
+            writer: writerKiiconnectMensajes,
+            autoSave: true
+        });
+        this.storeKiiconnectMensajes.load();
+
+
+
+        this.gridKiiconnectMensajes = new Ext.grid.EditorGridPanel({
+            height: winHeight - 144,
+            store: this.storeKiiconnectMensajes, columns: [
+                new Ext.grid.RowNumberer(),
+                {
+                    header: 'Body',
+                    dataIndex: 'body',
+                    sortable: true,
+                    width: 120,
+                    editor: new Ext.form.TextField({allowBlank: true})
+                },
+                {
+                    header: 'l',
+                    dataIndex: 'l',
+                    sortable: true,
+                    width: 120,
+                    editor: new Ext.form.TextField({allowBlank: true})
+                },
+                {
+                    header: 'tag',
+                    dataIndex: 'tag',
+                    sortable: true,
+                    width: 50,
+                    editor: new Ext.form.TextField({allowBlank: true})
+                },
+                {
+                    header: 'richpage id',
+                    dataIndex: 'richpage',
+                    sortable: true,
+                    width: 80,
+                    editor: new Ext.form.TextField({allowBlank: true})
+                },
+                {
+                    header: 'Activo',
+                    dataIndex: 'activo',
+                    sortable: true,
+                    width: 80,
+                    editor: comboOFAC, renderer: kiiconnectActivo
+                },
+                {header: 'Creado', dataIndex: 'creado', sortable: true, width: 60, renderer: formatDate}
+            ],
+            viewConfig: {forceFit: true},
+            sm: new Ext.grid.RowSelectionModel({singleSelect: true}),
+            border: false,
+            stripeRows: true
+        });
+
+        // fin kiiconnectMensajes
 
         if (!win) {
             win = desktop.createWindow({
@@ -358,7 +451,7 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
                                     text: 'Recargar Datos', iconCls: 'x-tbar-loading'
                                 },'-', {
                                     iconCls: 'demo-grid-add',
-                                    handler: this.requestKiiconnectData,
+                                    handler: this.enviarMensajeKiiconnect,
                                     scope: this,
                                     text: 'Enviar Mensaje', iconCls: 'x-tbar-loading'
                                 }, '->',
@@ -410,7 +503,8 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
 
                             ],
                             items: this.gridKiiconnect
-                        }, {
+                        },
+                        {
                             autoScroll: true,
                             title: 'Categorías KiiConnect',
                             closable: true,
@@ -475,6 +569,24 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
 
                             ],
                             items: this.gridKiiconnectCategoria
+                        }
+                        ,
+                        {
+                            autoScroll: true,
+                            title: 'Mensajes KiiConnect',
+                            closable: true,
+                            tbar: [
+                                {text: 'Nuevo', scope: this, handler: this.addkiiconnectCategoria, iconCls: 'add-icon', disabled: true},
+                                '-',
+                                {text: "Eliminar", scope: this, handler: this.deletekiiconnectCategoria, iconCls: 'delete-icon', disabled: true},
+                                '-', {
+                                    iconCls: 'demo-grid-add',
+                                    handler: this.requestKiiconnectMensajesData,
+                                    scope: this,
+                                    text: 'Recargar Datos', iconCls: 'x-tbar-loading'
+                                }
+                            ],
+                            items: this.gridKiiconnectMensajes
                         }
                     ]
                 })
@@ -550,6 +662,43 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
     },
     requestKiiconnectCategoriaData: function () {
         this.storeKiiconnectCategoria.load();
+    }
+    , enviarMensajeKiiconnect: function () {
+        var index = this.gridKiiconnect.getSelectionModel().getSelections();
+        var record = index[0];
+        if (!record || record.phantom === true) {
+            return;
+        }
+
+        this.gridEditor.show(record, function (groupIds) {
+            this.showMask('Actualizando Grupos...');
+            Ext.Ajax.request({
+                callback: function (options, success, response) {
+                    this.hideMask();
+                    if (success) {
+                        var decoded = Ext.decode(response.responseText);
+                        if (decoded.success === true) {
+
+                        } else {
+                            Ext.MessageBox.alert('Warning', 'Error occured on the server!');
+                        }
+                    } else {
+                        Ext.MessageBox.alert('Warning', 'Lost connection to the server!');
+                    }
+                }
+                , params: {
+                    method: 'editMembersGroups'
+                    , moduleId: this.ownerModule.id
+                    , memberId: record.data.id
+                    , groupIds: Ext.encode(groupIds)
+                }
+                , scope: this
+                , url: this.ownerModule.app.connection
+            });
+        }, this);
+    },
+    requestKiiconnectMensajesData: function () {
+        this.storeKiiconnectMensajes.load();
     }
 
 });

@@ -1,0 +1,38 @@
+{
+  "id": "xmltv",
+  "type": "desktop/xmltv",
+  "about": {
+    "author": "",
+    "description": "Mantenimiento de Xmltv.",
+    "name": "Ventana Xmltv",
+    "url": "",
+    "version": "1.0"
+  },
+
+  "client": {
+    "class": "QoDesk.XmltvWindow",
+    "css": [
+      {
+        "directory": "desktop/xmltv/client/resources/",
+        "files": [ "styles.css" ]
+      }
+    ],
+    "javascript": [
+      {
+        "directory": "desktop/xmltv/client/",
+        "files": [ "xmltv-win.js" ]
+      }
+    ],
+    "launcher": {
+      "config": {
+        "iconCls": "xmltv-icon",
+        "shortcutIconCls": "xmltv-shortcut",
+        "text": "Xmltv",
+        "tooltip": "<b>Xmltv</b>"
+      },
+      "paths": {
+        "startmenu": "/"
+      }
+    }
+  }
+}
