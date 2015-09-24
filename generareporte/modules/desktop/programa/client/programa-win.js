@@ -18,7 +18,7 @@ QoDesk.ProgramaWindow = Ext.extend(Ext.app.Module, {
         var urlPrograma = "modules/desktop/programa/server/";
 
         //inicio combo Canal
-        this.storeComboCanal = new Ext.data.JsonStore({
+/*        this.storeComboCanal = new Ext.data.JsonStore({
             id: 'storeComboCanal',
             root: 'data',
             fields: ['id', 'nombre'],
@@ -42,9 +42,9 @@ QoDesk.ProgramaWindow = Ext.extend(Ext.app.Module, {
                 var record = this.storeComboCanal.getAt(index);
                 return record.get('nombre');
             }
-        }
+        }*/
         //fin combo Canal
-
+        // grid Programa
         var proxyPrograma = new Ext.data.HttpProxy({
             api: {
                 create: urlPrograma + "crudPrograma.php?operation=insert",
@@ -120,77 +120,79 @@ QoDesk.ProgramaWindow = Ext.extend(Ext.app.Module, {
             border: false,
             stripeRows: true
         });
+        // fin grid programa
+        // form programa
+        this.formProgramaDetalle = new Ext.FormPanel({
+            id: 'formProgramaDetalle',
+
+            items: [
+                {
+                    collapsible: true,
+                    id: 'formcabeceraprograma',
+                    collapsedTitle: true,
+                    titleCollapse: true,
+                    split: true,
+                    flex: 1,
+                    autoScroll: true,
+                    title: 'Listado Programaes',
+                    layout: 'column', items: this.gridPrograma
+                },
+                {
+                    collapsible: true,
+                    collapsedTitle: true,
+                    titleCollapse: true,
+                    split: true,
+                    flex: 2,
+                    height: 'auto',
+                    autoScroll: true,
+                    labelAlign: 'left',
+                    title: 'Detalle Programa',
+                    bodyStyle: 'padding:0; background: #DFE8F6',
+                    layout: 'column',
+                    tbar: [
+                        {
+                            text: 'Grabar',
+                            scope: this,
+                            handler: this.grabarprograma,
+                            iconCls: 'save-icon',
+                            disabled: true,
+                            id: 'tb_grabarprograma'
+                        }
+                    ],
+                    items: [
+                        {
+                            frame: true,
+                            columnWidth: 1,
+                            layout: 'form',
+                            id: 'formPrograma',
+                            items: [
+                                {  xtype: 'textfield', fieldLabel: 'Id', name: 'id', anchor: '95%', readOnly: true },
+                                {  xtype: 'textfield', fieldLabel: 'Título', name: 'titulo', anchor: '95%', readOnly: false },
+                                {  xtype: 'textfield', fieldLabel: 'Imagen', name: 'imagen', anchor: '95%', readOnly: false },
+                                {  xtype: 'textfield', fieldLabel: 'Subtítulos', name: 'subtitulos', anchor: '95%', readOnly: false },
+                                {  xtype: 'textfield', fieldLabel: 'Categoría', name: 'categoria', anchor: '95%', readOnly: false },
+                                {  xtype: 'textfield', fieldLabel: 'Inicio', name: 'inicio', anchor: '95%', readOnly: false },
+                                {  xtype: 'textfield', fieldLabel: 'Audio', name: 'audio', anchor: '95%', readOnly: false },
+                                {  xtype: 'textfield', fieldLabel: 'Descripción', name: 'descripcion', anchor: '95%', readOnly: false },
+                                {  xtype: 'textfield', fieldLabel: 'Subtitulo', name: 'subtititulo', anchor: '95%', readOnly: false },
+                                {  xtype: 'textfield', fieldLabel: 'Canal', name: 'id_canal', anchor: '95%', readOnly: false },
+                                {  xtype: 'textfield', fieldLabel: 'Episodio', name: 'episodio', anchor: '95%', readOnly: false },
+                                {  xtype: 'textfield', fieldLabel: 'Fecha', name: 'fecha', anchor: '95%', readOnly: false }
+                            ]
+                        }
+                    ]
+
+                }
+            ]
+        });
+        // fin formprograma
+
         var desktop = this.app.getDesktop();
         var win = desktop.getWindow('layout-win');
 
         if (!win) {
             var winWidth = desktop.getWinWidth() / 1.1;
             var winHeight = desktop.getWinHeight() / 1.1;
-
-            this.formProgramaDetalle = new Ext.FormPanel({
-                id: 'formProgramaDetalle',
-
-                items: [
-                    {
-                        collapsible: true,
-                        id: 'formcabeceraprograma',
-                        collapsedTitle: true,
-                        titleCollapse: true,
-                        split: true,
-                        flex: 1,
-                        autoScroll: true,
-                        title: 'Listado Programaes',
-                        layout: 'column', items: this.gridPrograma
-                    },
-                    {
-                        collapsible: true,
-                        collapsedTitle: true,
-                        titleCollapse: true,
-                        split: true,
-                        flex: 2,
-                        height: 'auto',
-                        autoScroll: true,
-                        labelAlign: 'left',
-                        title: 'Detalle Programa',
-                        bodyStyle: 'padding:0; background: #DFE8F6',
-                        layout: 'column',
-                        tbar: [
-                            {
-                                text: 'Grabar',
-                                scope: this,
-                                handler: this.grabarprograma,
-                                iconCls: 'save-icon',
-                                disabled: true,
-                                id: 'tb_grabarprograma'
-                            }
-                        ],
-                        items: [
-                            {
-                                frame: true,
-                                columnWidth: 1,
-                                layout: 'form',
-                                id: 'formPrograma',
-                                items: [
-                                    {  xtype: 'textfield', fieldLabel: 'Id', name: 'id', anchor: '95%', readOnly: true },
-                                    {  xtype: 'textfield', fieldLabel: 'Título', name: 'titulo', anchor: '95%', readOnly: false },
-                                    {  xtype: 'textfield', fieldLabel: 'Imagen', name: 'imagen', anchor: '95%', readOnly: false },
-                                    {  xtype: 'textfield', fieldLabel: 'Subtítulos', name: 'subtitulos', anchor: '95%', readOnly: false },
-                                    {  xtype: 'textfield', fieldLabel: 'Categoría', name: 'categoria', anchor: '95%', readOnly: false },
-                                    {  xtype: 'textfield', fieldLabel: 'Inicio', name: 'inicio', anchor: '95%', readOnly: false },
-                                    {  xtype: 'textfield', fieldLabel: 'Audio', name: 'audio', anchor: '95%', readOnly: false },
-                                    {  xtype: 'textfield', fieldLabel: 'Descripción', name: 'descripcion', anchor: '95%', readOnly: false },
-                                    {  xtype: 'textfield', fieldLabel: 'Subtitulo', name: 'subtititulo', anchor: '95%', readOnly: false },
-                                    {  xtype: 'textfield', fieldLabel: 'Canal', name: 'id_canal', anchor: '95%', readOnly: false },
-                                    {  xtype: 'textfield', fieldLabel: 'Episodio', name: 'episodio', anchor: '95%', readOnly: false },
-                                    {  xtype: 'textfield', fieldLabel: 'Fecha', name: 'fecha', anchor: '95%', readOnly: false }
-                                ]
-                            }
-                        ]
-
-                    }
-                ]
-            });
-
             win = desktop.createWindow({
                 id: 'grid-win-programa',
                 title: 'Programa',

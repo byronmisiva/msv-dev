@@ -16,8 +16,10 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
         var win = desktop.getWindow('grid-win-xmltv');
 
         var urlXmltv = "modules/desktop/xmltv/server/";
+        var urlver = "modules/desktop/xmltv/server/";
         var pathimagenes = "../../../../../../imagenes/xmltvslisto/promociones-14-01/";
-        var urlver = "imagenes/xmltvslisto/promociones-14-01/";
+
+
 
         //inicio combo Xmltv
         this.storeXmltv = new Ext.data.JsonStore({
@@ -46,7 +48,39 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
                 return record.get('nombre');
             }
         }
+
         //fin combo Xmltv
+
+
+
+        //inicio combo Canal
+        this.storeComboCanal = new Ext.data.JsonStore({
+            id: 'storeComboCanal',
+            root: 'data',
+            fields: ['id', 'nombre'],
+            url: urlXmltv + "crudPrograma.php?operation=itemsCanal"
+        });
+        this.storeComboCanal.load();
+        storeComboCanal = this.storeComboCanal;
+
+        var comboCanal = new Ext.form.ComboBox({
+            id: 'comboCanal',
+            store: this.storeComboCanal,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function programaImagenes(id) {
+            var index = this.storeComboCanal.find('id', id);
+            if (index > -1) {
+                var record = this.storeComboCanal.getAt(index);
+                return record.get('nombre');
+            }
+        }
+        //fin combo Canal
+
         // grid Canal
         var proxyXmltvCanal = new Ext.data.HttpProxy({
             api: {
@@ -124,20 +158,98 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
             stripeRows: true
         });
         // fin grid canal
-        // form canal
-       /* this.formXmltvCanalDetalle = new Ext.FormPanel({
-            id: 'formXmltvCanalDetalle',
+        // grid Programa
+        var proxyPrograma = new Ext.data.HttpProxy({
+            api: {
+                create: urlXmltv + "crudPrograma.php?operation=insert",
+                read: urlXmltv + "crudPrograma.php?operation=select",
+                update: urlXmltv + "crudPrograma.php?operation=update",
+                destroy: urlXmltv + "crudPrograma.php?operation=delete"
+            }
+        });
+
+        var readerPrograma = new Ext.data.JsonReader({
+            totalProperty: 'total',
+            successProperty: 'success',
+            messageProperty: 'message',
+            idProperty: 'id',
+            root: 'data',
+            fields: [
+                {name: 'titulo', allowBlank: false},
+                {name: 'imagen', allowBlank: false},
+                {name: 'subtitulos', allowBlank: false},
+                {name: 'categoria', allowBlank: false},
+                {name: 'inicio', allowBlank: false, type: 'date', dateFormat: 'c'},
+                {name: 'audio', allowBlank: false},
+                {name: 'descripcion', allowBlank: false},
+                {name: 'subtititulo', allowBlank: false},
+                {name: 'id_canal', allowBlank: false},
+                {name: 'episodio', allowBlank: false},
+                {name: 'fecha', allowBlank: false, type: 'date', dateFormat: 'c'}
+            ]
+        });
+        var writerPrograma = new Ext.data.JsonWriter({
+            encode: true,
+            writeAllFields: true
+        });
+        this.storePrograma = new Ext.data.Store({
+            id: "id",
+            proxy: proxyPrograma,
+            reader: readerPrograma,
+            writer: writerPrograma,
+            autoSave: true
+        });
+        this.storePrograma.load();
+        storePrograma = this.storePrograma;
+
+        var textField = new Ext.form.TextField({allowBlank: false});
+
+        function formatDate(value) {
+            return value ? value.dateFormat('Y-m-d') : '';
+        }
+
+        var formatoFechaMax = new Ext.form.DateField({
+            format: 'Y-m-d'
+        });
+
+        var formatoTexto = new Ext.form.TextField({allowBlank: false})
+
+        this.gridPrograma = new Ext.grid.EditorGridPanel({
+            height: 300,
+            store: this.storePrograma, columns: [
+                { header: 'Título', dataIndex: 'titulo', sortable: true, width: 100, editor: formatoTexto }
+                ,{ header: 'Imagen', dataIndex: 'imagen', sortable: true, width: 100, editor: formatoTexto }
+                ,{ header: 'Subtítulos', dataIndex: 'subtitulos', sortable: true, width: 100, editor: formatoTexto }
+                ,{ header: 'Categoría', dataIndex: 'categoria', sortable: true, width: 100, editor: formatoTexto }
+                ,{ header: 'Inicio', dataIndex: 'inicio', sortable: true, width: 100, editor: formatoTexto }
+                ,{ header: 'Audio', dataIndex: 'audio', sortable: true, width: 100, editor: formatoTexto }
+                ,{ header: 'Descripción', dataIndex: 'descripcion', sortable: true, width: 100, editor: formatoTexto }
+                ,{ header: 'Subtítulo', dataIndex: 'subtititulo', sortable: true, width: 100, editor: formatoTexto }
+                ,{ header: 'Canal', dataIndex: 'id_canal', sortable: true, width: 100, editor: formatoTexto }
+                ,{ header: 'Episodio', dataIndex: 'episodio', sortable: true, width: 100, editor: formatoTexto }
+                ,{ header: 'Fecha', dataIndex: 'fecha', sortable: true, width: 100, editor: formatoTexto }
+            ],
+            viewConfig: {forceFit: true},
+            sm: new Ext.grid.RowSelectionModel({singleSelect: false}),
+            border: false,
+            stripeRows: true
+        });
+        // fin grid programa
+        // form programa
+        this.formProgramaDetalle = new Ext.FormPanel({
+            id: 'formProgramaDetalle',
+
             items: [
                 {
                     collapsible: true,
-                    id: 'formcabeceraxmltv',
+                    id: 'formcabeceraprograma',
                     collapsedTitle: true,
                     titleCollapse: true,
                     split: true,
                     flex: 1,
                     autoScroll: true,
-                    title: 'Detalle Canal',
-                    layout: 'column', items: this.gridXmltvCanal
+                    title: 'Listado Programaes',
+                    layout: 'column', items: this.gridPrograma
                 },
                 {
                     collapsible: true,
@@ -148,17 +260,17 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
                     height: 'auto',
                     autoScroll: true,
                     labelAlign: 'left',
-                    title: 'Detalle Xmltv',
+                    title: 'Detalle Programa',
                     bodyStyle: 'padding:0; background: #DFE8F6',
                     layout: 'column',
                     tbar: [
                         {
                             text: 'Grabar',
                             scope: this,
-                            handler: this.grabarxmltv,
+                            handler: this.grabarprograma,
                             iconCls: 'save-icon',
                             disabled: true,
-                            id: 'tb_grabarxmltv'
+                            id: 'tb_grabarprograma'
                         }
                     ],
                     items: [
@@ -166,42 +278,32 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
                             frame: true,
                             columnWidth: 1,
                             layout: 'form',
-                            id: 'formXmltvCanal',
+                            id: 'formPrograma',
                             items: [
-                                {
-                                    xtype: 'textfield',
-                                    fieldLabel: 'Nombre',
-                                    name: 'nombre',
-                                    anchor: '95%',
-                                    readOnly: false
-                                },
-                                {
-                                    xtype: 'textfield',
-                                    fieldLabel: 'Descripción',
-                                    name: 'descripcion',
-                                    anchor: '95%',
-                                    readOnly: false
-                                },
-                                {
-                                    xtype: 'textfield',
-                                    fieldLabel: 'Icono',
-                                    name: 'icono',
-                                    anchor: '95%',
-                                    readOnly: false
-                                },
-                                {xtype: 'textfield', fieldLabel: 'Id', name: 'id', anchor: '95%', readOnly: true}
+                                {  xtype: 'textfield', fieldLabel: 'Id', name: 'id', anchor: '95%', readOnly: true },
+                                {  xtype: 'textfield', fieldLabel: 'Título', name: 'titulo', anchor: '95%', readOnly: false },
+                                {  xtype: 'textfield', fieldLabel: 'Imagen', name: 'imagen', anchor: '95%', readOnly: false },
+                                {  xtype: 'textfield', fieldLabel: 'Subtítulos', name: 'subtitulos', anchor: '95%', readOnly: false },
+                                {  xtype: 'textfield', fieldLabel: 'Categoría', name: 'categoria', anchor: '95%', readOnly: false },
+                                {  xtype: 'textfield', fieldLabel: 'Inicio', name: 'inicio', anchor: '95%', readOnly: false },
+                                {  xtype: 'textfield', fieldLabel: 'Audio', name: 'audio', anchor: '95%', readOnly: false },
+                                {  xtype: 'textfield', fieldLabel: 'Descripción', name: 'descripcion', anchor: '95%', readOnly: false },
+                                {  xtype: 'textfield', fieldLabel: 'Subtitulo', name: 'subtititulo', anchor: '95%', readOnly: false },
+                                {  xtype: 'textfield', fieldLabel: 'Canal', name: 'id_canal', anchor: '95%', readOnly: false },
+                                {  xtype: 'textfield', fieldLabel: 'Episodio', name: 'episodio', anchor: '95%', readOnly: false },
+                                {  xtype: 'textfield', fieldLabel: 'Fecha', name: 'fecha', anchor: '95%', readOnly: false }
                             ]
                         }
                     ]
 
                 }
             ]
-        });*/
-        // fin form canal
+        });
+        // fin formprograma
+
 
         var desktop = this.app.getDesktop();
         var win = desktop.getWindow('layout-win');
-
 
 
         if (!win) {
@@ -219,9 +321,6 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
                 animCollapse: false,
                 constrainHeader: true,
                 layout: 'fit',
-
-
-
                 items: new Ext.TabPanel({
                     activeTab: 0,
                     border: false,
@@ -238,7 +337,7 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
                                 '-',
                                 {
                                     iconCls: 'demo-grid-add',
-                                    handler: this.requestGridData,
+                                    handler: this.reloadxmltvcanal,
                                     scope: this,
                                     text: 'Recargar Datos',
                                     tooltip: 'Recargar datos en la grilla'
@@ -246,33 +345,33 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
 
                             ],
                             items: this.gridXmltvCanal
+                        },
+                        {
+                            autoScroll: true,
+                            title: 'Programas',
+                            iconCls: 'xmltv-icon',
+                            closable: true,
+                            tbar: [
+                                {text: 'Nuevo', scope: this, handler: this.addxmltvcanal, iconCls: 'save-icon'},
+                                '-',
+                                {text: "Eliminar", scope: this, handler: this.deletexmltvcanal, iconCls: 'delete-icon'},
+                                '-',
+                                {
+                                    iconCls: 'demo-grid-add',
+                                    handler: this.reloadxmltvcanal,
+                                    scope: this,
+                                    text: 'Recargar Datos',
+                                    tooltip: 'Recargar datos en la grilla'
+                                }
+
+                            ],
+                            items: this.formProgramaDetalle
                         }
                     ]
                 })
-
-
-
-
             });
         }
         win.show();
-
-        /*function cargaDetalle(xmltv, forma) {
-            forma.getForm().load({
-                url: 'modules/desktop/xmltv/server/crudCanal.php?operation=selectForm',
-                params: {
-                    id: xmltv
-                }
-            });
-        };
-        this.gridXmltvCanal.on('rowclick', function (grid, rowIndex) {
-            this.record = this.gridXmltvCanal.getStore().getAt(rowIndex);
-            this.idXmltvCanalRecuperada = this.record.id;
-
-            /!*cargar el formulario*!/
-            cargaDetalle(this.idXmltvCanalRecuperada, this.formXmltvCanalDetalle);
-            Ext.getCmp('tb_grabarxmltv').setDisabled(false);
-        }, this);*/
     }, deletexmltvcanal: function () {
         Ext.Msg.show({
             title: 'Confirmación',
@@ -298,32 +397,9 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
         this.gridXmltvCanal.stopEditing();
         this.storeXmltvCanal.insert(0, xmltv);
         this.gridXmltvCanal.startEditing(0, 1);
-    }, requestGridData: function () {
+    }, reloadxmltvcanal: function () {
         this.storeXmltvCanal.load();
-    }/*,
-    grabarxmltv: function () {
-        Ext.Msg.show({
-            title: 'Advertencia',
-            msg: 'Desea Guardar los cambios.<br>¿Desea continuar?',
-            scope: this,
-            icon: Ext.Msg.WARNING,
-            buttons: Ext.Msg.YESNO,
-            fn: function (btn) {
-                if (btn == 'yes') {
-                    var myForm = Ext.getCmp('formXmltvCanalDetalle').getForm();
-                    myForm.submit({
-                        url: 'modules/desktop/xmltv/server/crudXmltvCanal.php?operation=updateForm',
-                        method: 'POST',
-                        fileUpload: true,
-                        submitEmptyText: false,
-                        // waitMsg : 'Saving data',
-                        success: function (form, action) {
-                            storeXmltvCanal.load();
-                        }
-                    });
-                }
-            }
-        });
-    }*/
+    }
+
 
 });
