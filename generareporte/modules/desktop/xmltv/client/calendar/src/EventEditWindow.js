@@ -61,7 +61,7 @@ Ext.calendar.EventEditWindow = function(config) {
     }
 
     Ext.calendar.EventEditWindow.superclass.constructor.call(this, Ext.apply({
-        titleTextAdd: 'Add Event',
+        titleTextAdd: 'Agregar Programa',
         titleTextEdit: 'Edit Event',
         width: 600,
         autocreate: true,

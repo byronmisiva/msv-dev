@@ -22,7 +22,7 @@ Build date: 2013-04-03 15:07:25
 App = function() {
     return {
         init : function() {
-            
+
             Ext.BLANK_IMAGE_URL = 'http://extjs.cachefly.net/ext-3.1.0/resources/images/default/s.gif';
 
             // This is an example calendar store that enables the events to have

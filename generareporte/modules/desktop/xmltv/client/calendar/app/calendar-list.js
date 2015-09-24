@@ -18,12 +18,15 @@ Build date: 2013-04-03 15:07:25
 var calendarList = {
     "calendars":[{
         "id":1,
-        "title":"Home"
+        "title":"Canal 1"
     },{
         "id":2,
-        "title":"Work"
+        "title":"Canal 2"
     },{
         "id":3,
-        "title":"School"
+        "title":"Canal 3"
+    },{
+        "id":4,
+        "title":"Canal 4"
     }]
 };

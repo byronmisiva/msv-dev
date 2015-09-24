@@ -20,23 +20,22 @@ var eventList = {
     "evts": [{
         "id": 1001,
         "cid": 1,
-        "title": "Vacation",
-        "start": today.add(Date.DAY, -20).add(Date.HOUR, 10),
-        "end": today.add(Date.DAY, -10).add(Date.HOUR, 15),
+        "title": "Programa1",
+        "start": today.add(Date.DAY, -1).add(Date.HOUR, 10),
+        "end": today.add(Date.DAY, 1).add(Date.HOUR, 15),
         "ad": false,
         "notes": "Have fun"
     },
     {
         "id": 1002,
         "cid": 2,
-        "title": "Lunch with Matt",
+        "title": "Programa 2",
         "start": today.add(Date.HOUR, 11).add(Date.MINUTE, 30),
         "end": today.add(Date.HOUR, 13),
         "ad": false,
         "loc": "Chuy's!",
         "url": "http://chuys.com",
-        "notes": "Order the queso",
-        "rem": "15"
+        "notes": "Order the queso"
     },
     {
         "id": 1003,
@@ -59,9 +58,9 @@ var eventList = {
         "id": 1005,
         "cid": 2,
         "title": "A long one...",
-        "start": today.add(Date.DAY, -12),
-        "end": today.add(Date.DAY, 10).add(Date.SECOND, -1),
-        "ad": true
+        "start": today.add(Date.DAY, -1),
+        "end": today.add(Date.DAY, 2).add(Date.SECOND, -1),
+        "ad": false
     },
     {
         "id": 1006,
@@ -69,8 +68,7 @@ var eventList = {
         "title": "School holiday",
         "start": today.add(Date.DAY, 5),
         "end": today.add(Date.DAY, 7).add(Date.SECOND, -1),
-        "ad": true,
-        "rem": "2880"
+        "ad": true
     },
     {
         "id": 1007,
@@ -97,8 +95,7 @@ var eventList = {
         "start": today.add(Date.DAY, -2).add(Date.HOUR, 13),
         "end": today.add(Date.DAY, -2).add(Date.HOUR, 18),
         "ad": false,
-        "loc": "ABC Inc.",
-        "rem": "60"
+        "loc": "ABC Inc."
     },
     {
         "id": 1010,
