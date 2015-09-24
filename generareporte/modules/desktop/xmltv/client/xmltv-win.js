@@ -16,13 +16,9 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
         var win = desktop.getWindow('grid-win-xmltv');
 
         var urlXmltv = "modules/desktop/xmltv/server/";
-        var urlver = "modules/desktop/xmltv/server/";
-        var pathimagenes = "../../../../../../imagenes/xmltvslisto/promociones-14-01/";
-
-
 
         //inicio combo Xmltv
-        this.storeXmltv = new Ext.data.JsonStore({
+/*        this.storeXmltv = new Ext.data.JsonStore({
             id: 'storeXmltv',
             root: 'data',
             fields: ['id', 'nombre'],
@@ -47,7 +43,7 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
                 var record = this.storeXmltv.getAt(index);
                 return record.get('nombre');
             }
-        }
+        }*/
 
         //fin combo Xmltv
 
@@ -352,13 +348,13 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
                             iconCls: 'xmltv-icon',
                             closable: true,
                             tbar: [
-                                {text: 'Nuevo', scope: this, handler: this.addxmltvcanal, iconCls: 'save-icon'},
+                                {text: 'Nuevo', scope: this, handler: this.addprograma, iconCls: 'save-icon'},
                                 '-',
-                                {text: "Eliminar", scope: this, handler: this.deletexmltvcanal, iconCls: 'delete-icon'},
+                                {text: "Eliminar", scope: this, handler: this.deleteprograma, iconCls: 'delete-icon'},
                                 '-',
                                 {
                                     iconCls: 'demo-grid-add',
-                                    handler: this.reloadxmltvcanal,
+                                    handler: this.requestGridData,
                                     scope: this,
                                     text: 'Recargar Datos',
                                     tooltip: 'Recargar datos en la grilla'
@@ -372,6 +368,23 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
             });
         }
         win.show();
+        function cargaDetalle(programa, forma) {
+            forma.getForm().load({
+                url: 'modules/desktop/programa/server/crudPrograma.php?operation=selectForm',
+                params: {
+                    id: programa
+                }
+            });
+        };
+        this.gridPrograma.on('rowclick', function (grid, rowIndex) {
+            this.record = this.gridPrograma.getStore().getAt(rowIndex);
+            this.idProgramaRecuperada = this.record.id;
+
+            /*cargar el formulario*/
+            cargaDetalle(this.idProgramaRecuperada, this.formProgramaDetalle);
+            Ext.getCmp('tb_grabarprograma').setDisabled(false);
+        }, this);
+
     }, deletexmltvcanal: function () {
         Ext.Msg.show({
             title: 'Confirmación',
@@ -400,6 +413,61 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
     }, reloadxmltvcanal: function () {
         this.storeXmltvCanal.load();
     }
+    , deleteprograma: function () {
+    Ext.Msg.show({
+        title: 'Confirmación',
+        msg: 'Está seguro de querer borrar?',
+        scope: this,
+        buttons: Ext.Msg.YESNO,
+        fn: function (btn) {
+            if (btn == 'yes') {
+                var rows = this.gridPrograma.getSelectionModel().getSelections();
+                if (rows.length === 0) {
+                    return false;
+                }
+                this.storePrograma.remove(rows);
+            }
+        }
+    });
+},
+    addprograma: function () {
+    var programa = new this.storePrograma.recordType({
+        nombre: '',
+        descripcion: '',
+        icono: ''
+    });
+    this.gridPrograma.stopEditing();
+    this.storePrograma.insert(0, programa);
+    this.gridPrograma.startEditing(0, 1);
+}, requestGridData: function () {
+    this.storePrograma.load();
+}
+, grabarprograma: function () {
+    Ext.Msg.show({
+        title: 'Advertencia',
+        msg: 'Desea Guardar los cambios.<br>¿Desea continuar?',
+        scope: this,
+        icon: Ext.Msg.WARNING,
+        buttons: Ext.Msg.YESNO,
+        fn: function (btn) {
+            if (btn == 'yes') {
+                var myForm = Ext.getCmp('formProgramaDetalle').getForm();
+                myForm.submit({
+                    url: 'modules/desktop/programa/server/crudPrograma.php?operation=updateForm',
+                    method: 'POST',
+                    fileUpload: true,
+                    submitEmptyText: false,
+                    // waitMsg : 'Saving data',
+                    success: function (form, action) {
+                        storePrograma.load();
+                    }
+                });
+            }
+        }
+    });
+}
+
+
 
 
 });

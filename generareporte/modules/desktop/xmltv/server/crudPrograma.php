@@ -62,19 +62,20 @@ function updatePrograma()
 
 
     $sql = "UPDATE xmltv_programa SET
-        id='$data->id',
-        titulo=>$data->titulo,
-        imagen=>$data->imagen,
-        subtitulos=>$data->subtitulos,
-        categoria=>$data->categoria,
-        inicio=>$data->inicio,
-        audio=>$data->audio,
-        descripcion=>$data->descripcion,
-        subtititulo=>$data->subtititulo,
-        id_canal=>$data->id_canal,
-        episodio=>$data->episodio,
-        fecha=>$data->fecha
+
+        titulo='$data->titulo',
+        imagen='$data->imagen',
+        subtitulos='$data->subtitulos',
+        categoria='$data->categoria',
+        inicio='$data->inicio',
+        audio='$data->audio',
+        descripcion='$data->descripcion',
+        subtititulo='$data->subtititulo',
+        id_canal='$data->id_canal',
+        episodio='$data->episodio',
+        fecha='$data->fecha'
 	  WHERE xmltv_programa.id = '$data->id' ";
+
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
     echo json_encode(array(
