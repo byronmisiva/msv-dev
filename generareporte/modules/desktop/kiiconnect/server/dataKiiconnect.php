@@ -22,9 +22,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 include("mysql.class.php");
 $database = new MySQL();
 
-if (isset($_POST['body'])) $body = $_POST['body']; else $body = "";
-if (isset($_POST['p'])) $p = $_POST['p']; else $p = "";
-if (isset($_POST['l'])) $l = $_POST['l']; else $l = "";
+//{"body":"test 3","header":"0;juan_valdez","p":"3Ff"}
+
+if (isset($_POST['body'])) $body = $_POST['body']; else $body = "test 5";
+if (isset($_POST['p'])) $p = $_POST['p']; else $p = "3Ff";
+if (isset($_POST['l'])) $l = $_POST['l']; else $l = "http://www.kfc.com.ec";
 if (isset($_POST['header'])) {
     $header = $_POST['header'];
     $parametros = explode(";", $header);
@@ -32,13 +34,13 @@ if (isset($_POST['header'])) {
         ($parametros[0] != "0") ? $richpage = $parametros[0] :$richpage = "" ;
         ($parametros[1] != "0") ? $tag = $parametros[1] :$tag = "" ;
     } else {
-        $richpage = "";
-        $tag = "";
+        $richpage = "0";
+        $tag = "juan_valdez";
     }
 } else {
-    $header = "";
-    $richpage = "";
-    $tag = "";
+    $header = "0;juan_valdez";
+    $richpage = "0";
+    $tag = "juan_valdez";
 }
 
 // validar que el mismo registro no exista

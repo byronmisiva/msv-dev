@@ -22,7 +22,7 @@
 class MySQL
 {
 	// SET THESE VALUES TO MATCH YOUR DATA CONNECTION
-	private $db_host    = "69.64.85.197"; // server name
+	private $db_host    = "69.64.85.167"; // server name
 	private $db_user    = "externo";          // user name
 	private $db_pass    = "feadmin06";          // password
 	private $db_dbname  = "appss";          // database name

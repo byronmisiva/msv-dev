@@ -29,7 +29,7 @@ class config {
     * Using PHP Data Objects (PDO)
     */
    /*
-   public $DB_CONN_STRING = 'mysql:dbname=aplicaciones;host=69.64.85.197';
+   public $DB_CONN_STRING = 'mysql:dbname=aplicaciones;host=69.64.85.167';
    public $DB_USERNAME = 'externo';
    public $DB_PASSWORD = 'feadmin06';
    */

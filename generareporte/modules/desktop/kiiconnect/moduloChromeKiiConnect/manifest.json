@@ -1,0 +1,29 @@
+{
+   "background": {
+      "scripts": [ "jquery-1.10.1.js", "pushwoosh.js", "background.js", "register.js" ]
+   },
+   "browser_action": {
+      "default_icon": "icon/icon16.png",
+      "icons": [ "icon/icon16.png" ],
+      "name": "Manipulate DOM"
+   },
+   "content_scripts": [ {
+      "js": [ "jquery-1.10.1.js", "pushwoosh.js", "background.js", "register.js" ],
+      "matches": [ "http://*/*", "https://*/*" ]
+   } ],
+   "description": "Kiconect Admin",
+   "externally_connectable": {
+      "matches": [ "*://*.futbolecuador.com/*" ]
+   },
+   "icons": {
+      "128": "icon/icon128.png",
+      "16": "icon/icon16.png",
+      "48": "icon/icon48.png"
+   },
+    "manifest_version": 2,
+   "name": "KiiConnect",
+   "permissions": [ "gcm", "storage", "notifications", "http://*/*", "https://*/*", "activeTab" ],
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "3.0.2",
+   "web_accessible_resources": [ "https://www.futbolecuador.com/imagenes/images/*" ]
+}

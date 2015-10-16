@@ -47,7 +47,7 @@ App = function() {
 
             // A sample event store that loads static JSON from a local file. Obviously a real
             // implementation would likely be loading remote data via an HttpProxy, but the
-            // underlying store functionality is the same.  Note that if you would like to 
+            // underlying store functionality is the same.  Note that if you would like to
             // provide custom data mappings for events, see EventRecord.js.
 		    this.eventStore = new Ext.data.JsonStore({
 		        id: 'eventStore',
@@ -60,7 +60,7 @@ App = function() {
 		            direction: 'ASC'
 		        }
 		    });
-            
+
             // This is the app UI layout code.  All of the calendar views are subcomponents of
             // CalendarPanel, but the app title bar and sidebar/navigation calendar are separate
             // pieces that are composed in app-specific layout code since they could be ommitted
@@ -79,7 +79,7 @@ App = function() {
                     title: '...', // will be updated to view date range
                     region: 'center',
                     layout: 'border',
-                    items: [{
+                    items: [/*{
                         id:'app-west',
                         region: 'west',
                         width: 176,
@@ -97,7 +97,7 @@ App = function() {
                                 }
                             }
                         }]
-                    },{
+                    },*/{
                         xtype: 'calendarpanel',
                         eventStore: this.eventStore,
                         calendarStore: this.calendarStore,
@@ -105,32 +105,32 @@ App = function() {
                         id:'app-calendar',
                         region: 'center',
                         activeItem: 2, // month view
-                        
-                        // CalendarPanel supports view-specific configs that are passed through to the 
-                        // underlying views to make configuration possible without explicitly having to 
+
+                        // CalendarPanel supports view-specific configs that are passed through to the
+                        // underlying views to make configuration possible without explicitly having to
                         // create those views at this level:
                         monthViewCfg: {
                             showHeader: true,
                             showWeekLinks: true,
                             showWeekNumbers: true
                         },
-                        
+
                         // Some optional CalendarPanel configs to experiment with:
                         //showDayView: false,
-                        //showWeekView: false,
+                        //showWeekView: true,
                         //showMonthView: false,
                         //showNavBar: false,
                         //showTodayText: false,
                         //showTime: false,
                         //title: 'My Calendar', // the header of the calendar, could be a subtitle for the app
-                        
+
                         // Once this component inits it will set a reference to itself as an application
                         // member property for easy reference in other functions within App.
                         initComponent: function() {
                             App.calendarPanel = this;
                             this.constructor.prototype.initComponent.apply(this, arguments);
                         },
-                        
+
                         listeners: {
                             'eventclick': {
                                 fn: function(vw, rec, el){
@@ -235,7 +235,7 @@ App = function() {
                 }]
             });
         },
-        
+
         // The edit popup window is not part of the CalendarPanel itself -- it is a separate component.
         // This makes it very easy to swap it out with a different type of window or custom view, or omit
         // it altogether. Because of this, it's up to the application code to tie the pieces together.
@@ -281,14 +281,14 @@ App = function() {
 	        }
 	        this.editWin.show(rec, animateTarget);
 		},
-        
+
         // The CalendarPanel itself supports the standard Panel title config, but that title
         // only spans the calendar views.  For a title that spans the entire width of the app
         // we added a title to the layout's outer center region that is app-specific. This code
         // updates that outer title based on the currently-selected view range anytime the view changes.
         updateTitle: function(startDt, endDt){
             var p = Ext.getCmp('app-center');
-            
+
             if(startDt.clearTime().getTime() == endDt.clearTime().getTime()){
                 p.setTitle(startDt.format('F j, Y'));
             }
@@ -304,14 +304,14 @@ App = function() {
                 p.setTitle(startDt.format('F j, Y') + ' - ' + endDt.format('F j, Y'));
             }
         },
-        
+
         // This is an application-specific way to communicate CalendarPanel event messages back to the user.
         // This could be replaced with a function to do "toast" style messages, growl messages, etc. This will
         // vary based on application requirements, which is why it's not baked into the CalendarPanel.
         showMsg: function(msg){
             Ext.fly('app-msg').update(msg).removeClass('x-hidden');
         },
-        
+
         clearMsg: function(){
             Ext.fly('app-msg').update('').addClass('x-hidden');
         }

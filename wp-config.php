@@ -19,13 +19,13 @@
 define('DB_NAME', 'misiva-wordpress');
 
 /** MySQL database username */
-define('DB_USER', 'externo');
+define('DB_USER', 'root');
 
 /** MySQL database password */
-define('DB_PASSWORD', 'feadmin06');
-
+define('DB_PASSWORD', '');
+define ('FS_METHOD', 'direct');
 /** MySQL hostname */
-define('DB_HOST', '69.64.85.197');
+define('DB_HOST', '127.0.0.1');
 
 /** Database Charset to use in creating database tables. */
 define('DB_CHARSET', 'utf8');
