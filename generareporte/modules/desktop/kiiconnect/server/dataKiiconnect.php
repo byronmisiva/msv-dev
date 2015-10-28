@@ -24,7 +24,7 @@ $database = new MySQL();
 
 //{"body":"test 3","header":"0;juan_valdez","p":"3Ff"}
 
-if (isset($_POST['body'])) $body = $_POST['body']; else $body = "test 5";
+/*if (isset($_POST['body'])) $body = $_POST['body']; else $body = "test 5";
 if (isset($_POST['p'])) $p = $_POST['p']; else $p = "3Ff";
 if (isset($_POST['l'])) $l = $_POST['l']; else $l = "http://www.kfc.com.ec";
 if (isset($_POST['header'])) {
@@ -41,6 +41,26 @@ if (isset($_POST['header'])) {
     $header = "0;juan_valdez";
     $richpage = "0";
     $tag = "juan_valdez";
+}*/
+
+if (isset($_POST['body'])) $body = $_POST['body']; else $body = "";
+if (isset($_POST['p'])) $p = $_POST['p']; else $p = "";
+if (isset($_POST['l'])) $l = $_POST['l']; else $l = "";
+if (isset($_POST['header'])) {
+    $header = $_POST['header'];
+    $parametros = explode(";", $header);
+    if (count($parametros) > 0) {
+        ($parametros[0] != "0") ? $richpage = $parametros[0] : $richpage = "";
+        ($parametros[1] != "0") ? $tag = $parametros[1] : $tag = "";
+        ($parametros[2] != "0") ? $tagsetings = $parametros[2] : $tagsetings = "";
+    } else {
+        $richpage = "";
+        $tag = "";
+    }
+} else {
+    $header = "";
+    $richpage = "";
+    $tag = "";
 }
 
 // validar que el mismo registro no exista
@@ -62,7 +82,7 @@ if ($database->Query("SELECT MAX(creado) as creado FROM samsung_kiiconnect_mensa
 
         $diferencia = $datetime1->diff($datetime2);
 
-        if (($diferencia->y == 0) && ($diferencia->m == 0) && ($diferencia->d == 0) && ($diferencia->h == 0) && ($diferencia->i == 0)) {
+        if (($diferencia->y == 0) && ($diferencia->m == 0) && ($diferencia->d == 0) && ($diferencia->h == 0) && ($diferencia->i == 0) && ($diferencia->s == 0)) {
             // registro en el mismo minuto se omite
         } else {
             // registro se inserta
@@ -71,7 +91,10 @@ if ($database->Query("SELECT MAX(creado) as creado FROM samsung_kiiconnect_mensa
             $update["p"] = MySQL::SQLValue($p);
             $update["l"] = MySQL::SQLValue($l);
             $update["richpage"] = MySQL::SQLValue($richpage);
-            $update["tag"] = MySQL::SQLValue($tag);
+            $update["tag"] = MySQL::SQLValue($tagsetings);
+            $update["tagsetings"] = MySQL::SQLValue($tagsetings);
+            $update["latitud"] = MySQL::SQLValue($fechaCreado);
+            $update["longuitud"] = MySQL::SQLValue($fechaServidor);
             $database->InsertRow("samsung_kiiconnect_mensajes", $update);
         }
 

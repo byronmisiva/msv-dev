@@ -47,11 +47,9 @@ function updateKiiconnect()
     $update["richpage"] = MySQL::SQLValue($data->richpage);
     $update["activo"] = MySQL::SQLValue($data->activo);
 
-
     $where["id"] = MySQL::SQLValue($data->id, "integer");
 
     $databaseKiiconnect->UpdateRows("samsung_kiiconnect_mensajes", $update, $where);
-
 
     echo json_encode(array(
         "success" => $databaseKiiconnect->ErrorNumber() == 0,

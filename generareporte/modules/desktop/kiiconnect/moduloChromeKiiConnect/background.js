@@ -14,10 +14,22 @@ function clickBotonPushWoosh() {
                 var filtro = document.querySelectorAll("#filters input:checked")
 
                 if (typeof filtro != 'undefined') {
+                    console.log (filtro)
                     filtro = filtro[0].value;
                 } else {
                     richpage = 0
                 }
+
+                var divs = document.querySelectorAll('.filter-name');
+                [].forEach.call(divs, function(div) {
+                    selector = div.innerHTML;
+                    if (selector == filtro ) {
+                        contenido = div.parentNode.querySelector('b').innerHTML;
+                        filtro2 =  contenido.match(/\((.*)\)/)[1];
+                    }
+
+                });
+
 
                 var richpage = document.querySelectorAll(".input-group input");
 
@@ -31,7 +43,7 @@ function clickBotonPushWoosh() {
                     richpage = 0
                 }
                 // en el campo de titulo para chrome envio el valor
-                document.getElementById("chrome-title").value = richpage + ";" + filtro;
+                document.getElementById("chrome-title").value = richpage + ";" + filtro + ";" + filtro2;
                 event.stopImmediatePropagation();
             })
         }
