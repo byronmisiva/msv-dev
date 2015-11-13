@@ -39,6 +39,7 @@ function updateKiiconnect()
 
     $update["nombre"] = MySQL::SQLValue($data->nombre);
     $update["icono"] = MySQL::SQLValue($data->icono);
+    $update["orden2"] = MySQL::SQLValue($data->orden2);
 
     $where["id"] = MySQL::SQLValue($data->id, "integer");
 
@@ -67,7 +68,8 @@ function insertKiiconnect()
             array(
                 "id" => $databaseKiiconnect->GetLastInsertID(),
                 "nombre" => $data->nombre,
-                "icono" => $data->icono
+                "icono" => $data->icono,
+                "orden2" => $data->orden2
             )
         )
     ));

@@ -54,7 +54,7 @@ if (!isset($_GET["parametro"])){
                                     samsung_kiiconnect_categoria.id AS id_categoria,
                                     samsung_kiiconnect_categoria.icono AS categoria_icono
                                 FROM
-                                    samsung_kiiconnect_categoria", MYSQL_ASSOC);
+                                    samsung_kiiconnect_categoria ORDER BY orden2", MYSQL_ASSOC);
 
 
 

@@ -26,7 +26,7 @@ global $databaseSamsung;
 
 if (isset($_GET["secciones"])) {
 
-    if (isset($_GET["fecha"] )) {
+    if (isset($_GET["fecha"])) {
         $fechaentrada = $_GET["fecha"];
         $fecha = " AND `samsung_kiiconnect_mensajes`.`creado`  + INTERVAL 3 HOUR  > '$fechaentrada' ";
 
@@ -46,18 +46,16 @@ if (isset($_GET["secciones"])) {
 
     if (count($totalsecciones) != 0)
         $total = count($totalsecciones) * 2;
-    else $total = 0
-        ;
+    else $total = 0;
     $secciones2 = explode("/", $secciones);
     $secciones = $secciones2[0];
 
 
-
-    $seccionesNew = '"' . str_replace (',', '","', $secciones)  . '"';
+    $seccionesNew = '"' . str_replace(',', '","', $secciones) . '"';
 
     // todo , DAYOFYEAR(samsung_kiiconnect_mensajes.creado) para el caso de que se quiera hacer que se repita dependiendo del día
 
-    if ($databaseSamsung->Query("SELECT *,
+ /*   if ($databaseSamsung->Query("SELECT *,
 	samsung_kiiconnect_setting.icono,
 	samsung_kiiconnect_mensajes.id,
 	samsung_kiiconnect_mensajes.body,
@@ -80,18 +78,64 @@ ORDER BY samsung_kiiconnect_mensajes.creado DESC
     ) {
         if ($databaseSamsung->GetJSON() != 'null')
 
-        echo $databaseSamsung->GetJSON();
+            echo $databaseSamsung->GetJSON();
         else
             echo "[]";
 
     } else {
         echo "<p>Query Failed</p>";
-    }
+    }*/
+    $resultados = array();
 
     foreach ($totalsecciones as $index1 => $seccion) {
+//        echo "<br>" . $seccion . "<br>";
+        if ($databaseSamsung->Query("SELECT *,
+                                    samsung_kiiconnect_setting.icono,
+                                    samsung_kiiconnect_mensajes.id,
+                                    samsung_kiiconnect_mensajes.body,
+                                    samsung_kiiconnect_mensajes.header,
+                                    samsung_kiiconnect_mensajes.p,
+                                    samsung_kiiconnect_mensajes.l,
+                                    samsung_kiiconnect_mensajes.tag,
+                                    samsung_kiiconnect_mensajes.longuitud,
+                                    samsung_kiiconnect_mensajes.latitud,
+                                    samsung_kiiconnect_mensajes.richpage,
+                                    samsung_kiiconnect_mensajes.activo,
+                                    samsung_kiiconnect_mensajes.creado,
+                                    samsung_kiiconnect_mensajes.tagsetings,
+                                    samsung_kiiconnect_setting.nombre
+                                FROM samsung_kiiconnect_mensajes INNER JOIN samsung_kiiconnect_setting ON samsung_kiiconnect_mensajes.tagsetings = samsung_kiiconnect_setting.tag
+                                WHERE samsung_kiiconnect_mensajes.activo = 1 AND samsung_kiiconnect_mensajes.tag IN ('$seccion') $fecha
+                                GROUP BY samsung_kiiconnect_mensajes.body
+                                ORDER BY samsung_kiiconnect_mensajes.creado DESC
+                                  LIMIT 2")
+        ) {
+            if ($databaseSamsung->RecordsArray(MYSQL_ASSOC) != 'null') {
+                $data = $databaseSamsung->RecordsArray(MYSQL_ASSOC);
+                if ($data) {
+//                    echo json_encode ($data);
+                    $resultados = array_merge($resultados, $data);
+                }
+
+//                echo $databaseSamsung->GetJSON();
+            }
+            else
+                echo "[]";
+
+        } else {
+            echo "<p>Query Failed</p>";
+        }
 
 
     }
+
+    foreach ($resultados as $key=>$arr):
+        $pun[$key] = $arr['creado'];
+    endforeach;
+    array_multisort($pun,SORT_DESC,$resultados);
+
+    echo json_encode ($resultados);
+
 } else {
     if ($databaseSamsung->Query("SELECT *,
 	samsung_kiiconnect_setting.icono,

@@ -279,7 +279,8 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
             root: 'data',
             fields: [
                 {name: 'nombre', allowBlank: false},
-                {name: 'icono', allowBlank: false}
+                {name: 'icono', allowBlank: false},
+                {name: 'orden2', allowBlank: false}
             ]
         });
 
@@ -310,6 +311,14 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
                     width: 80,
                     editor: new Ext.form.TextField({allowBlank: false})
                 },
+                {
+                    header: 'Orden',
+                    dataIndex: 'orden2',
+                    sortable: true,
+                    width: 30,
+                    editor:numberField
+                },
+
                 {
                     header: 'Icono Categoría',
                     dataIndex: 'icono',
