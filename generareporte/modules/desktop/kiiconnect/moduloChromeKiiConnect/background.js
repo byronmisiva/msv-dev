@@ -11,38 +11,61 @@ function clickBotonPushWoosh() {
         if (typeof btn[0] != 'undefined') {
             btn[0].addEventListener("click", function () {
 
+                //caso de filtros     
                 var filtro = document.querySelectorAll("#filters input:checked")
 
                 if (typeof filtro != 'undefined') {
-                    console.log (filtro)
-                    filtro = filtro[0].value;
+                    if (filtro.length > 0)
+                        filtro = filtro[0].value;
+                    else
+                        filtro = ""
                 } else {
                     richpage = 0
                 }
+                // fin caso de filtros 
 
-                var divs = document.querySelectorAll('.filter-name');
-                [].forEach.call(divs, function(div) {
-                    selector = div.innerHTML;
-                    if (selector == filtro ) {
-                        contenido = div.parentNode.querySelector('b').innerHTML;
-                        filtro2 =  contenido.match(/\((.*)\)/)[1];
+                // caso de rich page
+                var divs = document.querySelectorAll('.action-type-form input:checked ');
+                if ((typeof divs != 'undefined') && (divs.length > 0)){
+
+                    divs = divs[0].value;
+                    if (divs == 'richPage') {
+                        var filtro2 = document.querySelectorAll('.input-group input.form-control');
+                        if (typeof filtro2 != 'undefined') {
+                            filtro2 = filtro2[4].value;
+                            filtro2 = filtro2.match(/\[(.*)\]/)[1];
+
+                        }
+                    }
+                    if (divs == 'remotePage') {
+                        var filtro2 = document.querySelectorAll('input#remotePage ');
+                        if (typeof filtro2 != 'undefined') {
+                            filtro2 = filtro2[0].value
+                        }
                     }
 
-                });
-
-
-                var richpage = document.querySelectorAll(".input-group input");
-
-                if (typeof richpage != 'undefined') {
-                    richpage = richpage[5].value;
-                    if (richpage != "")
-                        richpage = richpage.match(/\[(.*)\]/)[1];
-                    else
-                        richpage = 0;
                 } else {
+                    filtro2 = ''
+                }
+                // fin caso de rich page
+
+                // caso de url
+                // var richpage = document.querySelectorAll(".input-group input#URLInput");
+                var richpage = document.querySelectorAll("#URLInput");
+                if (typeof richpage != 'undefined') {
+                    //richpage = richpage[5].value;
+                    richpage = richpage[0].value;
+                    //if (richpage != "")
+                    //    richpage = richpage.match(/\[(.*)\]/)[1];
+                    //else
+                    //    richpage = 0;
+                }
+                if (richpage.length == 0){
                     richpage = 0
                 }
+                // fin caso de url
                 // en el campo de titulo para chrome envio el valor
+                console.log(richpage + ";" + filtro + ";" + filtro2)
                 document.getElementById("chrome-title").value = richpage + ";" + filtro + ";" + filtro2;
                 event.stopImmediatePropagation();
             })

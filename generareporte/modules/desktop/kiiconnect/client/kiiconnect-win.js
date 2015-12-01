@@ -660,7 +660,8 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
     addkiiconnectCategoria: function () {
         var kiiconnectCategoria = new this.storeKiiconnectCategoria.recordType({
             nombre: '',
-            icono: ''
+            icono: '',
+            orden2: ''
         });
         this.gridKiiconnectCategoria.stopEditing();
         this.storeKiiconnectCategoria.insert(0, kiiconnectCategoria);

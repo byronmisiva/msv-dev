@@ -91,8 +91,8 @@ if ($database->Query("SELECT MAX(creado) as creado FROM samsung_kiiconnect_mensa
             $update["p"] = MySQL::SQLValue($p);
             $update["l"] = MySQL::SQLValue($l);
             $update["richpage"] = MySQL::SQLValue($richpage);
-            $update["tag"] = MySQL::SQLValue($tagsetings);
-            $update["tagsetings"] = MySQL::SQLValue($tagsetings);
+            $update["tag"] = MySQL::SQLValue($tag);
+            $update["tagsetings"] = MySQL::SQLValue($tag);
             $update["latitud"] = MySQL::SQLValue($fechaCreado);
             $update["longuitud"] = MySQL::SQLValue($fechaServidor);
             $database->InsertRow("samsung_kiiconnect_mensajes", $update);
