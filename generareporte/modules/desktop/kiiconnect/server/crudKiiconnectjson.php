@@ -20,28 +20,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 
 
 include("mysql.class.php");
-$databaseSamsung = new MySQL();
-global $databaseSamsung;
+$database = new MySQL();
+global $database;
 
 if (!isset($_GET["parametro"])){
-    if ($databaseSamsung->Query("SELECT
-                                    samsung_kiiconnect_setting.nombre,
-                                    samsung_kiiconnect_setting.tag,
-                                    samsung_kiiconnect_setting.descripcion,
-                                    samsung_kiiconnect_setting.icono,
-                                    samsung_kiiconnect_setting.link,
-                                    samsung_kiiconnect_categoria.nombre AS categoria,
-                                    samsung_kiiconnect_categoria.id AS id_categoria,
-                                    samsung_kiiconnect_categoria.icono AS categoria_icono
+    if ($database->Query("SELECT
+                                    kiiconnect_setting.nombre,
+                                    kiiconnect_setting.tag,
+                                    kiiconnect_setting.descripcion,
+                                    kiiconnect_setting.icono,
+                                    kiiconnect_setting.link,
+                                    kiiconnect_categoria.nombre AS categoria,
+                                    kiiconnect_categoria.id AS id_categoria,
+                                    kiiconnect_categoria.icono AS categoria_icono
                                 FROM
-                                    samsung_kiiconnect_setting
-                                INNER JOIN samsung_kiiconnect_categoria ON samsung_kiiconnect_setting.id_categoria = samsung_kiiconnect_categoria.id
+                                    kiiconnect_setting
+                                INNER JOIN kiiconnect_categoria ON kiiconnect_setting.id_categoria = kiiconnect_categoria.id
                                 WHERE
                                     activo = 1
                                 ORDER BY
                                     orden ASC")
     ) {
-        echo $databaseSamsung->GetJSON();
+        echo $database->GetJSON();
 
     } else {
         echo "<p>Query Failed</p>";
@@ -49,25 +49,25 @@ if (!isset($_GET["parametro"])){
 } else {
 
 
-        $temp = $databaseSamsung->QueryArray("SELECT
-                                    samsung_kiiconnect_categoria.nombre AS categoria,
-                                    samsung_kiiconnect_categoria.id AS id_categoria,
-                                    samsung_kiiconnect_categoria.icono AS categoria_icono
+        $temp = $database->QueryArray("SELECT
+                                    kiiconnect_categoria.nombre AS categoria,
+                                    kiiconnect_categoria.id AS id_categoria,
+                                    kiiconnect_categoria.icono AS categoria_icono
                                 FROM
-                                    samsung_kiiconnect_categoria ORDER BY orden2", MYSQL_ASSOC);
+                                    kiiconnect_categoria ORDER BY orden2", MYSQL_ASSOC);
 
 
 
         foreach ($temp as $index=>$categoria){
             $categoria_id = $categoria['id_categoria'];
-            $itemsCategoria = $databaseSamsung->QueryArray("SELECT
-                                    samsung_kiiconnect_setting.nombre,
-                                    samsung_kiiconnect_setting.tag,
-                                    samsung_kiiconnect_setting.descripcion,
-                                    samsung_kiiconnect_setting.icono,
-                                    samsung_kiiconnect_setting.link
+            $itemsCategoria = $database->QueryArray("SELECT
+                                    kiiconnect_setting.nombre,
+                                    kiiconnect_setting.tag,
+                                    kiiconnect_setting.descripcion,
+                                    kiiconnect_setting.icono,
+                                    kiiconnect_setting.link
                                 FROM
-                                    samsung_kiiconnect_setting
+                                    kiiconnect_setting
                                  WHERE
                                     activo = 1 AND id_categoria = $categoria_id
                                 ORDER BY

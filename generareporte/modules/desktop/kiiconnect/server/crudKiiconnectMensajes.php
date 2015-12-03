@@ -2,7 +2,7 @@
 
 //http://medoo.in/api/select
 
-//http://localhost:10088/msv-dev/generareporte/modules/desktop/samsung/server/help.html#Error
+//http://localhost:10088/msv-dev/generareporte/modules/desktop/kiiconnect/server/help.html#Error
 
 require_once '../../../../server/os.php';
 
@@ -19,7 +19,26 @@ $databaseKiiconnect = new MySQL();
 function selectKiiconnect()
 {
     global $databaseKiiconnect;
-    if ($databaseKiiconnect->Query("SELECT * FROM samsung_kiiconnect_mensajes ORDER BY creado DESC")) {
+
+    // borramos los registros duplicados
+    if ($databaseKiiconnect->Query("SELECT * FROM kiiconnect_mensajes GROUP BY creado HAVING (COUNT(*) > 1);")) {
+        $mensajes = $databaseKiiconnect->RecordsArray();
+        foreach ($mensajes as $mensaje) {
+            $databaseKiiconnect->Query("SELECT * FROM kiiconnect_mensajes where creado = '{$mensaje['creado']}';");
+            $mensajesrepetidos = $databaseKiiconnect->RecordsArray();
+            $none = 1;
+            foreach ($mensajesrepetidos as $index => $mensajesrepetido) {
+                if($none != 1){
+                    $databaseKiiconnect->Query("DELETE FROM kiiconnect_mensajes where id  = '{$mensajesrepetido['id']}';");
+                }
+                $none++;
+            }
+        }
+    } else {
+        echo "<p>Query Failed</p>";
+    }
+
+    if ($databaseKiiconnect->Query("SELECT * FROM kiiconnect_mensajes ORDER BY creado DESC")) {
         // echo $databaseKiiconnect->GetJSON();
         $data = $databaseKiiconnect->RecordsArray();
     } else {
@@ -49,7 +68,7 @@ function updateKiiconnect()
 
     $where["id"] = MySQL::SQLValue($data->id, "integer");
 
-    $databaseKiiconnect->UpdateRows("samsung_kiiconnect_mensajes", $update, $where);
+    $databaseKiiconnect->UpdateRows("kiiconnect_mensajes", $update, $where);
 
     echo json_encode(array(
         "success" => $databaseKiiconnect->ErrorNumber() == 0,
@@ -73,7 +92,7 @@ function insertKiiconnect()
     $update["richpage"] = MySQL::SQLValue($data->richpage);
     $update["activo"] = MySQL::SQLValue($data->activo);
 
-    $databaseKiiconnect->InsertRow("samsung_kiiconnect_mensajes", $update);
+    $databaseKiiconnect->InsertRow("kiiconnect_mensajes", $update);
     echo json_encode(array(
         "success" => $databaseKiiconnect->ErrorNumber() == 0,
         "msg" => $databaseKiiconnect->ErrorNumber() == 0 ? "Parametro insertado exitosamente" : $databaseKiiconnect->ErrorNumber(),
@@ -98,7 +117,7 @@ function deleteKiiconnect()
 {
     global $databaseKiiconnect;
     $id = json_decode(stripslashes($_POST["data"]));
-    $sql = "DELETE FROM samsung_kiiconnect_mensajes WHERE id=$id";
+    $sql = "DELETE FROM kiiconnect_mensajes WHERE id=$id";
 
     if ($databaseKiiconnect->Query($sql)) {
 

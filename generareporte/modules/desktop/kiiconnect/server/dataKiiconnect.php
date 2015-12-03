@@ -66,13 +66,13 @@ if (isset($_POST['header'])) {
 // validar que el mismo registro no exista
 
 //1 recuperamos el ultimo registro
-if ($database->Query("SELECT MAX(creado) as creado FROM samsung_kiiconnect_mensajes;")) {
+if ($database->Query("SELECT MAX(creado) as creado FROM kiiconnect_mensajes;")) {
     $data = $database->RecordsArray();
     $fechaCreado = $data[0]['creado'];
     //2 comparamos si existio otro registro similar en el tiempo
     $sql = "SELECT NOW() as fecha";
     if ($database->Query($sql)) {
-        //  if ($database->Query("select * from samsung_kiiconnect_mensajes where creado > date_sub('2015-09-23 11:16:30', interval 1 minute) ;")) {
+        //  if ($database->Query("select * from kiiconnect_mensajes where creado > date_sub('2015-09-23 11:16:30', interval 1 minute) ;")) {
         $data = $database->RecordsArray();
         $fechaServidor = $data[0]['fecha'];
 
@@ -95,7 +95,7 @@ if ($database->Query("SELECT MAX(creado) as creado FROM samsung_kiiconnect_mensa
             $update["tagsetings"] = MySQL::SQLValue($tag);
             $update["latitud"] = MySQL::SQLValue($fechaCreado);
             $update["longuitud"] = MySQL::SQLValue($fechaServidor);
-            $database->InsertRow("samsung_kiiconnect_mensajes", $update);
+            $database->InsertRow("kiiconnect_mensajes", $update);
         }
 
     } else {

@@ -2,7 +2,7 @@
 
 //http://medoo.in/api/select
 
-//http://localhost:10088/msv-dev/generareporte/modules/desktop/samsung/server/help.html#Error
+//http://localhost:10088/msv-dev/generareporte/modules/desktop/kiiconnect/server/help.html#Error
 
 require_once '../../../../server/os.php';
 
@@ -13,15 +13,15 @@ if (!$os->session_exists()) {
 
 include("mysql.class.php");
 
-$databaseSamsung = new MySQL();
+$databaseKiiconnect = new MySQL();
 
 function categorias()
 {
-    global $databaseSamsung;
+    global $databaseKiiconnect;
 
-    if ($databaseSamsung->Query("SELECT * FROM samsung_kiiconnect_categoria ORDER BY nombre")) {
-        // echo $databaseSamsung->GetJSON();
-        $data = $databaseSamsung->RecordsArray();
+    if ($databaseKiiconnect->Query("SELECT * FROM kiiconnect_categoria ORDER BY nombre")) {
+        // echo $databaseKiiconnect->GetJSON();
+        $data = $databaseKiiconnect->RecordsArray();
     } else {
         echo "<p>Query Failed</p>";
     }
@@ -32,11 +32,11 @@ function categorias()
 }
 function selectKiiconnect()
 {
-    global $databaseSamsung;
+    global $databaseKiiconnect;
 
-    if ($databaseSamsung->Query("SELECT * FROM samsung_kiiconnect_setting ORDER BY nombre")) {
-        // echo $databaseSamsung->GetJSON();
-        $data = $databaseSamsung->RecordsArray();
+    if ($databaseKiiconnect->Query("SELECT * FROM kiiconnect_setting ORDER BY nombre")) {
+        // echo $databaseKiiconnect->GetJSON();
+        $data = $databaseKiiconnect->RecordsArray();
     } else {
         echo "<p>Query Failed</p>";
     }
@@ -48,7 +48,7 @@ function selectKiiconnect()
 
 function updateKiiconnect()
 {
-    global $databaseSamsung;
+    global $databaseKiiconnect;
 
     $data = json_decode(stripslashes($_POST["data"]));
 
@@ -63,17 +63,17 @@ function updateKiiconnect()
 
     $where["id"] = MySQL::SQLValue($data->id, "integer");
 
-    $databaseSamsung->UpdateRows("samsung_kiiconnect_setting", $update, $where);
+    $databaseKiiconnect->UpdateRows("kiiconnect_setting", $update, $where);
 
 
     echo json_encode(array(
-        "success" => $databaseSamsung->ErrorNumber() == 0,
-        "msg" => $databaseSamsung->ErrorNumber() == 0 ? " actualizado exitosamente" : $databaseSamsung->ErrorNumber()
+        "success" => $databaseKiiconnect->ErrorNumber() == 0,
+        "msg" => $databaseKiiconnect->ErrorNumber() == 0 ? " actualizado exitosamente" : $databaseKiiconnect->ErrorNumber()
     ));
 }
 function insertKiiconnect()
 {
-    global $databaseSamsung;
+    global $databaseKiiconnect;
 
     $data = json_decode(stripslashes($_POST["data"]));
 
@@ -86,13 +86,13 @@ function insertKiiconnect()
     $update["id_categoria"] = MySQL::SQLValue($data->id_categoria);
     $update["activo"] = MySQL::SQLValue($data->activo, MySQL::SQLVALUE_NUMBER);
 
-    $databaseSamsung->InsertRow("samsung_kiiconnect_setting", $update );
+    $databaseKiiconnect->InsertRow("kiiconnect_setting", $update );
     echo json_encode(array(
-        "success" => $databaseSamsung->ErrorNumber() == 0,
-        "msg" => $databaseSamsung->ErrorNumber() == 0?"Parametro insertado exitosamente":$databaseSamsung->ErrorNumber(),
+        "success" => $databaseKiiconnect->ErrorNumber() == 0,
+        "msg" => $databaseKiiconnect->ErrorNumber() == 0?"Parametro insertado exitosamente":$databaseKiiconnect->ErrorNumber(),
         "data" => array(
             array(
-                "id" => $databaseSamsung->GetLastInsertID(),
+                "id" => $databaseKiiconnect->GetLastInsertID(),
                 "nombre"	=> $data->nombre,
                 "tag"	=> $data->tag,
                 "descripcion"	=> $data->descripcion,
@@ -108,18 +108,18 @@ function insertKiiconnect()
 
 function deleteKiiconnect()
 {
-    global $databaseSamsung;
+    global $databaseKiiconnect;
     $id = json_decode(stripslashes($_POST["data"]));
-    $sql = "DELETE FROM samsung_kiiconnect_setting WHERE id=$id";
+    $sql = "DELETE FROM kiiconnect_setting WHERE id=$id";
 
-    if ($databaseSamsung->Query( $sql)) {
+    if ($databaseKiiconnect->Query( $sql)) {
 
     } else {
         echo "<p>Query Failed</p>";
     }
     echo json_encode(array(
-        "success" => $databaseSamsung->ErrorNumber() == 0,
-        "msg"	=> $databaseSamsung->ErrorNumber() == 0?"Nota de entrega eliminado exitosamente":$databaseSamsung->ErrorNumber()
+        "success" => $databaseKiiconnect->ErrorNumber() == 0,
+        "msg"	=> $databaseKiiconnect->ErrorNumber() == 0?"Nota de entrega eliminado exitosamente":$databaseKiiconnect->ErrorNumber()
     ));
 }
 function itemsTienda($path, $url)
@@ -145,7 +145,9 @@ function listar_ficheros($tipos, $carpeta, $url)
                     //Verificamos que la extension se encuentre en $tipos
                     $thepath = pathinfo($carpeta . "/" . $scanarray[$i]);
                     if (in_array($thepath['extension'], $tipos)) {
-                        $data[] = array("id" => $url . $scanarray[$i], "nombre" => $scanarray[$i]);
+                        //$imagen =  $scanarray[$i] . ' <div style="overflow: hidden; width: 120px"><img src="http://wwww.misiva.com.ec/generareporte/' . $url . $scanarray[$i] .  '" width="30px"></div>';
+                        $imagen =  ' <div style="overflow: hidden; width: 120px"><img src="http://wwww.misiva.com.ec/generareporte/' . $url . $scanarray[$i] .  '" width="35px"></div>';
+                        $data[] = array("id" => $url . $scanarray[$i], "nombre" =>$imagen  ) ;
                     }
                 }
             }

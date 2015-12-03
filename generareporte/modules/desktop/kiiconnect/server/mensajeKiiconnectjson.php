@@ -20,8 +20,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 
 
 include("mysql.class.php");
-$databaseSamsung = new MySQL();
-global $databaseSamsung;
+$databaseKiiconnect = new MySQL();
+global $databaseKiiconnect;
 
 // recuperar codigo de don balos
 if (isset($_GET["tags"])) {
@@ -32,13 +32,13 @@ if (isset($_GET["tags"])) {
     $consultaTag = "";
 }
 
-if ($databaseSamsung->Query("SELECT *
+if ($databaseKiiconnect->Query("SELECT *
                                 FROM
-                                    samsung_kiiconnect_mensajes
+                                    kiiconnect_mensajes
                                     WHERE activo = 1 $consultaTag
                                     ORDER BY creado DESC  ")
 ) {
-    echo $databaseSamsung->GetJSON();
+    echo $databaseKiiconnect->GetJSON();
 } else {
     echo "<p>Query Failed</p>";
 }
