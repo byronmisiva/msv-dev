@@ -34,6 +34,7 @@ function selectKiiconnect()
                 $none++;
             }
         }
+
     } else {
         echo "<p>Query Failed</p>";
     }
