@@ -15,8 +15,8 @@
 if ($databaseSamsung->Query("SELECT royal_usuario_serial.id,
                                     royal_usuario_serial.codigopremio,
 
-                                    (SELECT completo FROM royal_usuarios WHERE royal_usuarios.cedula = royal_usuario_serial.cedula ) as completo,
-                                    (SELECT ciudad FROM royal_usuarios WHERE royal_usuarios.cedula = royal_usuario_serial.cedula ) as ciudad,
+                                    (SELECT completo FROM royal_usuarios WHERE royal_usuarios.cedula = royal_usuario_serial.cedula limit 1 ) as completo,
+                                    (SELECT ciudad FROM royal_usuarios WHERE royal_usuarios.cedula = royal_usuario_serial.cedula limit 1 ) as ciudad,
                                     royal_usuario_serial.cedula,
                                     royal_usuario_serial.creado,
                                     royal_usuario_serial.resultado,
@@ -44,8 +44,8 @@ foreach($result as &$rowdetalle ) {
     $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaInicio, $filaInicio-1);
     $objPHPExcel->getActiveSheet()->setCellValue('B' . $filaInicio, $rowdetalle['completo']);
     $objPHPExcel->getActiveSheet()->setCellValue('C' . $filaInicio, $rowdetalle['ciudad']);
-    $objPHPExcel->getActiveSheet()->setCellValue('D' . $filaInicio, $rowdetalle['cedula']);
-    $objPHPExcel->getActiveSheet()->setCellValue('E' . $filaInicio, $rowdetalle['codigopremio']);
+    $objPHPExcel->getActiveSheet()->setCellValue('D' . $filaInicio, ".". $rowdetalle['cedula'] .".");
+    $objPHPExcel->getActiveSheet()->setCellValue('E' . $filaInicio, ".". $rowdetalle['codigopremio'] .".");
     $objPHPExcel->getActiveSheet()->setCellValue('F' . $filaInicio, $rowdetalle['ip']);
     $objPHPExcel->getActiveSheet()->setCellValue('G' . $filaInicio, $rowdetalle['creado']);
     $objPHPExcel->getActiveSheet()->setCellValue('H' . $filaInicio, $rowdetalle['resultado']);

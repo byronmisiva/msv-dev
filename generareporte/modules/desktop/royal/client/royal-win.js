@@ -414,8 +414,8 @@ QoDesk.RoyalWindow = Ext.extend(Ext.app.Module, {
             }
         });
     },
-    requestRoyalParticipantesData: function () {
-        this.storeRoyalParticipantes.load();
+    requestRoyalIntentosData: function () {
+        this.storeRoyalIntentos.load();
     },
     requestRoyalIntentosDataExport: function () {
         Ext.Msg.show({

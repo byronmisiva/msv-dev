@@ -94,7 +94,6 @@ function messageReceived(message) {
         }
     });
 
-
     $.post("http://www.misiva.com.ec/generareporte/modules/desktop/kiiconnect/server/dataKiiconnect.php", {
         "body": message.data.body,
         "header": message.data.header,

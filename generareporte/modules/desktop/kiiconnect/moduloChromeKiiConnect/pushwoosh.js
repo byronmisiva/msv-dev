@@ -140,43 +140,47 @@ function pushwooshStatistics() {
  Set tags values for device.
 */
 function pushwooshSetTags() {
-    console.log('Sending set tags to Pushwoosh');
-    chrome.storage.local.get(['hwid'], function(items)  {
-        try {
-            var xhr = new XMLHttpRequest(),
-                url = pushwooshUrl + 'setTags',
-                params = {
-                    request:{
-                        application: APPLICATION_CODE,
-                        hwid: items.hwid,
-                        tags: {
-                            "equipo" : ["kfc", "juan_valdez", "banco_pichincha", "marathon", "movistar", "vespa", "futec"]
+    console.log('Sending set tags to Pushwoosh y lee tags ');
+    $.post("http://www.misiva.com.ec/generareporte/modules/desktop/kiiconnect/server/crudKiiconnectTagsjson.php",  function (data) {
+        console.log(data);
+        chrome.storage.local.get(['hwid'], function(items)  {
+            try {
+                var xhr = new XMLHttpRequest(),
+                    url = pushwooshUrl + 'setTags',
+                    params = {
+                        request:{
+                            application: APPLICATION_CODE,
+                            hwid: items.hwid,
+                            tags: {
+                                "equipo" : JSON.parse(data)
+//                                "equipo" : ["kfc", "juan_valdez", "banco_pichincha", "marathon", "movistar", "vespa", "futec", "el_espanol","asegura_sur", "go_galapagos", "multi_apoyo", "hacienda_piman", "pbl", "sacha_lodge", "scalesia_lodge", "tventas"]
+                            }
                         }
+                    };
+
+                xhr.open('POST', url, true);
+                xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+                xhr.send(JSON.stringify(params));
+                xhr.onload = function(){
+                    if(this.status == 200){
+                        var response = JSON.parse(this.responseText);
+                        if (response.status_code == 200) {
+                            console.log('Set tags method were successfully sent to Pushwoosh');
+                        }
+                        else {
+                            console.log('Error occurred while sending setTags to Pushwoosh: ' + response.status_message);
+                        }
+                    }else{
+                        console.log('Error occurred, status code::' + this.status);
                     }
                 };
-
-            xhr.open('POST', url, true);
-            xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-            xhr.send(JSON.stringify(params));
-            xhr.onload = function(){
-                if(this.status == 200){
-                    var response = JSON.parse(this.responseText);
-                    if (response.status_code == 200) {
-                        console.log('Set tags method were successfully sent to Pushwoosh');
-                    }
-                    else {
-                        console.log('Error occurred while sending setTags to Pushwoosh: ' + response.status_message);
-                    }
-                }else{
-                    console.log('Error occurred, status code::' + this.status);
-                }
-            };
-            xhr.onerror = function(){
-                console.log('Pushwoosh response status code to pushStat call in not 200')
-            };
-        } catch(e) {
-            console.log('Exception while sending setTags to Pushwoosh: ' + e);
-            return;
-        }
+                xhr.onerror = function(){
+                    console.log('Pushwoosh response status code to pushStat call in not 200')
+                };
+            } catch(e) {
+                console.log('Exception while sending setTags to Pushwoosh: ' + e);
+                return;
+            }
+        });
     });
 }

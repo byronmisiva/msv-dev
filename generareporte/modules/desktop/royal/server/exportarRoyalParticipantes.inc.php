@@ -46,8 +46,8 @@ foreach($result as &$rowdetalle ) {
     $objPHPExcel->getActiveSheet()->setCellValue('C' . $filaInicio, $rowdetalle['apellido']);
     $objPHPExcel->getActiveSheet()->setCellValue('D' . $filaInicio, $rowdetalle['mail']);
     $objPHPExcel->getActiveSheet()->setCellValue('E' . $filaInicio, $rowdetalle['ciudad']);
-    $objPHPExcel->getActiveSheet()->setCellValue('F' . $filaInicio, $rowdetalle['cedula']);
-    $objPHPExcel->getActiveSheet()->setCellValue('G' . $filaInicio, $rowdetalle['telefono']);
+    $objPHPExcel->getActiveSheet()->setCellValue('F' . $filaInicio, ".". $rowdetalle['cedula'] .".");
+    $objPHPExcel->getActiveSheet()->setCellValue('G' . $filaInicio, ".". $rowdetalle['telefono'] . ".");
     $objPHPExcel->getActiveSheet()->setCellValue('H' . $filaInicio, $rowdetalle['creado']);
     $filaInicio++;
 }

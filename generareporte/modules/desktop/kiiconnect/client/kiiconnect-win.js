@@ -26,7 +26,7 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
             maxValue:100,
             allowNegative:false,
             allowDecimals:false,
-            allowBlank:false,
+            allowBlank:true,
             minValue:0
         });
         //inicio combo activo
@@ -166,7 +166,7 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
                 {name: 'tag', allowBlank: false},
                 {name: 'descripcion', allowBlank: false},
                 {name: 'icono', allowBlank: false},
-                {name: 'link', allowBlank: false},
+                {name: 'link', allowBlank: true},
                 {name: 'activo', allowBlank: false},
                 {name: 'orden', allowBlank: false},
                 {name: 'id_categoria', allowBlank: false}
@@ -280,7 +280,7 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
             fields: [
                 {name: 'nombre', allowBlank: false},
                 {name: 'icono', allowBlank: false},
-                {name: 'orden2', allowBlank: false}
+                {name: 'orden2', allowBlank: true}
             ]
         });
 
@@ -627,8 +627,8 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
             descripcion: '',
             icono: '',
             link: '',
-            activo: '',
-            orden: '',
+            activo: '0',
+            orden: '0',
             id_categoria: ''
         });
         this.gridKiiconnect.stopEditing();
@@ -661,7 +661,7 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
         var kiiconnectCategoria = new this.storeKiiconnectCategoria.recordType({
             nombre: '',
             icono: '',
-            orden2: ''
+            orden2: '0'
         });
         this.gridKiiconnectCategoria.stopEditing();
         this.storeKiiconnectCategoria.insert(0, kiiconnectCategoria);

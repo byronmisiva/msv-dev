@@ -23,16 +23,19 @@ function selectKiiconnect()
     // borramos los registros duplicados
     if ($databaseKiiconnect->Query("SELECT * FROM kiiconnect_mensajes GROUP BY creado HAVING (COUNT(*) > 1);")) {
         $mensajes = $databaseKiiconnect->RecordsArray();
-        foreach ($mensajes as $mensaje) {
-            $databaseKiiconnect->Query("SELECT * FROM kiiconnect_mensajes where creado = '{$mensaje['creado']}';");
-            $mensajesrepetidos = $databaseKiiconnect->RecordsArray();
-            $none = 1;
-            foreach ($mensajesrepetidos as $index => $mensajesrepetido) {
-                if($none != 1){
-                    $databaseKiiconnect->Query("DELETE FROM kiiconnect_mensajes where id  = '{$mensajesrepetido['id']}';");
+        if ($mensajes != false) {
+            foreach ($mensajes as $mensaje) {
+                $databaseKiiconnect->Query("SELECT * FROM kiiconnect_mensajes where creado = '{$mensaje['creado']}';");
+                $mensajesrepetidos = $databaseKiiconnect->RecordsArray();
+                $none = 1;
+                foreach ($mensajesrepetidos as $index => $mensajesrepetido) {
+                    if ($none != 1) {
+                        $databaseKiiconnect->Query("DELETE FROM kiiconnect_mensajes where id  = '{$mensajesrepetido['id']}';");
+                    }
+                    $none++;
                 }
-                $none++;
             }
+
         }
 
     } else {

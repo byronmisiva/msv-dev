@@ -51,12 +51,12 @@ foreach($result as &$rowdetalle ) {
     $objPHPExcel->getActiveSheet()->setCellValue('B' . $filaInicio, $rowdetalle['nombre']);
     $objPHPExcel->getActiveSheet()->setCellValue('C' . $filaInicio, $rowdetalle['apellido']);
     $objPHPExcel->getActiveSheet()->setCellValue('D' . $filaInicio, $rowdetalle['mail']);
-    $objPHPExcel->getActiveSheet()->setCellValue('E' . $filaInicio, $rowdetalle['cedula']);
-    $objPHPExcel->getActiveSheet()->setCellValue('F' . $filaInicio, $rowdetalle['telefono']);
+    $objPHPExcel->getActiveSheet()->setCellValue('E' . $filaInicio, '"' .$rowdetalle['cedula']. '" ');
+    $objPHPExcel->getActiveSheet()->setCellValue('F' . $filaInicio, '"' .$rowdetalle['telefono']. '" ');
     $objPHPExcel->getActiveSheet()->setCellValue('G' . $filaInicio, $rowdetalle['ciudad']);
     $objPHPExcel->getActiveSheet()->setCellValue('H' . $filaInicio, $rowdetalle['premio']);
     $objPHPExcel->getActiveSheet()->setCellValue('I' . $filaInicio, $rowdetalle['fecha_ganador']);
-    $objPHPExcel->getActiveSheet()->setCellValue('J' . $filaInicio, $rowdetalle['codigo']);
+    $objPHPExcel->getActiveSheet()->setCellValue('J' . $filaInicio, '"' .$rowdetalle['codigo']. '" ');
     $filaInicio++;
 }
 

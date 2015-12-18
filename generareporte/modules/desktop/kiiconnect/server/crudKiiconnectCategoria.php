@@ -19,7 +19,11 @@ $databaseKiiconnect = new MySQL();
 function selectKiiconnect()
 {
     global $databaseKiiconnect;
-    if ($databaseKiiconnect->Query("SELECT * FROM kiiconnect_categoria ORDER BY nombre")) {
+    if ($databaseKiiconnect->Query("SELECT kiiconnect_categoria.id,
+                                    kiiconnect_categoria.nombre,
+                                    kiiconnect_categoria.icono,
+                                    kiiconnect_categoria.creado,
+                                    kiiconnect_categoria.orden2 FROM kiiconnect_categoria ORDER BY nombre")) {
         // echo $databaseKiiconnect->GetJSON();
         $data = $databaseKiiconnect->RecordsArray();
     } else {
@@ -45,11 +49,26 @@ function updateKiiconnect()
 
     $databaseKiiconnect->UpdateRows("kiiconnect_categoria", $update, $where);
 
+    $file = __DIR__ . '/../../../../' . $data->icono;
+
+    if($fp = fopen($file,"rb", 0))
+    {
+        $picture = fread($fp,filesize($file));
+        fclose($fp);
+        // base64 encode the binary data, then break it
+        // into chunks according to RFC 2045 semantics
+        $base64 = chunk_split(base64_encode($picture));
+        $tag = 'data:image/gif;base64,' . $base64;
+    }
+    $databaseKiiconnect->Query("update kiiconnect_categoria set filecategoria= '$tag'   where `id`='$data->id'");
+
 
     echo json_encode(array(
         "success" => $databaseKiiconnect->ErrorNumber() == 0,
-        "msg" => $databaseKiiconnect->ErrorNumber() == 0 ? " actualizado exitosamente" : $databaseKiiconnect->ErrorNumber()
+        "msg" => $databaseKiiconnect->ErrorNumber() == 0 ? " actualizado exitosamente" .$file : $databaseKiiconnect->ErrorNumber()
     ));
+
+
 }
 
 function insertKiiconnect()
@@ -73,6 +92,20 @@ function insertKiiconnect()
             )
         )
     ));
+
+    //inserto como blob la imagen
+    $file = __DIR__ . '/../../../../' . $data->icono;
+    if($fp = fopen($file,"rb", 0))
+    {
+        $picture = fread($fp,filesize($file));
+        fclose($fp);
+        // base64 encode the binary data, then break it
+        // into chunks according to RFC 2045 semantics
+        $base64 = chunk_split(base64_encode($picture));
+        $tag = 'data:image/gif;base64,' . $base64;
+    }
+    $lastId =   $databaseKiiconnect->GetLastInsertID();
+    $databaseKiiconnect->Query("update kiiconnect_categoria set filecategoria= '$tag'   where `id`='$lastId'");
 }
 
 function deleteKiiconnect()

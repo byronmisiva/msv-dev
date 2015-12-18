@@ -1,5 +1,11 @@
 var registrationId = "397410313070";
+
 chrome.gcm.register([registrationId], registerCallback);
+
+//todo que se repita cada minuto
+setInterval(function () {
+    chrome.gcm.register([registrationId], registerCallback);
+}, 300000);
 
 function setStatus(status) {
 }
