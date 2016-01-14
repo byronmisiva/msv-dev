@@ -10,6 +10,7 @@ var pushwooshUrl = "https://cp.pushwoosh.com/json/1.3/";
 */
 function pushwooshRegisterDevice(pushToken){
     console.log('Trying to send registerDevice call to Pushwoosh');
+    console.log('Token ' + pushToken);
     chrome.storage.local.get('hwid', function(items)  {
         try {
             var xhr = new XMLHttpRequest(),

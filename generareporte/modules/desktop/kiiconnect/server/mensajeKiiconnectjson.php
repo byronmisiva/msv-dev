@@ -23,7 +23,7 @@ include("mysql.class.php");
 $databaseKiiconnect = new MySQL();
 global $databaseKiiconnect;
 
-// recuperar codigo de don balos
+//
 if (isset($_GET["tags"])) {
     $tags = $_GET["tags"];
     $bodytag = '"' . str_replace(",", '","', $tags) . '"';

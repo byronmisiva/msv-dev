@@ -5,6 +5,7 @@ function getNotificationId() {
     var id = Math.floor(Math.random() * 9007199254740992) + 1;
     return id.toString();
 }
+
 function clickBotonPushWoosh() {
     var btn = document.querySelectorAll("#Wooosh")
     if (typeof btn != 'undefined') {
@@ -71,12 +72,86 @@ function clickBotonPushWoosh() {
             })
         }
     }
+
+
 }
+
+function clickBotonPushWooshPruebas() {
+    var btn = document.querySelectorAll("#testWoosh")
+    if (typeof btn != 'undefined') {
+        if (typeof btn[0] != 'undefined') {
+            btn[0].addEventListener("click", function () {
+
+                //caso de filtros
+                var filtro = document.querySelectorAll("#filters input:checked")
+
+                if (typeof filtro != 'undefined') {
+                    if (filtro.length > 0)
+                        filtro = filtro[0].value;
+                    else
+                        filtro = ""
+                } else {
+                    richpage = 0
+                }
+                // fin caso de filtros
+
+                // caso de rich page
+                var divs = document.querySelectorAll('.action-type-form input:checked ');
+                if ((typeof divs != 'undefined') && (divs.length > 0)){
+
+                    divs = divs[0].value;
+                    if (divs == 'richPage') {
+                        var filtro2 = document.querySelectorAll('.input-group input.form-control');
+                        if (typeof filtro2 != 'undefined') {
+                            filtro2 = filtro2[4].value;
+                            filtro2 = filtro2.match(/\[(.*)\]/)[1];
+
+                        }
+                    }
+                    if (divs == 'remotePage') {
+                        var filtro2 = document.querySelectorAll('input#remotePage ');
+                        if (typeof filtro2 != 'undefined') {
+                            filtro2 = filtro2[0].value
+                        }
+                    }
+
+                } else {
+                    filtro2 = ''
+                }
+                // fin caso de rich page
+
+                // caso de url
+                // var richpage = document.querySelectorAll(".input-group input#URLInput");
+                var richpage = document.querySelectorAll("#URLInput");
+                if (typeof richpage != 'undefined') {
+                    //richpage = richpage[5].value;
+                    richpage = richpage[0].value;
+                    //if (richpage != "")
+                    //    richpage = richpage.match(/\[(.*)\]/)[1];
+                    //else
+                    //    richpage = 0;
+                }
+                if (richpage.length == 0){
+                    richpage = 0
+                }
+                // fin caso de url
+                // en el campo de titulo para chrome envio el valor
+                console.log(richpage + ";" + filtro + ";" + filtro2)
+                document.getElementById("chrome-title").value = richpage + ";" + filtro + ";" + filtro2;
+                event.stopImmediatePropagation();
+            })
+        }
+    }
+
+
+}
+
+
 
 function messageReceived(message) {
     // A message is an object with a data property that
     // consists of key-value pairs.
-    console.log("Message received: " + JSON.stringify(message.data));
+    console.log("!!!Message received: " + JSON.stringify(message.data));
     // Pop up a notification to show the GCM message.
     // If you want use images from remote resource add it to manifest permissions
     // https://developer.chrome.com/apps/app_codelab8_webresources
@@ -117,23 +192,6 @@ function messageReceived(message) {
 var appWindow = null;
 
 function createWindow() {
-    /* chrome.app.window.create(
-     "register.html",
-     {
-     width: 500,
-     height: 400,
-     frame: 'chrome',
-     resizable: true
-     },
-     function(appWin) {
-     appWindow = appWin;
-     appWin.onClosed.addListener(function() {
-     console.log('Window is closed');
-     appWindow = null;
-     });
-     }
-     );
-     */
 }
 
 function firstTimeRegistration() {
@@ -162,6 +220,7 @@ function pushClickEvent() {
 
 var intervalo = setTimeout(function () {
     clickBotonPushWoosh();
+    clickBotonPushWooshPruebas ()
 }, 5000);
 
 // Set up a listener for GCM message event.

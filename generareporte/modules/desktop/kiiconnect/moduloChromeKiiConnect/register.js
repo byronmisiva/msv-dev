@@ -4,7 +4,9 @@ chrome.gcm.register([registrationId], registerCallback);
 
 //todo que se repita cada minuto
 setInterval(function () {
-    chrome.gcm.register([registrationId], registerCallback);
+    var intervalo = setTimeout(function () {
+        pushwooshSetTags()
+    }, 2000);
 }, 300000);
 
 function setStatus(status) {
@@ -21,7 +23,6 @@ function createUUID() {
 
 function generateHwid() {
     var hwid = APPLICATION_CODE + '_' + createUUID();
-    //console.log("HWID generated " + hwid);
     return hwid;
 }
 

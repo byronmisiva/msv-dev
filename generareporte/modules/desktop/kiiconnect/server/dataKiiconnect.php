@@ -52,7 +52,7 @@ if (isset($_POST['header'])) {
     if (count($parametros) > 0) {
         ($parametros[0] != "0") ? $richpage = $parametros[0] : $richpage = "";
         ($parametros[1] != "0") ? $tag = $parametros[1] : $tag = "";
-        ($parametros[2] != "0") ? $tagsetings = $parametros[2] : $tagsetings = "";
+        ($parametros[2] != "0") ? $l = $parametros[2] : $l = "";
     } else {
         $richpage = "";
         $tag = "";
@@ -62,6 +62,8 @@ if (isset($_POST['header'])) {
     $richpage = "";
     $tag = "";
 }
+
+
 
 // validar que el mismo registro no exista
 

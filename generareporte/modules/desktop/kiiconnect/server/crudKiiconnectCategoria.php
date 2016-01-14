@@ -57,10 +57,15 @@ function updateKiiconnect()
         fclose($fp);
         // base64 encode the binary data, then break it
         // into chunks according to RFC 2045 semantics
-        $base64 = chunk_split(base64_encode($picture));
-        $tag = 'data:image/gif;base64,' . $base64;
+        //$base64 =  $picture;
+        //$base64 = chunk_split(base64_encode($picture));
+        $base64 = base64_encode($picture);
+        $tag = 'data:image/png;base64,' . $base64;
+        //$tag = $base64;
+        //$tag = '' . $base64;
     }
-    $databaseKiiconnect->Query("update kiiconnect_categoria set filecategoria= '$tag'   where `id`='$data->id'");
+    //$databaseKiiconnect->Query("update kiiconnect_categoria set filecategoria= '$tag'   where `id`='$data->id'");
+    $databaseKiiconnect->Query("update kiiconnect_categoria set filecategoria2= '$tag'   where `id`='$data->id'");
 
 
     echo json_encode(array(
@@ -101,11 +106,13 @@ function insertKiiconnect()
         fclose($fp);
         // base64 encode the binary data, then break it
         // into chunks according to RFC 2045 semantics
-        $base64 = chunk_split(base64_encode($picture));
-        $tag = 'data:image/gif;base64,' . $base64;
+        //$base64 = chunk_split(base64_encode($picture));
+        $base64 = base64_encode($picture);
+        $tag = 'data:image/png;base64,' . $base64;
     }
     $lastId =   $databaseKiiconnect->GetLastInsertID();
-    $databaseKiiconnect->Query("update kiiconnect_categoria set filecategoria= '$tag'   where `id`='$lastId'");
+    //$databaseKiiconnect->Query("update kiiconnect_categoria set filecategoria= '$tag'   where `id`='$lastId'");
+    $databaseKiiconnect->Query("update kiiconnect_categoria set filecategoria2= '$tag'   where `id`='$lastId'");
 }
 
 function deleteKiiconnect()

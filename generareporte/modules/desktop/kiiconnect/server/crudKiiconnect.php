@@ -133,7 +133,7 @@ function insertKiiconnect()
         // base64 encode the binary data, then break it
         // into chunks according to RFC 2045 semantics
         $base64 = chunk_split(base64_encode($picture));
-        $tag = 'data:image/gif;base64,' . $base64;
+        $tag = 'data:image/png;base64,' . $base64;
     }
     $lastId =   $databaseKiiconnect->GetLastInsertID();
     $databaseKiiconnect->Query("update kiiconnect_setting set file='$tag'  where `id`='$lastId'");

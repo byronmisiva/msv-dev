@@ -32,6 +32,7 @@ if (!isset($_GET["parametro"])){
                                     kiiconnect_categoria.nombre AS categoria,
                                     kiiconnect_categoria.id AS id_categoria,
                                     kiiconnect_categoria.filecategoria,
+                                    kiiconnect_categoria.filecategoria2,
                                     kiiconnect_categoria.icono AS categoria_icono
                                 FROM
                                     kiiconnect_setting
@@ -51,13 +52,16 @@ if (!isset($_GET["parametro"])){
                                     kiiconnect_categoria.nombre AS categoria,
                                     kiiconnect_categoria.id AS id_categoria,
                                     kiiconnect_categoria.icono AS categoria_icono,
-                                    kiiconnect_categoria.filecategoria
+                                    kiiconnect_categoria.filecategoria,
+                                    kiiconnect_categoria.filecategoria2
 
                                 FROM
                                     kiiconnect_categoria ORDER BY orden2", MYSQL_ASSOC);
         $temp2 = array();
         foreach ($temp as $index=>$categoria){
             $categoria_id = $categoria['id_categoria'];
+//            CONCAT('" . '<span style="font-weight:bold">' ." ', kiiconnect_setting.nombre, '</span>') AS nombre,
+
             $itemsCategoria = $database->QueryArray("SELECT
                                     kiiconnect_setting.nombre,
                                     kiiconnect_setting.tag,
@@ -76,5 +80,6 @@ if (!isset($_GET["parametro"])){
                 $temp2[] = $categoria;
             }
         }
-        echo json_encode($temp2);
+        $temp3 = json_encode($temp2);
+        echo $temp3;
 }
