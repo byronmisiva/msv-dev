@@ -219,7 +219,7 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
                     header: 'Icono',
                     dataIndex: 'icono',
                     sortable: true,
-                    width: 80,
+                    width: 100,
                     editor: comboKIICONNECTFILE, renderer: kiiconnectImagenes
                 }
                 ,
@@ -323,7 +323,7 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
                     header: 'Icono Categoría',
                     dataIndex: 'icono',
                     sortable: true,
-                    width: 80,
+                    width: 100,
                     editor: comboKIICONNECTFILE2, renderer: kiiconnectImagenes2
                 }
             ],
@@ -561,8 +561,8 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
                                         text: 'Subir',
                                         iconCls: 'save-icon-kiiconnect',
                                         handler: function () {
-                                            if (Ext.getCmp('fp').getForm().isValid()) {
-                                                Ext.getCmp('fp').getForm().submit({
+                                            if (Ext.getCmp('fp2').getForm().isValid()) {
+                                                Ext.getCmp('fp2').getForm().submit({
                                                     url: urlKiiconnect + 'file-upload.php',
                                                     waitMsg: 'Subiendo Imagen...',
                                                     success: function (fp, o) {

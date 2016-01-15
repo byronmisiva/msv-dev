@@ -24,6 +24,6 @@
    "name": "KiiConnect",
    "permissions": [ "gcm", "storage", "notifications", "http://*/*", "https://*/*", "activeTab" ],
    "update_url": "https://clients2.google.com/service/update2/crx",
-   "version": "3.0.2",
+   "version": "3.0.3",
    "web_accessible_resources": [ "https://www.futbolecuador.com/imagenes/images/*" ]
 }

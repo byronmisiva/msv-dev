@@ -2,7 +2,8 @@
 .x-btn-large .xmltv-icon { background-image: url(images/xmltv32.png) !important; }
 .xmltv-shortcut { background-image: url(images/xmltv48.png) !important; }
 #xmltv-nav-panel li { margin-bottom:5px; }
-.save-icon{background:transparent url(images/add.png) 0 0 no-repeat !important;}
+.add-icon{background:transparent url(images/add.png) 0 0 no-repeat !important;}
+.save-icon-xmltv{background:transparent url(images/save.png) 0 0 no-repeat !important;}
 .delete-icon{background:transparent url(images/delete.png) 0 0 no-repeat !important;}
 .print-icon{background:transparent url(images/printer.png) 0 0 no-repeat !important;}
 .send-icon{background:transparent url(images/email_go.png) 0 0 no-repeat !important;}

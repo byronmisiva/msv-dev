@@ -21,11 +21,20 @@
 
 class MySQL
 {
-	// SET THESE VALUES TO MATCH YOUR DATA CONNECTION
+/*	// SET THESE VALUES TO MATCH YOUR DATA CONNECTION
 	private $db_host    = "69.64.85.167"; // server name
 	private $db_user    = "externo";          // user name
 	private $db_pass    = "feadmin06";          // password
-	private $db_dbname  = "appss";          // database name
+	private $db_dbname  = "kiiconnect";          // database name
+	private $db_charset = "utf8";          // optional character set (i.e. utf8)
+	private $db_pcon    = false;      // use persistent connection?
+*/
+
+	// SET THESE VALUES TO MATCH YOUR DATA CONNECTION
+	private $db_host    = "127.0.0.1"; // server name
+	private $db_user    = "root";          // user name
+	private $db_pass    = "";          // password
+	private $db_dbname  = "kiiconnect";          // database name
 	private $db_charset = "utf8";          // optional character set (i.e. utf8)
 	private $db_pcon    = false;      // use persistent connection?
 

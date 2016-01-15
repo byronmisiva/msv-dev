@@ -1,34 +1,34 @@
 {
-  "id": "royal",
-  "type": "desktop/royal",
+  "id": "xmltv",
+  "type": "desktop/xmltv",
   "about": {
     "author": "",
-    "description": "Mantenimiento de Royal.",
-    "name": "Ventana Royal",
+    "description": "Mantenimiento de Xmltv.",
+    "name": "Ventana Xmltv",
     "url": "",
     "version": "1.0"
   },
 
   "client": {
-    "class": "QoDesk.RoyalWindow",
+    "class": "QoDesk.XmltvWindow",
     "css": [
       {
-        "directory": "desktop/royal/client/resources/",
+        "directory": "desktop/xmltv/client/resources/",
         "files": [ "styles.css" ]
       }
     ],
     "javascript": [
       {
-        "directory": "desktop/royal/client/",
-        "files": [ "royal-win.js" ]
+        "directory": "desktop/xmltv/client/",
+        "files": [ "xmltv-win.js" ]
       }
     ],
     "launcher": {
       "config": {
-        "iconCls": "royal-icon",
-        "shortcutIconCls": "royal-shortcut",
-        "text": "Royal",
-        "tooltip": "<b>Royal</b>"
+        "iconCls": "xmltv-icon",
+        "shortcutIconCls": "xmltv-shortcut",
+        "text": "Xmltv",
+        "tooltip": "<b>Xmltv</b>"
       },
       "paths": {
         "startmenu": "/"
