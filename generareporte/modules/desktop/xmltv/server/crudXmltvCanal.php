@@ -2,7 +2,7 @@
 
 //http://medoo.in/api/select
 
-//http://localhost:10088/msv-dev/generareporte/modules/desktop/kiiconnect/server/help.html#Error
+//http://localhost:10088/msv-dev/generareporte/modules/desktop/xmltv/server/help.html#Error
 
 require_once '../../../../server/os.php';
 
@@ -13,19 +13,21 @@ if (!$os->session_exists()) {
 
 include("mysql.class.php");
 
-$databaseKiiconnect = new MySQL();
+$databaseXmltv = new MySQL();
+
+include("mysql.class.php");
 
 function categorias()
 {
-    global $databaseKiiconnect;
+    global $databaseXmltv;
 
-    if ($databaseKiiconnect->Query("SELECT kiiconnect_categoria.id,
-                                    kiiconnect_categoria.nombre,
-                                    kiiconnect_categoria.icono,
-                                    kiiconnect_categoria.creado,
-                                    kiiconnect_categoria.orden2 FROM kiiconnect_categoria ORDER BY nombre")) {
-        // echo $databaseKiiconnect->GetJSON();
-        $data = $databaseKiiconnect->RecordsArray();
+    if ($databaseXmltv->Query("SELECT xmltv_categoria.id,
+                                    xmltv_categoria.nombre,
+                                    xmltv_categoria.icono,
+                                    xmltv_categoria.creado,
+                                    xmltv_categoria.orden2 FROM xmltv_categoria ORDER BY nombre")) {
+        // echo $databaseXmltv->GetJSON();
+        $data = $databaseXmltv->RecordsArray();
     } else {
         echo "<p>Query Failed</p>";
     }
@@ -35,13 +37,12 @@ function categorias()
     );
 }
 
-function selectKiiconnect()
+function selectXmltv()
 {
-    global $databaseKiiconnect;
-
-    if ($databaseKiiconnect->Query("SELECT kiiconnect_setting.id, kiiconnect_setting.nombre, kiiconnect_setting.tag, kiiconnect_setting.descripcion, kiiconnect_setting.slogan, kiiconnect_setting.icono, kiiconnect_setting.link, kiiconnect_setting.activo, kiiconnect_setting.creado, kiiconnect_setting.orden, kiiconnect_setting.id_categoria FROM kiiconnect_setting ORDER BY nombre ASC")) {
-        // echo $databaseKiiconnect->GetJSON();
-        $data = $databaseKiiconnect->RecordsArray();
+    global $databaseXmltv;
+    if ($databaseXmltv->Query("SELECT xmltv_canal.id, xmltv_canal.nombre, xmltv_canal.tag, xmltv_canal.descripcion, xmltv_canal.icono, xmltv_canal.activo, xmltv_canal.creado, xmltv_canal.orden   FROM xmltv_canal ORDER BY orden ASC")) {
+        // echo $databaseXmltv->GetJSON();
+        $data = $databaseXmltv->RecordsArray();
     } else {
         echo "<p>Query Failed</p>";
     }
@@ -51,9 +52,9 @@ function selectKiiconnect()
     );
 }
 
-function updateKiiconnect()
+function updateXmltv()
 {
-    global $databaseKiiconnect;
+    global $databaseXmltv;
 
     $data = json_decode(stripslashes($_POST["data"]));
 
@@ -77,22 +78,22 @@ function updateKiiconnect()
         $base64 = chunk_split(base64_encode($picture));
         $tag = 'data:image/gif;base64,' . $base64;
     }
-//    $databaseKiiconnect->Query("update kiiconnect_setting set file= '$tag'   where `id`='$data->id'");
+//    $databaseXmltv->Query("update xmltv_setting set file= '$tag'   where `id`='$data->id'");
 
     $update["file"] = MySQL::SQLValue($tag);
     $where["id"] = MySQL::SQLValue($data->id, "integer");
 
-    $databaseKiiconnect->UpdateRows("kiiconnect_setting", $update, $where);
+    $databaseXmltv->UpdateRows("xmltv_setting", $update, $where);
 
     echo json_encode(array(
-        "success" => $databaseKiiconnect->ErrorNumber() == 0,
-        "msg" => $databaseKiiconnect->ErrorNumber() == 0 ? " actualizado exitosamente" : $databaseKiiconnect->ErrorNumber()
+        "success" => $databaseXmltv->ErrorNumber() == 0,
+        "msg" => $databaseXmltv->ErrorNumber() == 0 ? " actualizado exitosamente" : $databaseXmltv->ErrorNumber()
     ));
 }
 
-function insertKiiconnect()
+function insertXmltv()
 {
-    global $databaseKiiconnect;
+    global $databaseXmltv;
     $data = json_decode(stripslashes($_POST["data"]));
     $update["nombre"] = MySQL::SQLValue($data->nombre);
     $update["tag"] = MySQL::SQLValue($data->tag);
@@ -103,13 +104,13 @@ function insertKiiconnect()
     $update["id_categoria"] = MySQL::SQLValue($data->id_categoria);
     $update["activo"] = MySQL::SQLValue($data->activo, MySQL::SQLVALUE_NUMBER);
 
-    $databaseKiiconnect->InsertRow("kiiconnect_setting", $update);
+    $databaseXmltv->InsertRow("xmltv_setting", $update);
     echo json_encode(array(
-        "success" => $databaseKiiconnect->ErrorNumber() == 0,
-        "msg" => $databaseKiiconnect->ErrorNumber() == 0 ? "Parametro insertado exitosamente" : $databaseKiiconnect->ErrorNumber(),
+        "success" => $databaseXmltv->ErrorNumber() == 0,
+        "msg" => $databaseXmltv->ErrorNumber() == 0 ? "Parametro insertado exitosamente" : $databaseXmltv->ErrorNumber(),
         "data" => array(
             array(
-                "id" => $databaseKiiconnect->GetLastInsertID(),
+                "id" => $databaseXmltv->GetLastInsertID(),
                 "nombre" => $data->nombre,
                 "tag" => $data->tag,
                 "descripcion" => $data->descripcion,
@@ -133,25 +134,25 @@ function insertKiiconnect()
         $base64 = chunk_split(base64_encode($picture));
         $tag = 'data:image/png;base64,' . $base64;
     }
-    $lastId =   $databaseKiiconnect->GetLastInsertID();
-    $databaseKiiconnect->Query("update kiiconnect_setting set file='$tag'  where `id`='$lastId'");
+    $lastId =   $databaseXmltv->GetLastInsertID();
+    $databaseXmltv->Query("update xmltv_setting set file='$tag'  where `id`='$lastId'");
 
 }
 
-function deleteKiiconnect()
+function deleteXmltv()
 {
-    global $databaseKiiconnect;
+    global $databaseXmltv;
     $id = json_decode(stripslashes($_POST["data"]));
-    $sql = "DELETE FROM kiiconnect_setting WHERE id=$id";
+    $sql = "DELETE FROM xmltv_setting WHERE id=$id";
 
-    if ($databaseKiiconnect->Query($sql)) {
+    if ($databaseXmltv->Query($sql)) {
 
     } else {
         echo "<p>Query Failed</p>";
     }
     echo json_encode(array(
-        "success" => $databaseKiiconnect->ErrorNumber() == 0,
-        "msg" => $databaseKiiconnect->ErrorNumber() == 0 ? "Nota de entrega eliminado exitosamente" : $databaseKiiconnect->ErrorNumber()
+        "success" => $databaseXmltv->ErrorNumber() == 0,
+        "msg" => $databaseXmltv->ErrorNumber() == 0 ? "Nota de entrega eliminado exitosamente" : $databaseXmltv->ErrorNumber()
     ));
 }
 
@@ -196,19 +197,19 @@ function listar_ficheros($tipos, $carpeta, $url)
 
 switch ($_GET['operation']) {
     case 'selectjson' :
-        selectKiiconnectJson();
+        selectXmltvJson();
         break;
     case 'select' :
-        selectKiiconnect();
+        selectXmltv();
         break;
     case 'update' :
-        updateKiiconnect();
+        updateXmltv();
         break;
     case 'insert' :
-        insertKiiconnect();
+        insertXmltv();
         break;
     case 'delete' :
-        deleteKiiconnect();
+        deleteXmltv();
         break;
     case 'categorias' :
         categorias();

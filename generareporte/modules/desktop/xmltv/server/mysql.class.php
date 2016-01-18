@@ -34,7 +34,7 @@ class MySQL
 	private $db_host    = "127.0.0.1"; // server name
 	private $db_user    = "root";          // user name
 	private $db_pass    = "";          // password
-	private $db_dbname  = "kiiconnect";          // database name
+	private $db_dbname  = "xmltv";          // database name
 	private $db_charset = "utf8";          // optional character set (i.e. utf8)
 	private $db_pcon    = false;      // use persistent connection?
 
