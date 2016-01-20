@@ -11,7 +11,8 @@ if (!$os->session_exists()) {
 include("mysql.class.php");
 
 $databaseXmltv = new MySQL();
-$URLBASE = 'http://localhost:10088/msv-dev/generareporte/';
+$URLBASE = 'http://misiva.com.ec/generareporte/';
+//$URLBASE = 'http://localhost:10088/msv-dev/generareporte/';
 
 
 function canales()

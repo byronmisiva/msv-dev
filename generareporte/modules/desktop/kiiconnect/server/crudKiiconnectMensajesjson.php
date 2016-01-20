@@ -105,9 +105,9 @@ if (isset($_GET["secciones"])) {
                                     kiiconnect_mensajes.tagsetings,
                                     kiiconnect_setting.nombre,
                                     kiiconnect_setting.file
-                                FROM kiiconnect_mensajes INNER JOIN kiiconnect_setting ON kiiconnect_mensajes.tagsetings = kiiconnect_setting.tag
+                                FROM kiiconnect_mensajes INNER JOIN kiiconnect_setting ON kiiconnect_mensajes.tag = kiiconnect_setting.tag
                                 WHERE kiiconnect_mensajes.activo = 1 AND kiiconnect_mensajes.tag IN ('$seccion') $fecha
-                                GROUP BY kiiconnect_mensajes.body
+                                /*GROUP BY kiiconnect_mensajes.body*/
                                 ORDER BY kiiconnect_mensajes.creado DESC
                                   LIMIT 2")
         ) {

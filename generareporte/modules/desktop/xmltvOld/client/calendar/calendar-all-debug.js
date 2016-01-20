@@ -3908,7 +3908,7 @@ Ext.calendar.DateRangeField = Ext.extend(Ext.form.Field, {
      * @cfg {String} toText
      * The text to display as the label for the all day checkbox (defaults to 'All day')
      */
-    allDayText: 'All day',
+    allDayText: 'All dayss',
 
     // private
     onRender: function(ct, position) {
