@@ -8,7 +8,11 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
             iconCls: 'xmltv-icon',
             handler: this.createWindow,
             scope: this
-        }
+        };
+
+
+
+
     },
 
     createWindow: function () {
@@ -32,8 +36,8 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
             allowBlank: true,
             minValue: 0
         });
-        //inicio combo activo
 
+        //inicio combo activo
         storeACXC = new Ext.data.JsonStore({
             root: 'users',
             fields: ['id', 'nombre'],
@@ -42,7 +46,6 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
                 users: [
                     {"id": 1, "nombre": "Si"},
                     {"id": 0, "nombre": "No"}
-
                 ]
             }
         });
@@ -102,7 +105,6 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
         this.storeXmltvFILE.load();
         storeXmltvFILE = this.storeXmltvFILE;
 
-
         var comboXmltvFILE = new Ext.form.ComboBox({
             id: 'comboXmltvFILE',
             store: this.storeXmltvFILE,
@@ -119,8 +121,8 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
                 return record.get('nombre');
             }
         }
-
         //fin combo XmltvFILE
+
         //inicio combo XmltvFILE
         this.storeXmltvFILE2 = new Ext.data.JsonStore({
             id: 'storeXmltvFILE2',
@@ -130,8 +132,6 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
         });
         this.storeXmltvFILE2.load();
         storeXmltvFILE2 = this.storeXmltvFILE2;
-
-
         var comboXmltvFILE2 = new Ext.form.ComboBox({
             id: 'comboXmltvFILE2',
             store: this.storeXmltvFILE2,
@@ -151,6 +151,26 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
 
         //fin combo XmltvFILE
 
+        //
+
+
+       this.calendarStore = new Ext.data.JsonStore({
+           url: urlXmltv + "crudXmltv.php?operation=itemsTienda&path=" + pathimagenesPrograma + "&urlver=" + urlverPrograma,
+           storeId: 'calendarStore',
+            root: 'data',
+            idProperty: 'id',
+            proxy: new Ext.data.MemoryProxy(),
+            autoLoad: true,
+            fields: [
+                {name:'CalendarId', mapping: 'id', type: 'int'},
+                {name:'Title', mapping: 'title', type: 'string'}
+            ],
+            sortInfo: {
+                field: 'CalendarId',
+                direction: 'ASC'
+            }
+        });
+        //
 
         //item xmltv
         var proxyXmltv = new Ext.data.HttpProxy({
