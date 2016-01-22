@@ -11,8 +11,6 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
         };
 
 
-
-
     },
 
     createWindow: function () {
@@ -36,6 +34,17 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
             allowBlank: true,
             minValue: 0
         });
+
+        var textField = new Ext.form.TextField({allowBlank: false});
+
+        var formatoFecha = new Ext.form.DateField({
+            format: 'Y-m-d'
+        });
+
+        function formatDate(value) {
+            return value ? value.dateFormat('Y-m-d') : '';
+        }
+
 
         //inicio combo activo
         storeACXC = new Ext.data.JsonStore({
@@ -121,6 +130,7 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
                 return record.get('nombre');
             }
         }
+
         //fin combo XmltvFILE
 
         //inicio combo XmltvFILE
@@ -151,26 +161,24 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
 
         //fin combo XmltvFILE
 
-        //
-
-
-       this.calendarStore = new Ext.data.JsonStore({
-           url: urlXmltv + "crudXmltv.php?operation=itemsTienda&path=" + pathimagenesPrograma + "&urlver=" + urlverPrograma,
-           storeId: 'calendarStore',
+        //store combo listado canales
+        this.calendarStore = new Ext.data.JsonStore({
+            url: urlXmltv + "canalesjson.php",
+            storeId: 'calendarStore',
             root: 'data',
             idProperty: 'id',
-            proxy: new Ext.data.MemoryProxy(),
+            //proxy: new Ext.data.MemoryProxy(),
             autoLoad: true,
             fields: [
-                {name:'CalendarId', mapping: 'id', type: 'int'},
-                {name:'Title', mapping: 'title', type: 'string'}
+                {name: 'CalendarId', mapping: 'id', type: 'int'},
+                {name: 'Title', mapping: 'title', type: 'string'}
             ],
             sortInfo: {
                 field: 'CalendarId',
                 direction: 'ASC'
             }
         });
-        //
+        //fin store combo listado canales
 
         //item xmltv
         var proxyXmltv = new Ext.data.HttpProxy({
@@ -268,18 +276,6 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
 
         // fin xmltv
 
-
-        var textField = new Ext.form.TextField({allowBlank: false});
-
-        var formatoFecha = new Ext.form.DateField({
-            format: 'Y-m-d'
-        });
-
-        function formatDate(value) {
-            return value ? value.dateFormat('Y-m-d') : '';
-        }
-
-
         //item xmltvPrograma
 
         var proxyXmltvPrograma = new Ext.data.HttpProxy({
@@ -304,6 +300,7 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
                 {name: 'descripcion', allowBlank: true},
                 {name: 'activo', allowBlank: true},
                 {name: 'imagen', allowBlank: true},
+                {name: 'tipo', allowBlank: true},
                 {name: 'id_canal', allowBlank: true}
             ]
         });

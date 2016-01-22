@@ -27,6 +27,7 @@ function selectXmltv()
                                     xmltv_programa.descripcion,
                                     xmltv_programa.activo,
                                     xmltv_programa.imagen,
+                                    xmltv_programa.tipo,
                                     xmltv_programa.id_canal
                                 FROM xmltv_programa ORDER BY titulo")
     ) {
@@ -55,6 +56,7 @@ function updateXmltv()
     $update["descripcion"] = MySQL::SQLValue($data->descripcion);
     $update["activo"] = MySQL::SQLValue($data->activo);
     $update["imagen"] = MySQL::SQLValue($data->imagen);
+    $update["tipo"] = MySQL::SQLValue($data->tipo);
     $update["id_canal"] = MySQL::SQLValue($data->id_canal);
 
 
@@ -82,8 +84,6 @@ function updateXmltv()
         "success" => $databaseXmltv->ErrorNumber() == 0,
         "msg" => $databaseXmltv->ErrorNumber() == 0 ? " actualizado exitosamente" . $file : $databaseXmltv->ErrorNumber()
     ));
-
-
 }
 
 function insertXmltv()
@@ -92,7 +92,15 @@ function insertXmltv()
 
     $data = json_decode(stripslashes($_POST["data"]));
 
-    $update["nombre"] = MySQL::SQLValue($data->nombre);
+    $update["titulo"] = MySQL::SQLValue($data->titulo);
+    $update["fecha_fin"] = MySQL::SQLValue($data->fecha_fin);
+    $update["fecha_inicio"] = MySQL::SQLValue($data->fecha_inicio);
+    $update["duracion"] = MySQL::SQLValue($data->duracion);
+    $update["descripcion"] = MySQL::SQLValue($data->descripcion);
+    $update["activo"] = MySQL::SQLValue($data->activo);
+    $update["imagen"] = MySQL::SQLValue($data->imagen);
+    $update["tipo"] = MySQL::SQLValue($data->tipo);
+    $update["id_canal"] = MySQL::SQLValue($data->id_canal);
 
     $databaseXmltv->InsertRow("xmltv_programa", $update);
     echo json_encode(array(
@@ -101,9 +109,15 @@ function insertXmltv()
         "data" => array(
             array(
                 "id" => $databaseXmltv->GetLastInsertID(),
-                "nombre" => $data->nombre,
-                "icono" => $data->icono,
-                "orden2" => $data->orden2
+                "titulo" => $data->titulo,
+                "fecha_fin" => $data->fecha_fin,
+                "fecha_inicio" => $data->fecha_inicio,
+                "duracion" => $data->duracion,
+                "descripcion" => $data->descripcion,
+                "activo" => $data->activo,
+                "imagen" => $data->imagen,
+                "tipo" => $data->tipo,
+                "id_canal" => $data->id_canal
             )
         )
     ));
@@ -122,7 +136,7 @@ function insertXmltv()
         $imagen = "";
     }
     $lastId = $databaseXmltv->GetLastInsertID();
-    $databaseXmltv->Query("update xmltv_programa set filecategoria2= '$imagen'   where `id`='$lastId'");
+    $databaseXmltv->Query("update xmltv_programa set file= '$imagen'   where `id`='$lastId'");
 }
 
 function deleteXmltv()
@@ -142,9 +156,7 @@ function deleteXmltv()
     ));
 }
 
-
 switch ($_GET['operation']) {
-
     case 'select' :
         selectXmltv();
         break;
@@ -157,5 +169,4 @@ switch ($_GET['operation']) {
     case 'delete' :
         deleteXmltv();
         break;
-
 }
