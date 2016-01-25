@@ -123,7 +123,7 @@ function insertXmltv()
     ));
 
     //inserto como blob la imagen
-    $file = __DIR__ . '/../../../../' . $data->icono;
+    $file = __DIR__ . '/../../../../' . $data->imagen;
     if ($fp = fopen($file, "rb", 0)) {
         $picture = fread($fp, filesize($file));
         fclose($fp);

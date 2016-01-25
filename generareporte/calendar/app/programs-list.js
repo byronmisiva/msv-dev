@@ -15,18 +15,25 @@ at http://www.sencha.com/contact.
 
 Build date: 2013-04-03 15:07:25
 */
-var calendarList = {
+var programasList = {
     "calendars":[{
         "id":1,
-        "title":"Canal 1"
+        "title":"Teleamazonas"
     },{
         "id":2,
-        "title":"Canal 2"
+        "title":"Gama TV"
     },{
         "id":3,
-        "title":"Canal 3"
+        "title":"RTS"
     },{
         "id":4,
-        "title":"Canal 4"
-    }]
+        "title":"Ecuador TV"
+    },{
+        "id":5,
+        "title":"Ecuavisa"
+    },{
+        "id":6,
+        "title":"TC"
+    }
+    ]
 };

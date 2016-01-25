@@ -161,25 +161,6 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
 
         //fin combo XmltvFILE
 
-        //store combo listado canales
-        this.calendarStore = new Ext.data.JsonStore({
-            url: urlXmltv + "canalesjson.php",
-            storeId: 'calendarStore',
-            root: 'data',
-            idProperty: 'id',
-            //proxy: new Ext.data.MemoryProxy(),
-            autoLoad: true,
-            fields: [
-                {name: 'CalendarId', mapping: 'id', type: 'int'},
-                {name: 'Title', mapping: 'title', type: 'string'}
-            ],
-            sortInfo: {
-                field: 'CalendarId',
-                direction: 'ASC'
-            }
-        });
-        //fin store combo listado canales
-
         //item xmltv
         var proxyXmltv = new Ext.data.HttpProxy({
             api: {
@@ -218,7 +199,6 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
             autoSave: true
         });
         this.storeXmltv.load();
-
 
         this.gridXmltv = new Ext.grid.EditorGridPanel({
             height: winHeight - 144,
@@ -273,11 +253,9 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
             border: false,
             stripeRows: true
         });
-
         // fin xmltv
 
         //item xmltvPrograma
-
         var proxyXmltvPrograma = new Ext.data.HttpProxy({
             api: {
                 create: urlXmltv + "crudXmltvPrograma.php?operation=insert",
@@ -296,12 +274,12 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
                 {name: 'titulo', allowBlank: false},
                 {name: 'fecha_fin', type: 'date', dateFormat: 'c', allowBlank: true},
                 {name: 'fecha_inicio', type: 'date', dateFormat: 'c', allowBlank: true},
-                {name: 'duracion', allowBlank: true},
-                {name: 'descripcion', allowBlank: true},
-                {name: 'activo', allowBlank: true},
-                {name: 'imagen', allowBlank: true},
-                {name: 'tipo', allowBlank: true},
-                {name: 'id_canal', allowBlank: true}
+                {name: 'duracion', allowBlank: false},
+                {name: 'descripcion', allowBlank: false},
+                {name: 'activo', allowBlank: false},
+                {name: 'imagen', allowBlank: false},
+                {name: 'tipo', allowBlank: false},
+                {name: 'id_canal', allowBlank: false}
             ]
         });
 
@@ -319,7 +297,6 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
         });
         this.storeXmltvPrograma.load();
 
-
         this.gridXmltvPrograma = new Ext.grid.EditorGridPanel({
             height: winHeight - 144,
             store: this.storeXmltvPrograma, columns: [
@@ -335,6 +312,12 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'descripcion',
                     sortable: true,
                     width: 120,
+                    editor: textField
+                }, {
+                    header: 'Tipo',
+                    dataIndex: 'tipo',
+                    sortable: true,
+                    width: 40,
                     editor: textField
                 },
                 {
@@ -389,22 +372,69 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
             border: false,
             stripeRows: true
         });
-
         // fin xmltvPrograma
 
+        //item xmltvEventos
 
-        //item xmltvMensajes
+        //store combo listado canales
+        /*this.calendarStore = new Ext.data.JsonStore({
+            url: urlXmltv + "canalesjson.php",
+            storeId: 'calendarStore',
+            root: 'data',
+            idProperty: 'id',
+            //proxy: new Ext.data.MemoryProxy(),
+            autoLoad: true,
+            fields: [
+                {name: 'CalendarId', mapping: 'id', type: 'int'},
+                {name: 'Title', mapping: 'title', type: 'string'}
+            ],
+            sortInfo: {
+                field: 'CalendarId',
+                direction: 'ASC'
+            }
+        });*/
 
-        var proxyXmltvMensajes = new Ext.data.HttpProxy({
+        this.calendarStore = new Ext.data.JsonStore({
+            storeId: 'calendarStore',
+            root: 'calendars',
+            idProperty: 'id',
+            data: calendarList, // defined in calendar-list.js
+            proxy: new Ext.data.MemoryProxy(),
+            autoLoad: true,
+            fields: [
+                {name:'CalendarId', mapping: 'id', type: 'int'},
+                {name:'Title', mapping: 'title', type: 'string'}
+            ],
+            sortInfo: {
+                field: 'CalendarId',
+                direction: 'ASC'
+            }
+        });
+        //fin store combo listado canales
+        // store eventos
+        this.eventStore = new Ext.data.JsonStore({
+            id: 'eventStore',
+            root: 'evts',
+            data: eventList, // defined in event-list.js
+            proxy: new Ext.data.MemoryProxy(),
+            fields: Ext.calendar.EventRecord.prototype.fields.getRange(),
+            sortInfo: {
+                field: 'StartDate',
+                direction: 'ASC'
+            }
+        });
+        // fin store eventos
+        
+        var proxyXmltvEventos = new Ext.data.HttpProxy({
             api: {
-                create: urlXmltv + "crudXmltvMensajes.php?operation=insert",
-                read: urlXmltv + "crudXmltvMensajes.php?operation=select",
-                update: urlXmltv + "crudXmltvMensajes.php?operation=update",
-                destroy: urlXmltv + "crudXmltvMensajes.php?operation=delete"
+                create: urlXmltv + "crudXmltvEventos.php?operation=insert",
+                read: urlXmltv + "crudXmltvEventos.php?operation=select",
+                update: urlXmltv + "crudXmltvEventos.php?operation=update",
+                destroy: urlXmltv + "crudXmltvEventos.php?operation=delete"
             }
         });
 
-        var readerXmltvMensajes = new Ext.data.JsonReader({
+        var readerXmltvEventos = new Ext.data.JsonReader({
             successProperty: 'success',
             messageProperty: 'message',
             idProperty: 'id',
@@ -419,24 +449,23 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
             ]
         });
 
-        var writerXmltvMensajes = new Ext.data.JsonWriter({
+        var writerXmltvEventos = new Ext.data.JsonWriter({
             encode: true,
             writeAllFields: true
         });
 
-        this.storeXmltvMensajes = new Ext.data.Store({
+        this.storeXmltvEventos = new Ext.data.Store({
             id: "id",
-            proxy: proxyXmltvMensajes,
-            reader: readerXmltvMensajes,
-            writer: writerXmltvMensajes,
+            proxy: proxyXmltvEventos,
+            reader: readerXmltvEventos,
+            writer: writerXmltvEventos,
             autoSave: true
         });
-        this.storeXmltvMensajes.load();
+        this.storeXmltvEventos.load();
 
-
-        this.gridXmltvMensajes = new Ext.grid.EditorGridPanel({
+        this.calendarXmltvEventos = new Ext.grid.EditorGridPanel({
             height: winHeight - 144,
-            store: this.storeXmltvMensajes, columns: [
+            store: this.storeXmltvEventos, columns: [
                 new Ext.grid.RowNumberer(),
                 {
                     header: 'Body',
@@ -480,8 +509,7 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
             border: false,
             stripeRows: true
         });
-
-        // fin xmltvMensajes
+        // fin xmltvEventos
 
         if (!win) {
             win = desktop.createWindow({
@@ -497,7 +525,6 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
                 items: new Ext.TabPanel({
                     activeTab: 0,
                     border: false,
-
                     items: [
                         {
                             autoScroll: true,
@@ -639,11 +666,10 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
 
                             ],
                             items: this.gridXmltvPrograma
-                        }
-                        ,
+                        },
                         {
                             autoScroll: true,
-                            title: 'Mensajes Xmltv',
+                            title: 'Programación Xmltv',
                             closable: true,
                             tbar: [
                                 {
@@ -663,12 +689,143 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
                                 },
                                 '-', {
                                     iconCls: 'demo-grid-add',
-                                    handler: this.requestXmltvMensajesData,
+                                    handler: this.requestXmltvEventosData,
                                     scope: this,
                                     text: 'Recargar Datos', iconCls: 'x-tbar-loading'
                                 }
                             ],
-                            items: this.gridXmltvMensajes
+                            items:  {
+                                xtype: 'calendarpanel',
+                                eventStore: this.eventStore,
+                                calendarStore: this.calendarStore,
+                                border: false,
+                                id:'app-calendar',
+                                region: 'center',
+                                activeItem: 2, // month view
+
+                                // CalendarPanel supports view-specific configs that are passed through to the
+                                // underlying views to make configuration possible without explicitly having to
+                                // create those views at this level:
+                                monthViewCfg: {
+                                    showHeader: true,
+                                    showWeekLinks: true,
+                                    showWeekNumbers: true
+                                },
+
+                                // Some optional CalendarPanel configs to experiment with:
+                                //showDayView: false,
+                                //showWeekView: false,
+                                //showMonthView: false,
+                                //showNavBar: false,
+                                //showTodayText: false,
+                                //showTime: false,
+                                //title: 'My Calendar', // the header of the calendar, could be a subtitle for the app
+
+                                // Once this component inits it will set a reference to itself as an application
+                                // member property for easy reference in other functions within App.
+
+
+                                listeners: {
+                                    'eventclick': {
+                                        fn: function(vw, rec, el){
+                                            this.showEditWindow(rec, el);
+                                            //this.clearMsg();
+                                        },
+                                        scope: this
+                                    },
+                                    'eventover': function(vw, rec, el){
+                                        //console.log('Entered evt rec='+rec.data.Title+', view='+ vw.id +', el='+el.id);
+                                    },
+                                    'eventout': function(vw, rec, el){
+                                        //console.log('Leaving evt rec='+rec.data.Title+', view='+ vw.id +', el='+el.id);
+                                    },
+                                    'eventadd': {
+                                        fn: function(cp, rec){
+                                            this.showMsg('Event '+ rec.data.Title +' was added');
+                                        },
+                                        scope: this
+                                    },
+                                    'eventupdate': {
+                                        fn: function(cp, rec){
+                                            this.showMsg('Event '+ rec.data.Title +' was updated');
+                                        },
+                                        scope: this
+                                    },
+                                    'eventdelete': {
+                                        fn: function(cp, rec){
+                                            this.showMsg('Event '+ rec.data.Title +' was deleted');
+                                        },
+                                        scope: this
+                                    },
+                                    'eventcancel': {
+                                        fn: function(cp, rec){
+                                            // edit canceled
+                                        },
+                                        scope: this
+                                    },
+                                    'viewchange': {
+                                        fn: function(p, vw, dateInfo){
+                                            if(this.editWin){
+                                                this.editWin.hide();
+                                            };
+                                            if(dateInfo !== null){
+                                                // will be null when switching to the event edit form so ignore
+
+                                                //this.updateTitle(dateInfo.viewStart, dateInfo.viewEnd);
+                                            }
+                                        },
+                                        scope: this
+                                    },
+                                    'dayclick': {
+                                        fn: function(vw, dt, ad, el){
+                                            this.showEditWindow({
+                                                StartDate: dt,
+                                                IsAllDay: ad
+                                            }, el);
+                                            //this.clearMsg();
+                                        },
+                                        scope: this
+                                    },
+                                    'rangeselect': {
+                                        fn: function(win, dates, onComplete){
+                                            this.showEditWindow(dates);
+                                            this.editWin.on('hide', onComplete, this, {single:true});
+                                            //this.clearMsg();
+                                        },
+                                        scope: this
+                                    },
+                                    'eventmove': {
+                                        fn: function(vw, rec){
+                                            rec.commit();
+                                            var time = rec.data.IsAllDay ? '' : ' \\a\\t g:i a';
+                                            //this.showMsg('Event '+ rec.data.Title +' was moved to '+rec.data.StartDate.format('F jS'+time));
+                                        },
+                                        scope: this
+                                    },
+                                    'eventresize': {
+                                        fn: function(vw, rec){
+                                            rec.commit();
+                                            //this.showMsg('Event '+ rec.data.Title +' was updated');
+                                        },
+                                        scope: this
+                                    },
+                                    'eventdelete': {
+                                        fn: function(win, rec){
+                                            this.eventStore.remove(rec);
+                                            ///this.showMsg('Event '+ rec.data.Title +' was deleted');
+                                        },
+                                        scope: this
+                                    },
+                                    'initdrag': {
+                                        fn: function(vw){
+                                            if(this.editWin && this.editWin.isVisible()){
+                                                this.editWin.hide();
+                                            }
+                                        },
+                                        scope: this
+                                    }
+                                }
+                            }
                         }
                     ]
                 })
@@ -730,15 +887,20 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
     },
     addxmltvPrograma: function () {
         var xmltvPrograma = new this.storeXmltvPrograma.recordType({
-            nombre: '',
-            icono: '',
-            orden2: '0'
+            titulo: '',
+            fecha_fin: '',
+            fecha_inicio: '',
+            duracion: 30,
+            descripcion: '',
+            activo: 0,
+            imagen: '',
+            tipo: '',
+            id_canal: 1,
+
         });
         this.gridXmltvPrograma.stopEditing();
         this.storeXmltvPrograma.insert(0, xmltvPrograma);
         this.gridXmltvPrograma.startEditing(0, 1);
-
-
     },
     requestXmltvProgramaData: function () {
         this.storeXmltvPrograma.load();
@@ -779,8 +941,8 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
             });
         }, this);
     },
-    requestXmltvMensajesData: function () {
-        this.storeXmltvMensajes.load();
+    requestXmltvEventosData: function () {
+        this.storeXmltvEventos.load();
     }
 
 });

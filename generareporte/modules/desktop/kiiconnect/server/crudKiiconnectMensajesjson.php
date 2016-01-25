@@ -130,7 +130,8 @@ if (isset($_GET["secciones"])) {
     }
 
     foreach ($resultados as $key => $arr):
-        $resultados[$key]['body'] = cortarTexto($arr['body'], 117);
+        //$resultados[$key]['body'] = cortarTexto($arr['body'], 117);
+        $resultados[$key]['body'] = $arr['body'];
         $pun[$key] = $arr['creado'];
     endforeach;
     array_multisort($pun, SORT_DESC, $resultados);
@@ -195,7 +196,7 @@ logMensajes($_GET, $databaseKiiconnect);
 function logMensajes($json, $databaseKiiconnect)
 {
     $file = 'log.txt';
-    $json = json_encode($json) . "\n";
+    $json = json_encode($json) . "\n\n";
     //$json = $json . json_encode($databaseKiiconnect->GetLastSQL())  . "\n";
     file_put_contents($file, $json, FILE_APPEND | LOCK_EX);
 }
