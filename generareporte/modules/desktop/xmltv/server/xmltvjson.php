@@ -33,7 +33,7 @@ if ($databaseXmltv->Query("SELECT xmltv_canal.id,
     $canales = "''";
 };
 //CONCAT(UNIX_TIMESTAMP (fecha_inicio), '000') as inicio,
-CONCAT(UNIX_TIMESTAMP (fecha_fin), '000') as fin,
+//CONCAT(UNIX_TIMESTAMP (fecha_fin), '000') as fin,
 
 if ($databaseXmltv->Query("SELECT id,
                                 id_canal,
