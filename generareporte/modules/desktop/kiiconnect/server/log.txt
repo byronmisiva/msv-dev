@@ -19,3 +19,15 @@
 {"secciones":"juan_valdez"}
 {"secciones":"juan_valdez"}
 {"secciones":"juan_valdez"}
+{"secciones":"kfc,termas_papallacta"}
+
+{"secciones":"kfc,termas_papallacta"}
+
+{"secciones":"kfc,termas_papallacta"}
+
+{"secciones":"kfc,termas_papallacta"}
+
+{"secciones":"kfc,termas_papallacta"}
+
+{"secciones":"kfc,termas_papallacta"}
+

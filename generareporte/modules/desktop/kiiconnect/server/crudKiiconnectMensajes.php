@@ -21,7 +21,7 @@ function selectKiiconnect()
     global $databaseKiiconnect;
 
     // borramos los registros duplicados
-    if ($databaseKiiconnect->Query("SELECT * FROM kiiconnect_mensajes GROUP BY creado HAVING (COUNT(*) > 1);")) {
+    /*if ($databaseKiiconnect->Query("SELECT * FROM kiiconnect_mensajes GROUP BY creado HAVING (COUNT(*) > 1);")) {
         $mensajes = $databaseKiiconnect->RecordsArray();
         if ($mensajes != false) {
             foreach ($mensajes as $mensaje) {
@@ -40,7 +40,7 @@ function selectKiiconnect()
 
     } else {
         echo "<p>Query Failed</p>";
-    }
+    }*/
 
     if ($databaseKiiconnect->Query("SELECT * FROM kiiconnect_mensajes ORDER BY creado DESC")) {
         // echo $databaseKiiconnect->GetJSON();

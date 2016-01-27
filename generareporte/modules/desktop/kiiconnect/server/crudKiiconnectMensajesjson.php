@@ -3,21 +3,17 @@ if (isset($_SERVER['HTTP_ORIGIN'])) {
     header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
     header('Access-Control-Allow-Credentials: true');
     header('Access-Control-Max-Age: 86400');
-
     header('Access-Control-Allow-Origin: *');
     header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
     header('Content-type: text/html; charset=utf-8');
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-
     if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD']))
         header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-
     if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']))
         header("Access-Control-Allow-Headers: {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
 }
-
 
 include("mysql.class.php");
 $databaseKiiconnect = new MySQL();
@@ -26,13 +22,14 @@ global $databaseKiiconnect;
 
 if (isset($_GET["secciones"])) {
 
-    if (isset($_GET["fecha"])) {
-        $fechaentrada = $_GET["fecha"];
-        $fecha = " AND `kiiconnect_mensajes`.`creado`  + INTERVAL 3 HOUR  > '$fechaentrada' ";
+//    if (isset($_GET["fecha"])) {
+//    $fechaentrada = $_GET["fecha"];
+    $fechaentrada = date('Y-m-d H:i:s');
+    $fecha = " AND `kiiconnect_mensajes`.`creado`  + INTERVAL 7 DAY  > '$fechaentrada' ";
 
-    } else {
-        $fecha = "";
-    }
+    //   } else {
+    //    $fecha = "";
+    //   }
     $secciones = $_GET["secciones"];
     if ($secciones == "") {
         echo "[]";
@@ -55,36 +52,7 @@ if (isset($_GET["secciones"])) {
 
     // todo , DAYOFYEAR(kiiconnect_mensajes.creado) para el caso de que se quiera hacer que se repita dependiendo del día
 
-    /*   if ($databaseKiiconnect->Query("SELECT *,
-       kiiconnect_setting.icono,
-       kiiconnect_mensajes.id,
-       kiiconnect_mensajes.body,
-       kiiconnect_mensajes.header,
-       kiiconnect_mensajes.p,
-       kiiconnect_mensajes.l,
-       kiiconnect_mensajes.tag,
-       kiiconnect_mensajes.longuitud,
-       kiiconnect_mensajes.latitud,
-       kiiconnect_mensajes.richpage,
-       kiiconnect_mensajes.activo,
-       kiiconnect_mensajes.creado,
-       kiiconnect_mensajes.tagsetings,
-       kiiconnect_setting.nombre
-   FROM kiiconnect_mensajes INNER JOIN kiiconnect_setting ON kiiconnect_mensajes.tagsetings = kiiconnect_setting.tag
-   WHERE kiiconnect_mensajes.activo = 1 AND kiiconnect_mensajes.tag IN ($seccionesNew) $fecha
-   GROUP BY kiiconnect_mensajes.body
-   ORDER BY kiiconnect_mensajes.creado DESC
-     LIMIT $total")
-       ) {
-           if ($databaseKiiconnect->GetJSON() != 'null')
 
-               echo $databaseKiiconnect->GetJSON();
-           else
-               echo "[]";
-
-       } else {
-           echo "<p>Query Failed</p>";
-       }*/
     $resultados = array();
 
     foreach ($totalsecciones as $index1 => $seccion) {
@@ -109,7 +77,7 @@ if (isset($_GET["secciones"])) {
                                 WHERE kiiconnect_mensajes.activo = 1 AND kiiconnect_mensajes.tag IN ('$seccion') $fecha
                                 /*GROUP BY kiiconnect_mensajes.body*/
                                 ORDER BY kiiconnect_mensajes.creado DESC
-                                  LIMIT 2")
+                                   ")
         ) {
             if ($databaseKiiconnect->RecordsArray(MYSQL_ASSOC) != 'null') {
                 $data = $databaseKiiconnect->RecordsArray(MYSQL_ASSOC);
@@ -125,8 +93,6 @@ if (isset($_GET["secciones"])) {
         } else {
             echo "<p>Query Failed</p>";
         }
-
-
     }
 
     foreach ($resultados as $key => $arr):
@@ -159,8 +125,8 @@ if (isset($_GET["secciones"])) {
                 "id_categoria": ""
             }';
     $jsonNulo = json_decode($jsonNulo);
-    if ( count($resultados) > 6 ){
-        $resultados[] =$jsonNulo;
+    if (count($resultados) > 6) {
+        $resultados[] = $jsonNulo;
     }
     echo json_encode($resultados);
 
@@ -222,5 +188,3 @@ function cortarTexto($texto, $numMaxCaract)
 
     return $textoCortado;
 }
-
-
