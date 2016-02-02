@@ -1,1 +1,0 @@
-<?php $datetime = new DateTime(date('Y-m-d  12:00:00')); echo $datetime->format('U') . '000'; ?>
