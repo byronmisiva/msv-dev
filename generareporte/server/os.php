@@ -54,6 +54,15 @@ class os extends kernal {
       return $this->config->DOCUMENT_ROOT;
    } // end get_document_root()
 
+   /**
+    * get_url_base()
+    *
+    * @access public
+    */
+   public function get_url_base(){
+      return $this->config->URLBASE;
+   } // end get_url_base()
+
    // get directories
 
    /**

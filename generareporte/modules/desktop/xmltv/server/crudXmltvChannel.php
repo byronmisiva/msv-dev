@@ -12,10 +12,21 @@ include("mysql.class.php");
 
 $databaseXmltv = new MySQL();
 
+
 function selectXmltv()
 {
     global $databaseXmltv;
-    if ($databaseXmltv->Query("SELECT xmltv_canal.id, xmltv_canal.nombre, xmltv_canal.tag, xmltv_canal.descripcion, xmltv_canal.icono, xmltv_canal.activo, xmltv_canal.creado, xmltv_canal.orden   FROM xmltv_canal ORDER BY orden ASC")) {
+    if ($databaseXmltv->Query("SELECT xmltv_channel.id,
+                                    xmltv_channel.id_code,
+                                    xmltv_channel.display_name,
+                                    xmltv_channel.description,
+                                    xmltv_channel.tag,
+                                    xmltv_channel.`order`,
+                                    xmltv_channel.icon,
+                                    xmltv_channel.activo,
+                                    xmltv_channel.creado
+                                FROM xmltv_channel
+                                ORDER BY xmltv_channel.`order` ASC")) {
         // echo $databaseXmltv->GetJSON();
         $data = $databaseXmltv->RecordsArray();
     } else {
@@ -33,14 +44,15 @@ function updateXmltv()
 
     $data = json_decode(stripslashes($_POST["data"]));
 
-    $update["nombre"] = MySQL::SQLValue($data->nombre);
-    $update["descripcion"] = MySQL::SQLValue($data->descripcion);
+    $update["id_code"] = MySQL::SQLValue($data->id_code);
+    $update["display_name"] = MySQL::SQLValue($data->display_name);
+    $update["description"] = MySQL::SQLValue($data->description);
     $update["tag"] = MySQL::SQLValue($data->tag);
-    $update["icono"] = MySQL::SQLValue($data->icono);
-    $update["orden"] = MySQL::SQLValue($data->orden);
+    $update["icon"] = MySQL::SQLValue($data->icon);
+    $update["order"] = MySQL::SQLValue($data->order);
     $update["activo"] = MySQL::SQLValue($data->activo, MySQL::SQLVALUE_NUMBER);
 
-    $file = __DIR__ . '/../../../../' . $data->icono;
+    $file = __DIR__ . '/../../../../' . $data->icon;
 
     if($fp = fopen($file,"rb", 0))
     {
@@ -57,7 +69,7 @@ function updateXmltv()
     $update["file"] = MySQL::SQLValue($imagen);
     $where["id"] = MySQL::SQLValue($data->id, "integer");
 
-    $databaseXmltv->UpdateRows("xmltv_canal", $update, $where);
+    $databaseXmltv->UpdateRows("xmltv_channel", $update, $where);
 
     echo json_encode(array(
         "success" => $databaseXmltv->ErrorNumber() == 0,
@@ -69,32 +81,34 @@ function insertXmltv()
 {
     global $databaseXmltv;
     $data = json_decode(stripslashes($_POST["data"]));
-    $update["nombre"] = MySQL::SQLValue($data->nombre);
+    $update["id_code"] = MySQL::SQLValue($data->id_code);
+    $update["display_name"] = MySQL::SQLValue($data->display_name);
     $update["tag"] = MySQL::SQLValue($data->tag);
-    $update["descripcion"] = MySQL::SQLValue($data->descripcion);
-    $update["icono"] = MySQL::SQLValue($data->icono);
-    $update["orden"] = MySQL::SQLValue($data->orden);
+    $update["description"] = MySQL::SQLValue($data->description);
+    $update["icon"] = MySQL::SQLValue($data->icon);
+    $update["order"] = MySQL::SQLValue($data->order);
     $update["activo"] = MySQL::SQLValue($data->activo, MySQL::SQLVALUE_NUMBER);
 
-    $databaseXmltv->InsertRow("xmltv_canal", $update);
+    $databaseXmltv->InsertRow("xmltv_channel", $update);
     echo json_encode(array(
         "success" => $databaseXmltv->ErrorNumber() == 0,
         "msg" => $databaseXmltv->ErrorNumber() == 0 ? "Parametro insertado exitosamente" : $databaseXmltv->ErrorNumber(),
         "data" => array(
             array(
                 "id" => $databaseXmltv->GetLastInsertID(),
-                "nombre" => $data->nombre,
+                "id_code" => $data->id_code,
+                "display_name" => $data->display_name,
                 "tag" => $data->tag,
-                "descripcion" => $data->descripcion,
-                "icono" => $data->icono,
-                "orden" => $data->orden,
+                "description" => $data->description,
+                "icon" => $data->icon,
+                "order" => $data->order,
                 "activo" => $data->activo
             )
         )
     ));
 
     //inserto como blob la imagen
-    $file = __DIR__ . '/../../../../' . $data->icono;
+    $file = __DIR__ . '/../../../../' . $data->icon;
     if($fp = fopen($file,"rb", 0))
     {
         $picture = fread($fp,filesize($file));
@@ -107,7 +121,7 @@ function insertXmltv()
         $imagen = "";
     }
     $lastId =   $databaseXmltv->GetLastInsertID();
-    $databaseXmltv->Query("update xmltv_canal set file='$imagen'  where `id`='$lastId'");
+    $databaseXmltv->Query("update xmltv_channel set file='$imagen'  where `id`='$lastId'");
 
 }
 
@@ -115,7 +129,7 @@ function deleteXmltv()
 {
     global $databaseXmltv;
     $id = json_decode(stripslashes($_POST["data"]));
-    $sql = "DELETE FROM xmltv_canal WHERE id=$id";
+    $sql = "DELETE FROM xmltv_channel WHERE id=$id";
 
     if ($databaseXmltv->Query($sql)) {
 

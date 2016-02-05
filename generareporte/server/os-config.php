@@ -38,7 +38,8 @@ class config {
    public $DB_USERNAME = 'root';
    public $DB_PASSWORD = '';
 
-
+   //public $URLBASE = 'http://misiva.com.ec/generareporte/';
+   public $URLBASE = 'http://localhost:10088/msv-dev/generareporte/';
    
    /**
     * Login url
@@ -74,6 +75,8 @@ class config {
     * Document root
     */
    public $DOCUMENT_ROOT = '';
+
+
 
    /**
     * __construct()

@@ -45,6 +45,7 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
             return value ? value.dateFormat('Y-m-d') : '';
         }
 
+
         //inicio combo activo
         storeACXC = new Ext.data.JsonStore({
             root: 'users',
@@ -77,46 +78,10 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
 
         //fin combo activo
 
-        //inicio combo categoria
-        storeACCATE = new Ext.data.JsonStore({
-            root: 'users',
-            fields: ['id', 'nombre'],
-            autoLoad: true,
-            data: {
-                users: [
-                    {"id": "Serie", "nombre": "Serie"},
-                    {"id":"Novela", "nombre": "Novela"},
-                    {"id":"Noticiero", "nombre": "Noticiero"},
-                    {"id": "Pelicula", "nombre": "Pelicula"},
-                    {"id": "Variedades", "nombre": "Variedades"},
-                    {"id": "Infantil", "nombre": "Infantil"}
-                ]
-            }
-        });
-
-        var comboACCATE = new Ext.form.ComboBox({
-            id: 'comboACCATE',
-            store: storeACCATE,
-            valueField: 'id',
-            displayField: 'nombre',
-            triggerAction: 'all',
-            mode: 'local'
-        });
-
-        function xmltvCategoria(id) {
-            var index = storeACCATE.find('id', id);
-            if (index > -1) {
-                var record = storeACCATE.getAt(index);
-                return record.get('nombre');
-            }
-        }
-
-        //fin combo categoria
-
         //inicio combo Canales
         storeXmlCan = new Ext.data.JsonStore({
             root: 'data',
-            fields: ['id', 'display_name'],
+            fields: ['id', 'nombre'],
             url: urlXmltv + "crudXmltv.php?operation=canales"
         });
         storeXmlCan.load();
@@ -124,7 +89,7 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
         var comboXmlCan = new Ext.form.ComboBox({
             store: storeXmlCan,
             valueField: 'id',
-            displayField: 'display_name',
+            displayField: 'nombre',
             triggerAction: 'all',
             mode: 'local'
         });
@@ -133,37 +98,11 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
             var index = storeXmlCan.find('id', id);
             if (index > -1) {
                 var record = storeXmlCan.getAt(index);
-                return record.get('display_name');
+                return record.get('nombre');
             }
         }
 
         //fin combo Programa
-
-
-        //inicio combo Frecuencia
-        storeXmlFre = new Ext.data.JsonStore({
-            root: 'data',
-            fields: ['id', 'nombre'],
-            url: urlXmltv + "crudXmltv.php?operation=frecuencia"
-        });
-        storeXmlFre.load();
-
-        var comboXmlFre = new Ext.form.ComboBox({
-            store: storeXmlFre,
-            valueField: 'id',
-            displayField: 'nombre',
-            triggerAction: 'all',
-            mode: 'local'
-        });
-
-        function xmltvFrecuencia(id) {
-            var index = storeXmlFre.find('id', id);
-            if (index > -1) {
-                var record = storeXmlFre.getAt(index);
-                return record.get('nombre');
-            }
-        }
-        //fin combo frecuencia
 
         //inicio combo XmltvFILE
         this.storeXmltvFILE = new Ext.data.JsonStore({
@@ -222,13 +161,13 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
 
         //fin combo XmltvFILE
 
-        //item xmltv canal
+        //item xmltv
         var proxyXmltv = new Ext.data.HttpProxy({
             api: {
-                create: urlXmltv + "crudXmltvChannel.php?operation=insert",
-                read: urlXmltv + "crudXmltvChannel.php?operation=select",
-                update: urlXmltv + "crudXmltvChannel.php?operation=update",
-                destroy: urlXmltv + "crudXmltvChannel.php?operation=delete"
+                create: urlXmltv + "crudXmltv.php?operation=insert",
+                read: urlXmltv + "crudXmltv.php?operation=select",
+                update: urlXmltv + "crudXmltv.php?operation=update",
+                destroy: urlXmltv + "crudXmltv.php?operation=delete"
             }
         });
         var readerXmltv = new Ext.data.JsonReader({
@@ -238,14 +177,12 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
             idProperty: 'id',
             root: 'data',
             fields: [
-                {name: 'id', allowBlank: true},
-                {name: 'id_code', allowBlank: true},
-                {name: 'display_name', allowBlank: false},
-                {name: 'description', allowBlank: false},
+                {name: 'nombre', allowBlank: false},
+                {name: 'descripcion', allowBlank: false},
                 {name: 'tag', allowBlank: false},
-                {name: 'icon', allowBlank: false},
+                {name: 'icono', allowBlank: false},
                 {name: 'activo', allowBlank: false},
-                {name: 'order', allowBlank: false}
+                {name: 'orden', allowBlank: false}
             ]
         });
 
@@ -268,29 +205,16 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
             store: this.storeXmltv, columns: [
                 new Ext.grid.RowNumberer(),
                 {
-                    header: 'Id',
-                    dataIndex: 'id',
-                    width: 12
-                }
-                ,
-                {
-                    header: 'Name',
-                    dataIndex: 'display_name',
-                    sortable: true,
-                    width: 80,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                }
-                ,{
-                    header: 'Code channel*',
-                    dataIndex: 'id_code',
+                    header: 'nombre',
+                    dataIndex: 'nombre',
                     sortable: true,
                     width: 80,
                     editor: new Ext.form.TextField({allowBlank: false})
                 }
                 ,
                 {
-                    header: 'Description',
-                    dataIndex: 'description',
+                    header: 'Descripción',
+                    dataIndex: 'descripcion',
                     sortable: true,
                     width: 80,
                     editor: new Ext.form.TextField({allowBlank: false})
@@ -310,15 +234,15 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
                     editor: comboACXC, renderer: xmltvActivo
                 }
                 , {
-                    header: 'Order',
-                    dataIndex: 'order',
+                    header: 'Orden',
+                    dataIndex: 'orden',
                     sortable: true,
                     width: 30,
                     editor: numberField
                 }
                 , {
                     header: 'Icono',
-                    dataIndex: 'icon',
+                    dataIndex: 'icono',
                     sortable: true,
                     width: 100,
                     editor: comboXmltvFILE, renderer: xmltvImagenes
@@ -329,15 +253,15 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
             border: false,
             stripeRows: true
         });
-        // fin xmltv canal
+        // fin xmltv
 
-        //item xmltv Programa
+        //item xmltvPrograma
         var proxyXmltvPrograma = new Ext.data.HttpProxy({
             api: {
-                create: urlXmltv + "crudXmltvProgramme.php?operation=insert",
-                read: urlXmltv + "crudXmltvProgramme.php?operation=select",
-                update: urlXmltv + "crudXmltvProgramme.php?operation=update",
-                destroy: urlXmltv + "crudXmltvProgramme.php?operation=delete"
+                create: urlXmltv + "crudXmltvPrograma.php?operation=insert",
+                read: urlXmltv + "crudXmltvPrograma.php?operation=select",
+                update: urlXmltv + "crudXmltvPrograma.php?operation=update",
+                destroy: urlXmltv + "crudXmltvPrograma.php?operation=delete"
             }
         });
 
@@ -347,16 +271,15 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
             idProperty: 'id',
             root: 'data',
             fields: [
-                {name: 'title', allowBlank: false},
-                {name: 'date_end', type: 'date', dateFormat: 'c',  allowBlank: true},
-                {name: 'date_start', type: 'date', dateFormat: 'c', allowBlank: true},
-                {name: 'duration', allowBlank: false},
-                {name: 'description', allowBlank: false},
+                {name: 'titulo', allowBlank: false},
+                {name: 'fecha_fin', type: 'date', dateFormat: 'c', allowBlank: true},
+                {name: 'fecha_inicio', type: 'date', dateFormat: 'c', allowBlank: true},
+                {name: 'duracion', allowBlank: false},
+                {name: 'descripcion', allowBlank: false},
                 {name: 'activo', allowBlank: false},
-                {name: 'category', allowBlank: false},
                 {name: 'imagen', allowBlank: false},
-                {name: 'id_channel', allowBlank: false},
-                {name: 'id_frecuencia', allowBlank: false}
+                {name: 'tipo', allowBlank: false},
+                {name: 'id_canal', allowBlank: false}
             ]
         });
 
@@ -380,34 +303,34 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
                 new Ext.grid.RowNumberer(),
                 {
                     header: 'Nombre',
-                    dataIndex: 'title',
+                    dataIndex: 'titulo',
                     sortable: true,
                     width: 40,
                     editor: textField
                 }, {
                     header: 'Descripción',
-                    dataIndex: 'description',
+                    dataIndex: 'descripcion',
                     sortable: true,
                     width: 120,
                     editor: textField
                 }, {
                     header: 'Tipo',
-                    dataIndex: 'category',
+                    dataIndex: 'tipo',
                     sortable: true,
                     width: 40,
-                    editor: comboACCATE, renderer: xmltvCategoria
+                    editor: textField
                 },
                 {
                     header: 'Fecha Inicio',
-                    dataIndex: 'date_start',
+                    dataIndex: 'fecha_inicio',
                     sortable: true,
                     width: 50,
                     editor: formatoFecha,
                     renderer: formatDate
                 },
                 {
-                    header: 'Fecha Fin*',
-                    dataIndex: 'date_end',
+                    header: 'Fecha Fin',
+                    dataIndex: 'fecha_fin',
                     sortable: true,
                     width: 50,
                     editor: formatoFecha,
@@ -415,7 +338,7 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
                 },
                 {
                     header: 'Duración (m)',
-                    dataIndex: 'duration',
+                    dataIndex: 'duracion',
                     sortable: true,
                     width: 30,
                     editor: numberField
@@ -430,18 +353,12 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
                 },
                 {
                     header: 'Canal',
-                    dataIndex: 'id_channel',
+                    dataIndex: 'id_canal',
                     sortable: true,
                     width: 30,
                     editor: comboXmlCan, renderer: xmltvCanal
                 },
-                {
-                    header: 'Frecuencia',
-                    dataIndex: 'id_frecuencia',
-                    sortable: true,
-                    width: 30,
-                    editor: comboXmlFre, renderer: xmltvFrecuencia
-                },
+
                 {
                     header: 'Imagen',
                     dataIndex: 'imagen',
@@ -455,119 +372,9 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
             border: false,
             stripeRows: true
         });
-        // fin xmltv Programa
+        // fin xmltvPrograma
 
-        //item xmltv Programa
-        var proxyXmltvSchedules= new Ext.data.HttpProxy({
-            api: {
-                create: urlXmltv + "crudXmltvSchedules.php?operation=insert",
-                read: urlXmltv + "crudXmltvSchedules.php?operation=select",
-                update: urlXmltv + "crudXmltvSchedules.php?operation=update",
-                destroy: urlXmltv + "crudXmltvSchedules.php?operation=delete"
-            }
-        });
-
-        var readerXmltvSchedules= new Ext.data.JsonReader({
-            successProperty: 'success',
-            messageProperty: 'message',
-            idProperty: 'id',
-            root: 'data',
-            fields: [
-                {name: 'id_programme', allowBlank: false},
-                {name: 'id_channel', allowBlank: false},
-                {name: 'description', allowBlank: false},
-                {name: 'date_start', type: 'date', dateFormat: 'c', allowBlank: true},
-                {name: 'date_end', type: 'date', dateFormat: 'c',  allowBlank: true},
-                {name: 'time', allowBlank: false},
-                {name: 'duration', allowBlank: false},
-                {name: 'activo', allowBlank: false}
-            ]
-        });
-
-        var writerXmltvSchedules= new Ext.data.JsonWriter({
-            encode: true,
-            writeAllFields: true
-        });
-
-        this.storeXmltvSchedules= new Ext.data.Store({
-            id: "id",
-            proxy: proxyXmltvSchedules,
-            reader: readerXmltvSchedules,
-            writer: writerXmltvSchedules,
-            autoSave: true
-        });
-        this.storeXmltvSchedules.load();
-
-        this.gridXmltvSchedules= new Ext.grid.EditorGridPanel({
-            height: winHeight - 144,
-            store: this.storeXmltvSchedules, columns: [
-                new Ext.grid.RowNumberer(),
-                {
-                    header: 'id_programme',
-                    dataIndex: 'id_programme',
-                    sortable: true,
-                    width: 40,
-                    editor: textField
-                }, {
-                    header: 'id_channel',
-                    dataIndex: 'id_channel',
-                    sortable: true,
-                    width: 40,
-                    editor: textField
-                }, {
-                    header: 'Descripción',
-                    dataIndex: 'description',
-                    sortable: true,
-                    width: 120,
-                    editor: textField
-                } ,{
-                    header: 'Fecha Inicio',
-                    dataIndex: 'date_start',
-                    sortable: true,
-                    width: 50,
-                    editor: formatoFecha,
-                    renderer: formatDate
-                },
-                {
-                    header: 'Fecha Fin*',
-                    dataIndex: 'date_end',
-                    sortable: true,
-                    width: 50,
-                    editor: formatoFecha,
-                    renderer: formatDate
-                },
-                {
-                    header: 'time',
-                    dataIndex: 'time',
-                    sortable: true,
-                    width: 30,
-                    editor: numberField
-                },
-                {
-                    header: 'Duración (m)',
-                    dataIndex: 'duration',
-                    sortable: true,
-                    width: 30,
-                    editor: numberField
-                },
-
-                {
-                    header: 'Activo',
-                    dataIndex: 'activo',
-                    sortable: true,
-                    width: 30,
-                    editor: comboACXC, renderer: xmltvActivo
-                }
-            ],
-            viewConfig: {forceFit: true},
-            sm: new Ext.grid.RowSelectionModel({singleSelect: false}),
-            border: false,
-            stripeRows: true
-        });
-        // fin xmltv Programa
-
-
-        //item xmltv Eventos
+        //item xmltvEventos
 
         //store combo listado canales
         /*this.calendarStore = new Ext.data.JsonStore({
@@ -860,31 +667,6 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
                             ],
                             items: this.gridXmltvPrograma
                         },
-
-                        {
-                            autoScroll: true,
-                            title: 'Schedules',
-                            closable: true,
-                            tbar: [
-                                {text: 'Nuevo', scope: this, handler: this.addxmltvPrograma, iconCls: 'add-icon'},
-                                '-',
-                                {
-                                    text: "Eliminar",
-                                    scope: this,
-                                    handler: this.deletexmltvPrograma,
-                                    iconCls: 'delete-icon'
-                                },
-                                '-', {
-                                    iconCls: 'demo-grid-add',
-                                    handler: this.requestXmltvProgramaData,
-                                    scope: this,
-                                    text: 'Recargar Datos', iconCls: 'x-tbar-loading'
-                                }
-                            ],
-                            items: this.gridXmltvSchedules
-                        },
-
-
                         {
                             autoScroll: true,
                             title: 'Programación Xmltv',
@@ -1070,13 +852,12 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
     },
     addxmltvCanal: function () {
         var xmltv = new this.storeXmltv.recordType({
-            id_code: '',
-            display_name: '',
+            nombre: '',
             tag: '',
-            description: '',
-            icon: '',
+            descripcion: '',
+            icono: '',
             activo: '0',
-            order: '0'
+            orden: '0'
         });
         this.gridXmltv.stopEditing();
         this.storeXmltv.insert(0, xmltv);
@@ -1106,16 +887,15 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
     },
     addxmltvPrograma: function () {
         var xmltvPrograma = new this.storeXmltvPrograma.recordType({
-            title: '',
-            date_end: '',
-            date_start: '',
-            duration: 0,
-            description: '',
+            titulo: '',
+            fecha_fin: '',
+            fecha_inicio: '',
+            duracion: 30,
+            descripcion: '',
             activo: 0,
             imagen: '',
-            category: '',
-            id_channel: '',
-            id_frecuencia:''
+            tipo: '',
+            id_canal: 1,
 
         });
         this.gridXmltvPrograma.stopEditing();
