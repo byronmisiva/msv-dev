@@ -30,13 +30,7 @@ function selectXmltv()
                                     id_programme,
                                     activo,
                                     creado,
-                                    lunes,
-                                    martes,
-                                    miercoles,
-                                    jueves,
-                                    viernes,
-                                    sabado,
-                                    domingo,
+                                    id_frecuencia,
                                     id_reemplazo
                                 FROM xmltv_schedules")
     ) {
@@ -59,6 +53,7 @@ function updateXmltv()
 
     $update["id_programme"] = MySQL::SQLValue($data->id_programme);
     $update["id_channel"] = MySQL::SQLValue($data->id_channel);
+    $update["id_frecuencia"] = MySQL::SQLValue($data->id_frecuencia);
     $update["description"] = MySQL::SQLValue($data->description);
     $update["date_star"] = MySQL::SQLValue($data->date_star);
     $update["date_end"] = MySQL::SQLValue($data->date_end);
@@ -83,6 +78,7 @@ function insertXmltv()
 
     $update["id_channel"] = MySQL::SQLValue($data->id_channel);
     $update["id_programme"] = MySQL::SQLValue($data->id_programme);
+    $update["id_frecuencia"] = MySQL::SQLValue($data->id_frecuencia);
     $update["description"] = MySQL::SQLValue($data->description);
     $update["date_end"] = MySQL::SQLValue($data->date_end);
     $update["date_star"] = MySQL::SQLValue($data->date_star);
@@ -99,6 +95,7 @@ function insertXmltv()
                 "id" => $databaseXmltv->GetLastInsertID(),
                 "id_channel" => $data->id_channel,
                 "id_programme" => $data->id_programme,
+                "id_frecuencia" => $data->id_frecuencia,
                 "description" => $data->description,
                 "date_end" => $data->date_end,
                 "date_star" => $data->date_star,

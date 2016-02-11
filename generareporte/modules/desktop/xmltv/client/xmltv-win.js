@@ -45,6 +45,10 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
             return value ? value.dateFormat('Y-m-d') : '';
         }
 
+        function formatHora(value) {
+            return value ? value.dateFormat('h:MM:ss') : '';
+        }
+
         //inicio combo activo
         storeACXC = new Ext.data.JsonStore({
             root: 'users',
@@ -85,8 +89,8 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
             data: {
                 users: [
                     {"id": "Serie", "nombre": "Serie"},
-                    {"id":"Novela", "nombre": "Novela"},
-                    {"id":"Noticiero", "nombre": "Noticiero"},
+                    {"id": "Novela", "nombre": "Novela"},
+                    {"id": "Noticiero", "nombre": "Noticiero"},
                     {"id": "Pelicula", "nombre": "Pelicula"},
                     {"id": "Variedades", "nombre": "Variedades"},
                     {"id": "Infantil", "nombre": "Infantil"}
@@ -147,12 +151,58 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
         });
         storeXmlProg.load();
 
+
         var comboXmlProg = new Ext.form.ComboBox({
             store: storeXmlProg,
             valueField: 'id',
             displayField: 'title',
             triggerAction: 'all',
             mode: 'local'
+        });
+        var idprograma;
+        comboXmlProg.on('select', function () {
+            //console.log (this.getValue());
+            //var record = gridXmltvSchedules.store.getAt(0).data;
+            //console.log (record);
+            var selectedRecord = gridXmltvSchedules.getSelectionModel().getSelections()[0];
+
+            //validamos que sea nuevo registro, de ser asi llenamos el resto de campos con la información de referencia.
+            //if (selectedRecord.data['duration'] == 0) {
+                idprograma = this.getValue();
+                storeXmlDataProg.load({
+                    params: {idprograma: this.getValue()}
+                });
+            //}
+        });
+
+        var storeXmlDataProg = new Ext.data.JsonStore({
+            root: 'data',
+            fields: ['idchannel', 'id', 'title', 'dateend', 'datestart', 'hora','duration', 'category', 'activo', 'idfrecuencia'],
+            url: urlXmltv + "crudXmltv.php?operation=programainfo",
+            baseParams: {
+                idprograma: ''
+            },
+            listeners: {
+                load: function () {
+                    //var selectedRecord = gridXmltvSchedules.getSelectionModel().getSelections()[0];
+                    //var row = gridXmltvSchedules.store.indexOf(selectedRecord);
+                    var datacargar = storeXmlDataProg.data.items[0].data;
+                    var selModel = gridXmltvSchedules.getSelectionModel();
+                    // set control of the record to text
+                    //NOTE: 'control' here is the value set in the dataIndex property of the Control combobox
+                    selModel.getSelections()[0].set('id_channel', datacargar['idchannel']);
+                    selModel.getSelections()[0].set('time', datacargar['hora'] );
+                    selModel.getSelections()[0].set('duration', datacargar['duration'] );
+                    selModel.getSelections()[0].set('id_frecuencia', datacargar['idfrecuencia'] );
+                    if (datacargar['dateend'] != null) {
+                        selModel.getSelections()[0].set('date_end', new Date(datacargar['dateend']));
+                    }
+
+                    if (datacargar['datestart'] != null) {
+                        selModel.getSelections()[0].set('date_star', new Date(datacargar['datestart']));
+                    }
+                }
+            }
         });
 
         function xmltvProgramme(id) {
@@ -189,6 +239,7 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
                 return record.get('nombre');
             }
         }
+
         //fin combo frecuencia
 
         //inicio combo XmltvFILE
@@ -306,9 +357,17 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
                     width: 80,
                     editor: new Ext.form.TextField({allowBlank: false})
                 }
-                ,{
+                , {
                     header: 'Code channel*',
                     dataIndex: 'id_code',
+                    sortable: true,
+                    width: 30,
+                    editor: new Ext.form.TextField({allowBlank: false})
+                }
+
+                , {
+                    header: 'Tag',
+                    dataIndex: 'tag',
                     sortable: true,
                     width: 80,
                     editor: new Ext.form.TextField({allowBlank: false})
@@ -317,13 +376,6 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
                 {
                     header: 'Description',
                     dataIndex: 'description',
-                    sortable: true,
-                    width: 80,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                }
-                , {
-                    header: 'Tag',
-                    dataIndex: 'tag',
                     sortable: true,
                     width: 80,
                     editor: new Ext.form.TextField({allowBlank: false})
@@ -374,8 +426,9 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
             root: 'data',
             fields: [
                 {name: 'title', allowBlank: false},
-                {name: 'date_end', type: 'date', dateFormat: 'c',  allowBlank: true},
+                {name: 'date_end', type: 'date', dateFormat: 'c', allowBlank: true},
                 {name: 'date_start', type: 'date', dateFormat: 'c', allowBlank: true},
+                {name: 'hora', allowBlank: false},
                 {name: 'duration', allowBlank: false},
                 {name: 'description', allowBlank: false},
                 {name: 'activo', allowBlank: false},
@@ -414,20 +467,20 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
                     header: 'Descripción',
                     dataIndex: 'description',
                     sortable: true,
-                    width: 120,
+                    width: 100,
                     editor: textField
                 }, {
                     header: 'Tipo',
                     dataIndex: 'category',
                     sortable: true,
-                    width: 40,
+                    width: 30,
                     editor: comboACCATE, renderer: xmltvCategoria
                 },
                 {
                     header: 'Fecha Inicio',
                     dataIndex: 'date_start',
                     sortable: true,
-                    width: 50,
+                    width: 30,
                     editor: formatoFecha,
                     renderer: formatDate
                 },
@@ -435,15 +488,22 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
                     header: 'Fecha Fin*',
                     dataIndex: 'date_end',
                     sortable: true,
-                    width: 50,
+                    width: 30,
                     editor: formatoFecha,
                     renderer: formatDate
                 },
                 {
-                    header: 'Duración (m)',
+                    header: 'Hora',
+                    dataIndex: 'hora',
+                    sortable: true,
+                    width: 25,
+                    editor: numberField
+                },
+                {
+                    header: 'Duración(m)',
                     dataIndex: 'duration',
                     sortable: true,
-                    width: 30,
+                    width: 25,
                     editor: numberField
                 },
 
@@ -451,21 +511,21 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
                     header: 'Activo',
                     dataIndex: 'activo',
                     sortable: true,
-                    width: 30,
+                    width: 20,
                     editor: comboACXC, renderer: xmltvActivo
                 },
                 {
                     header: 'Canal',
                     dataIndex: 'id_channel',
                     sortable: true,
-                    width: 30,
+                    width: 50,
                     editor: comboXmlCan, renderer: xmltvCanal
                 },
                 {
                     header: 'Frecuencia',
                     dataIndex: 'id_frecuencia',
                     sortable: true,
-                    width: 30,
+                    width: 50,
                     editor: comboXmlFre, renderer: xmltvFrecuencia
                 },
                 {
@@ -485,134 +545,143 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
 
 
         //item xmltv Schedules
-        var proxyXmltvShedules = new Ext.data.HttpProxy({
+        var proxyXmltvSchedules = new Ext.data.HttpProxy({
             api: {
                 create: urlXmltv + "crudXmltvSchedules.php?operation=insert",
                 read: urlXmltv + "crudXmltvSchedules.php?operation=select",
                 update: urlXmltv + "crudXmltvSchedules.php?operation=update",
                 destroy: urlXmltv + "crudXmltvSchedules.php?operation=delete"
-
             }
         });
-        var readerXmltvShedules = new Ext.data.JsonReader({
 
+        var readerXmltvSchedules = new Ext.data.JsonReader({
             successProperty: 'success',
             messageProperty: 'message',
             idProperty: 'id',
             root: 'data',
             fields: [
-                {name: 'id', allowBlank: true},
-                {name: 'id_code', allowBlank: true},
-                {name: 'display_name', allowBlank: false},
-                {name: 'description', allowBlank: false},
-                {name: 'tag', allowBlank: false},
-                {name: 'icon', allowBlank: false},
-                {name: 'activo', allowBlank: false},
-                {name: 'order', allowBlank: false}
+                {name: 'id_programme', allowBlank: false},
+                {name: 'id_channel', allowBlank: false},
+                {name: 'description', allowBlank: true},
+                {name: 'date_star', type: 'date', dateFormat: 'c', allowBlank: true},
+                {name: 'date_end', type: 'date', dateFormat: 'c', allowBlank: true},
+                {name: 'time', allowBlank: false},
+                {name: 'duration', allowBlank: false},
+                {name: 'id_frecuencia', allowBlank: false},
+                {name: 'activo', allowBlank: false}
             ]
         });
 
-        var writerXmltvShedules = new Ext.data.JsonWriter({
+        var writerXmltvSchedules = new Ext.data.JsonWriter({
             encode: true,
             writeAllFields: true
         });
 
-        this.storeXmltvShedules = new Ext.data.Store({
+        this.storeXmltvSchedules = new Ext.data.Store({
             id: "id",
-            proxy: proxyXmltvShedules,
-            reader: readerXmltvShedules,
-            writer: writerXmltvShedules,
+            proxy: proxyXmltvSchedules,
+            reader: readerXmltvSchedules,
+            writer: writerXmltvSchedules,
             autoSave: true
         });
-        this.storeXmltvShedules.load();
+        this.storeXmltvSchedules.load();
 
-        this.gridXmltvShedules = new Ext.grid.EditorGridPanel({
+        this.gridXmltvSchedules = new Ext.grid.EditorGridPanel({
             height: winHeight - 144,
-            store: this.storeXmltvShedules, columns: [
+            store: this.storeXmltvSchedules, columns: [
                 new Ext.grid.RowNumberer(),
                 {
-                    header: 'Id',
-                    dataIndex: 'id',
-                    width: 12
-                }
-                ,
-                {
-                    header: 'Name',
-                    dataIndex: 'display_name',
+                    header: 'id_programme',
+                    dataIndex: 'id_programme',
                     sortable: true,
-                    width: 80,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                }
-                ,{
-                    header: 'Code channel*',
-                    dataIndex: 'id_code',
+                    width: 40,
+                    editor: comboXmlProg, renderer: xmltvProgramme
+                }, {
+                    header: 'id_channel',
+                    dataIndex: 'id_channel',
                     sortable: true,
-                    width: 80,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                }
-                ,
-                {
-                    header: 'Description',
+                    width: 40,
+                    editor: comboXmlCan, renderer: xmltvCanal
+                }, {
+                    header: 'Descripción',
                     dataIndex: 'description',
                     sortable: true,
-                    width: 80,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                }
-                , {
-                    header: 'Tag',
-                    dataIndex: 'tag',
+                    width: 120,
+                    editor: textField
+                }, {
+                    header: 'Fecha Inicio',
+                    dataIndex: 'date_star',
                     sortable: true,
-                    width: 80,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                }
-                , {
+                    width: 50,
+                    editor: formatoFecha,
+                    renderer: formatDate
+                },
+                {
+                    header: 'Fecha Fin*',
+                    dataIndex: 'date_end',
+                    sortable: true,
+                    width: 50,
+                    editor: formatoFecha,
+                    renderer: formatDate
+                },
+                {
+                    header: 'time',
+                    dataIndex: 'time',
+                    sortable: true,
+                    width: 30,
+                    editor: numberField
+                },
+                {
+                    header: 'Duración (m)',
+                    dataIndex: 'duration',
+                    sortable: true,
+                    width: 30,
+                    editor: numberField
+                },
+                {
+                    header: 'Frecuencia',
+                    dataIndex: 'id_frecuencia',
+                    sortable: true,
+                    width: 50,
+                    editor: comboXmlFre, renderer: xmltvFrecuencia
+                },
+
+                {
                     header: 'Activo',
                     dataIndex: 'activo',
                     sortable: true,
                     width: 30,
                     editor: comboACXC, renderer: xmltvActivo
                 }
-                , {
-                    header: 'Order',
-                    dataIndex: 'order',
-                    sortable: true,
-                    width: 30,
-                    editor: numberField
-                }
-                , {
-                    header: 'Icono',
-                    dataIndex: 'icon',
-                    sortable: true,
-                    width: 100,
-                    editor: comboXmltvFILE, renderer: xmltvImagenes
-                }
             ],
             viewConfig: {forceFit: true},
-            sm: new Ext.grid.RowSelectionModel({singleSelect: true}),
+            sm: new Ext.grid.RowSelectionModel({singleSelect: false}),
             border: false,
             stripeRows: true
         });
+
+        var gridXmltvSchedules = this.gridXmltvSchedules;
         // fin xmltv Schedules
 
         //item xmltv Eventos
 
         //store combo listado canales
         /*this.calendarStore = new Ext.data.JsonStore({
-            url: urlXmltv + "canalesjson.php",
-            storeId: 'calendarStore',
-            root: 'data',
-            idProperty: 'id',
-            //proxy: new Ext.data.MemoryProxy(),
-            autoLoad: true,
-            fields: [
-                {name: 'CalendarId', mapping: 'id', type: 'int'},
-                {name: 'Title', mapping: 'title', type: 'string'}
-            ],
-            sortInfo: {
-                field: 'CalendarId',
-                direction: 'ASC'
-            }
-        });*/
+         url: urlXmltv + "canalesjson.php",
+         storeId: 'calendarStore',
+         root: 'data',
+         idProperty: 'id',
+         //proxy: new Ext.data.MemoryProxy(),
+         autoLoad: true,
+         fields: [
+         {name: 'CalendarId', mapping: 'id', type: 'int'},
+         {name: 'Title', mapping: 'title', type: 'string'}
+         ],
+         sortInfo: {
+         field: 'CalendarId',
+         direction: 'ASC'
+         }
+         });*/
 
         this.calendarStore = new Ext.data.JsonStore({
             storeId: 'calendarStore',
@@ -622,8 +691,8 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
             proxy: new Ext.data.MemoryProxy(),
             autoLoad: true,
             fields: [
-                {name:'CalendarId', mapping: 'id', type: 'int'},
-                {name:'Title', mapping: 'title', type: 'string'}
+                {name: 'CalendarId', mapping: 'id', type: 'int'},
+                {name: 'Title', mapping: 'title', type: 'string'}
             ],
             sortInfo: {
                 field: 'CalendarId',
@@ -644,7 +713,7 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
             }
         });
         // fin store eventos
-        
+
         var proxyXmltvEventos = new Ext.data.HttpProxy({
             api: {
                 create: urlXmltv + "crudXmltvEventos.php?operation=insert",
@@ -903,176 +972,176 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
                                 },
                                 '-', {
                                     iconCls: 'demo-grid-add',
-                                    handler: this.requestXmltvSchedules,
+                                    handler: this.requestXmltvSchedulesData,
                                     scope: this,
                                     text: 'Recargar Datos', iconCls: 'x-tbar-loading'
                                 }
                             ],
-                            items: this.gridXmltvSchedules
+                            items: gridXmltvSchedules
                         }/*,
 
 
-                        {
-                            autoScroll: true,
-                            title: 'Programación Xmltv',
-                            closable: true,
-                            tbar: [
-                                {
-                                    text: 'Nuevo',
-                                    scope: this,
-                                    handler: this.addxmltvPrograma,
-                                    iconCls: 'add-icon',
-                                    disabled: true
-                                },
-                                '-',
-                                {
-                                    text: "Eliminar",
-                                    scope: this,
-                                    handler: this.deletexmltvPrograma,
-                                    iconCls: 'delete-icon',
-                                    disabled: true
-                                },
-                                '-', {
-                                    iconCls: 'demo-grid-add',
-                                    handler: this.requestXmltvEventosData,
-                                    scope: this,
-                                    text: 'Recargar Datos', iconCls: 'x-tbar-loading'
-                                }
-                            ],
-                            items:  {
-                                xtype: 'calendarpanel',
-                                eventStore: this.eventStore,
-                                calendarStore: this.calendarStore,
-                                border: false,
-                                id:'app-calendar',
-                                region: 'center',
-                                activeItem: 2, // month view
+                         {
+                         autoScroll: true,
+                         title: 'Programación Xmltv',
+                         closable: true,
+                         tbar: [
+                         {
+                         text: 'Nuevo',
+                         scope: this,
+                         handler: this.addxmltvPrograma,
+                         iconCls: 'add-icon',
+                         disabled: true
+                         },
+                         '-',
+                         {
+                         text: "Eliminar",
+                         scope: this,
+                         handler: this.deletexmltvPrograma,
+                         iconCls: 'delete-icon',
+                         disabled: true
+                         },
+                         '-', {
+                         iconCls: 'demo-grid-add',
+                         handler: this.requestXmltvEventosData,
+                         scope: this,
+                         text: 'Recargar Datos', iconCls: 'x-tbar-loading'
+                         }
+                         ],
+                         items:  {
+                         xtype: 'calendarpanel',
+                         eventStore: this.eventStore,
+                         calendarStore: this.calendarStore,
+                         border: false,
+                         id:'app-calendar',
+                         region: 'center',
+                         activeItem: 2, // month view
 
-                                // CalendarPanel supports view-specific configs that are passed through to the
-                                // underlying views to make configuration possible without explicitly having to
-                                // create those views at this level:
-                                monthViewCfg: {
-                                    showHeader: true,
-                                    showWeekLinks: true,
-                                    showWeekNumbers: true
-                                },
+                         // CalendarPanel supports view-specific configs that are passed through to the
+                         // underlying views to make configuration possible without explicitly having to
+                         // create those views at this level:
+                         monthViewCfg: {
+                         showHeader: true,
+                         showWeekLinks: true,
+                         showWeekNumbers: true
+                         },
 
-                                // Some optional CalendarPanel configs to experiment with:
-                                //showDayView: false,
-                                //showWeekView: false,
-                                //showMonthView: false,
-                                //showNavBar: false,
-                                //showTodayText: false,
-                                //showTime: false,
-                                //title: 'My Calendar', // the header of the calendar, could be a subtitle for the app
+                         // Some optional CalendarPanel configs to experiment with:
+                         //showDayView: false,
+                         //showWeekView: false,
+                         //showMonthView: false,
+                         //showNavBar: false,
+                         //showTodayText: false,
+                         //showTime: false,
+                         //title: 'My Calendar', // the header of the calendar, could be a subtitle for the app
 
-                                // Once this component inits it will set a reference to itself as an application
-                                // member property for easy reference in other functions within App.
+                         // Once this component inits it will set a reference to itself as an application
+                         // member property for easy reference in other functions within App.
 
 
-                                listeners: {
-                                    'eventclick': {
-                                        fn: function(vw, rec, el){
-                                            this.showEditWindow(rec, el);
-                                            //this.clearMsg();
-                                        },
-                                        scope: this
-                                    },
-                                    'eventover': function(vw, rec, el){
-                                        //console.log('Entered evt rec='+rec.data.Title+', view='+ vw.id +', el='+el.id);
-                                    },
-                                    'eventout': function(vw, rec, el){
-                                        //console.log('Leaving evt rec='+rec.data.Title+', view='+ vw.id +', el='+el.id);
-                                    },
-                                    'eventadd': {
-                                        fn: function(cp, rec){
-                                            this.showMsg('Event '+ rec.data.Title +' was added');
-                                        },
-                                        scope: this
-                                    },
-                                    'eventupdate': {
-                                        fn: function(cp, rec){
-                                            this.showMsg('Event '+ rec.data.Title +' was updated');
-                                        },
-                                        scope: this
-                                    },
-                                    'eventdelete': {
-                                        fn: function(cp, rec){
-                                            this.showMsg('Event '+ rec.data.Title +' was deleted');
-                                        },
-                                        scope: this
-                                    },
-                                    'eventcancel': {
-                                        fn: function(cp, rec){
-                                            // edit canceled
-                                        },
-                                        scope: this
-                                    },
-                                    'viewchange': {
-                                        fn: function(p, vw, dateInfo){
-                                            if(this.editWin){
-                                                this.editWin.hide();
-                                            };
-                                            if(dateInfo !== null){
-                                                // will be null when switching to the event edit form so ignore
+                         listeners: {
+                         'eventclick': {
+                         fn: function(vw, rec, el){
+                         this.showEditWindow(rec, el);
+                         //this.clearMsg();
+                         },
+                         scope: this
+                         },
+                         'eventover': function(vw, rec, el){
+                         //console.log('Entered evt rec='+rec.data.Title+', view='+ vw.id +', el='+el.id);
+                         },
+                         'eventout': function(vw, rec, el){
+                         //console.log('Leaving evt rec='+rec.data.Title+', view='+ vw.id +', el='+el.id);
+                         },
+                         'eventadd': {
+                         fn: function(cp, rec){
+                         this.showMsg('Event '+ rec.data.Title +' was added');
+                         },
+                         scope: this
+                         },
+                         'eventupdate': {
+                         fn: function(cp, rec){
+                         this.showMsg('Event '+ rec.data.Title +' was updated');
+                         },
+                         scope: this
+                         },
+                         'eventdelete': {
+                         fn: function(cp, rec){
+                         this.showMsg('Event '+ rec.data.Title +' was deleted');
+                         },
+                         scope: this
+                         },
+                         'eventcancel': {
+                         fn: function(cp, rec){
+                         // edit canceled
+                         },
+                         scope: this
+                         },
+                         'viewchange': {
+                         fn: function(p, vw, dateInfo){
+                         if(this.editWin){
+                         this.editWin.hide();
+                         };
+                         if(dateInfo !== null){
+                         // will be null when switching to the event edit form so ignore
 
-                                                //this.updateTitle(dateInfo.viewStart, dateInfo.viewEnd);
-                                            }
-                                        },
-                                        scope: this
-                                    },
-                                    'dayclick': {
-                                        fn: function(vw, dt, ad, el){
-                                            this.showEditWindow({
-                                                StartDate: dt,
-                                                IsAllDay: ad
-                                            }, el);
-                                            //this.clearMsg();
-                                        },
-                                        scope: this
-                                    },
-                                    'rangeselect': {
-                                        fn: function(win, dates, onComplete){
-                                            this.showEditWindow(dates);
-                                            this.editWin.on('hide', onComplete, this, {single:true});
-                                            //this.clearMsg();
-                                        },
-                                        scope: this
-                                    },
-                                    'eventmove': {
-                                        fn: function(vw, rec){
-                                            rec.commit();
-                                            var time = rec.data.IsAllDay ? '' : ' \\a\\t g:i a';
-                                            //this.showMsg('Event '+ rec.data.Title +' was moved to '+rec.data.StartDate.format('F jS'+time));
-                                        },
-                                        scope: this
-                                    },
-                                    'eventresize': {
-                                        fn: function(vw, rec){
-                                            rec.commit();
-                                            //this.showMsg('Event '+ rec.data.Title +' was updated');
-                                        },
-                                        scope: this
-                                    },
-                                    'eventdelete': {
-                                        fn: function(win, rec){
-                                            this.eventStore.remove(rec);
-                                            ///this.showMsg('Event '+ rec.data.Title +' was deleted');
-                                        },
-                                        scope: this
-                                    },
-                                    'initdrag': {
-                                        fn: function(vw){
-                                            if(this.editWin && this.editWin.isVisible()){
-                                                this.editWin.hide();
-                                            }
-                                        },
-                                        scope: this
-                                    }
-                                }
-                            }
-                        }
-                    */
+                         //this.updateTitle(dateInfo.viewStart, dateInfo.viewEnd);
+                         }
+                         },
+                         scope: this
+                         },
+                         'dayclick': {
+                         fn: function(vw, dt, ad, el){
+                         this.showEditWindow({
+                         StartDate: dt,
+                         IsAllDay: ad
+                         }, el);
+                         //this.clearMsg();
+                         },
+                         scope: this
+                         },
+                         'rangeselect': {
+                         fn: function(win, dates, onComplete){
+                         this.showEditWindow(dates);
+                         this.editWin.on('hide', onComplete, this, {single:true});
+                         //this.clearMsg();
+                         },
+                         scope: this
+                         },
+                         'eventmove': {
+                         fn: function(vw, rec){
+                         rec.commit();
+                         var time = rec.data.IsAllDay ? '' : ' \\a\\t g:i a';
+                         //this.showMsg('Event '+ rec.data.Title +' was moved to '+rec.data.StartDate.format('F jS'+time));
+                         },
+                         scope: this
+                         },
+                         'eventresize': {
+                         fn: function(vw, rec){
+                         rec.commit();
+                         //this.showMsg('Event '+ rec.data.Title +' was updated');
+                         },
+                         scope: this
+                         },
+                         'eventdelete': {
+                         fn: function(win, rec){
+                         this.eventStore.remove(rec);
+                         ///this.showMsg('Event '+ rec.data.Title +' was deleted');
+                         },
+                         scope: this
+                         },
+                         'initdrag': {
+                         fn: function(vw){
+                         if(this.editWin && this.editWin.isVisible()){
+                         this.editWin.hide();
+                         }
+                         },
+                         scope: this
+                         }
+                         }
+                         }
+                         }
+                         */
                     ]
                 })
             });
@@ -1134,26 +1203,29 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
         });
     },
     addxmltvSchedules: function () {
-
-
         var xmltvSchedules = new this.storeXmltvSchedules.recordType({
-            id_programme: ''
-            /*,
-            id_channel: '',
-            description: '',
-            date_star: '',
+            title: '',
             date_end: '',
-            time: '',
-            duration: '',
-            activo: '0'*/
+            date_start: '',
+            duration: 0,
+            description: '',
+            activo: '',
+            imagen: '',
+            category: '',
+            id_channel: '',
+            id_frecuencia: ''
+
         });
         this.gridXmltvSchedules.stopEditing();
-        this.gridXmltvSchedules.insert(0, xmltvSchedules);
+        this.storeXmltvSchedules.insert(0, xmltvSchedules);
         this.gridXmltvSchedules.startEditing(0, 1);
+
+        this.gridXmltvSchedules.getSelectionModel().selectRow(0);
+        this.gridXmltvSchedules.fireEvent('rowclick', this.gridXmltvSchedules, 0)
     },
-    requestXmltvSchedules: function () {
+
+    requestXmltvSchedulesData: function () {
         this.storeXmltvSchedules.load();
-        storeXmltvSchedules.load();
     },
 
 
@@ -1185,7 +1257,7 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
             imagen: '',
             category: '',
             id_channel: '',
-            id_frecuencia:''
+            id_frecuencia: ''
 
         });
         this.gridXmltvPrograma.stopEditing();
@@ -1197,6 +1269,8 @@ QoDesk.XmltvWindow = Ext.extend(Ext.app.Module, {
         storeXmlCan.load();
         this.storeXmltvFILE.load();
     },
+
+
     enviarMensajeXmltv: function () {
         var index = this.gridXmltv.getSelectionModel().getSelections();
         var record = index[0];

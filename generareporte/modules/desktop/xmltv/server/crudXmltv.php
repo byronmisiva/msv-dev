@@ -52,6 +52,33 @@ function programas()
             "data" => $data)
     );
 }
+function programainfo()
+{
+    global $databaseXmltv;
+
+    $id = $_POST['idprograma'];
+
+    if ($databaseXmltv->Query("SELECT id,
+                                    title,
+                                    date_end as dateend,
+                                    date_start as datestart,
+                                    hora,
+                                    duration,
+                                    category,
+                                    activo,
+                                    id_channel as idchannel,
+                                    id_frecuencia as idfrecuencia,
+                                    id_frecuencia as idfrecuencia
+                                FROM xmltv_programme WHERE id = " . $id)) {
+        $data = $databaseXmltv->RecordsArray();
+    } else {
+        echo "<p>Query Failed</p>";
+    }
+    echo json_encode(array(
+            "success" => true,
+            "data" => $data)
+    );
+}
 
 function frecuencia()
 {
@@ -60,7 +87,7 @@ function frecuencia()
     if ($databaseXmltv->Query("SELECT id,
                                     nombre
                                 FROM xmltv_frecuencia WHERE activo = 1
-                                ORDER BY nombre ASC
+                                ORDER BY id ASC
                                 ")) {
         // echo $databaseXmltv->GetJSON();
         $data = $databaseXmltv->RecordsArray();
@@ -122,6 +149,9 @@ switch ($_GET['operation']) {
 
     case 'programas' :
         programas();
+        break;
+    case 'programainfo' :
+        programainfo();
         break;
 
     case 'frecuencia' :

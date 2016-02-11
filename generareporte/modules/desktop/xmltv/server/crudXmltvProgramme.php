@@ -25,6 +25,7 @@ function selectXmltv()
                                     xmltv_programme.date_end,
                                     xmltv_programme.date_start,
                                     xmltv_programme.duration,
+                                    xmltv_programme.hora,
                                     xmltv_programme.description,
                                     xmltv_programme.category,
                                     xmltv_programme.activo,
@@ -53,6 +54,7 @@ function updateXmltv()
     $update["title"] = MySQL::SQLValue($data->title);
     $update["date_start"] = MySQL::SQLValue($data->date_start);
     $update["date_end"] = MySQL::SQLValue($data->date_end);
+    $update["hora"] = MySQL::SQLValue($data->hora);
     $update["duration"] = MySQL::SQLValue($data->duration);
     $update["description"] = MySQL::SQLValue($data->description);
     $update["activo"] = MySQL::SQLValue($data->activo);
@@ -97,6 +99,7 @@ function insertXmltv()
     $update["title"] = MySQL::SQLValue($data->title);
     $update["date_end"] = MySQL::SQLValue($data->date_end);
     $update["date_start"] = MySQL::SQLValue($data->date_start);
+    $update["hora"] = MySQL::SQLValue($data->hora);
     $update["duration"] = MySQL::SQLValue($data->duration);
     $update["description"] = MySQL::SQLValue($data->description);
     $update["activo"] = MySQL::SQLValue($data->activo);
@@ -115,6 +118,7 @@ function insertXmltv()
                 "title" => $data->title,
                 "date_end" => $data->date_end,
                 "date_start" => $data->date_start,
+                "hora" => $data->hora,
                 "duration" => $data->duration,
                 "description" => $data->description,
                 "activo" => $data->activo,
