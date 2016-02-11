@@ -20,11 +20,28 @@ function canales()
     global $databaseXmltv;
 
     if ($databaseXmltv->Query("SELECT id,
-                                    display_name,
-                                    icon
+                                    display_name
                                 FROM xmltv_channel WHERE activo = 1
                                 ORDER BY `order` ASC
                                 ")) {
+        // echo $databaseXmltv->GetJSON();
+        $data = $databaseXmltv->RecordsArray();
+    } else {
+        echo "<p>Query Failed</p>";
+    }
+    echo json_encode(array(
+            "success" => true,
+            "data" => $data)
+    );
+}
+
+function programas()
+{
+    global $databaseXmltv;
+
+    if ($databaseXmltv->Query("SELECT id, title
+                                FROM xmltv_programme WHERE activo = 1
+                                ORDER BY id ASC")) {
         // echo $databaseXmltv->GetJSON();
         $data = $databaseXmltv->RecordsArray();
     } else {
@@ -101,6 +118,10 @@ switch ($_GET['operation']) {
 
     case 'canales' :
         canales();
+        break;
+
+    case 'programas' :
+        programas();
         break;
 
     case 'frecuencia' :
