@@ -22,6 +22,7 @@ function selectKiiconnect()
     if ($databaseKiiconnect->Query("SELECT kiiconnect_categoria.id,
                                     kiiconnect_categoria.nombre,
                                     kiiconnect_categoria.icono,
+                                    kiiconnect_categoria.iconodev,
                                     kiiconnect_categoria.creado,
                                     kiiconnect_categoria.orden2 FROM kiiconnect_categoria ORDER BY nombre")) {
         // echo $databaseKiiconnect->GetJSON();
@@ -43,6 +44,7 @@ function updateKiiconnect()
 
     $update["nombre"] = MySQL::SQLValue($data->nombre);
     $update["icono"] = MySQL::SQLValue($data->icono);
+    $update["iconodev"] = MySQL::SQLValue($data->iconodev);
     $update["orden2"] = MySQL::SQLValue($data->orden2);
 
 
@@ -63,6 +65,19 @@ function updateKiiconnect()
         //$tag = '' . $base64;
     }
     $update["filecategoria2"] = MySQL::SQLValue($tag);
+    // fin creamos en variable tag copia de la imagen
+
+    // creamos en variable tag copia de la imagen
+    $filedev = __DIR__ . '/../../../../' . $data->iconodev;
+
+    if($fpdev = fopen($filedev,"rb", 0))
+    {
+        $picturedev = fread($fpdev,filesize($filedev));
+        fclose($fpdev);
+        $base64dev = base64_encode($picturedev);
+        $tagdev = 'data:image/png;base64,' . $base64dev;
+    }
+    $update["filecategoriadev"] = MySQL::SQLValue($tagdev);
     // fin creamos en variable tag copia de la imagen
 
     // actualizamos la base de datos
@@ -94,11 +109,13 @@ function insertKiiconnect()
                 "id" => $databaseKiiconnect->GetLastInsertID(),
                 "nombre" => $data->nombre,
                 "icono" => $data->icono,
+                "iconodev" => $data->iconodev,
                 "orden2" => $data->orden2
             )
         )
     ));
 
+    $lastId =   $databaseKiiconnect->GetLastInsertID();
     //inserto como blob la imagen
     $file = __DIR__ . '/../../../../' . $data->icono;
     if($fp = fopen($file,"rb", 0))
@@ -111,9 +128,21 @@ function insertKiiconnect()
         $base64 = base64_encode($picture);
         $tag = 'data:image/png;base64,' . $base64;
     }
-    $lastId =   $databaseKiiconnect->GetLastInsertID();
+
     //$databaseKiiconnect->Query("update kiiconnect_categoria set filecategoria= '$tag'   where `id`='$lastId'");
     $databaseKiiconnect->Query("update kiiconnect_categoria set filecategoria2= '$tag'   where `id`='$lastId'");
+
+    //inserto como blob la imagen dev
+    $filedev = __DIR__ . '/../../../../' . $data->iconodev;
+    if($fpdev = fopen($filedev,"rb", 0))
+    {
+        $picturedev = fread($fpdev,filesize($filedev));
+        fclose($fpdev);
+        $base64dev = base64_encode($picturedev);
+        $tagdev = 'data:image/png;base64,' . $base64dev;
+    }
+    $databaseKiiconnect->Query("update kiiconnect_categoria set filecategoriadev= '$tagdev'   where `id`='$lastId'");
+
 }
 
 function deleteKiiconnect()

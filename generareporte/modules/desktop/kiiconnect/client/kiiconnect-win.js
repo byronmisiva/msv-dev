@@ -280,6 +280,7 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
             fields: [
                 {name: 'nombre', allowBlank: false},
                 {name: 'icono', allowBlank: false},
+                {name: 'iconodev', allowBlank: false},
                 {name: 'orden2', allowBlank: true}
             ]
         });
@@ -322,6 +323,14 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
                 {
                     header: 'Icono Categoría',
                     dataIndex: 'icono',
+                    sortable: true,
+                    width: 100,
+                    editor: comboKIICONNECTFILE2, renderer: kiiconnectImagenes2
+                },
+
+                {
+                    header: 'Icono Categoría Dev',
+                    dataIndex: 'iconodev',
                     sortable: true,
                     width: 100,
                     editor: comboKIICONNECTFILE2, renderer: kiiconnectImagenes2
@@ -661,6 +670,7 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
         var kiiconnectCategoria = new this.storeKiiconnectCategoria.recordType({
             nombre: '',
             icono: '',
+            iconodev: '',
             orden2: '0'
         });
         this.gridKiiconnectCategoria.stopEditing();
