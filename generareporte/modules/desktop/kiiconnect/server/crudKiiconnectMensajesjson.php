@@ -33,6 +33,7 @@ if (isset($_GET["secciones"])) {
     $secciones = $_GET["secciones"];
     if ($secciones == "") {
         echo "[]";
+        logMensajes($_GET);
         return;
     }
 
@@ -157,9 +158,9 @@ ORDER BY kiiconnect_mensajes.creado DESC ")
     }
 }
 
-logMensajes($_GET, $databaseKiiconnect);
+logMensajes($_GET);
 
-function logMensajes($json, $databaseKiiconnect)
+function logMensajes($json)
 {
     $file = 'log.txt';
     $json = json_encode($json) . "\n\n";

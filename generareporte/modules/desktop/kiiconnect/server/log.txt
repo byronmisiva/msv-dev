@@ -31,3 +31,5 @@
 
 {"secciones":"kfc,termas_papallacta"}
 
+{"secciones":""}
+

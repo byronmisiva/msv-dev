@@ -23,7 +23,7 @@ define('DB_USER', 'root');
 
 /** MySQL database password */
 define('DB_PASSWORD', '');
-define ('FS_METHOD', 'direct');
+
 /** MySQL hostname */
 define('DB_HOST', '127.0.0.1');
 

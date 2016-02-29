@@ -66,7 +66,8 @@ if (!isset($_GET["parametro"])){
                                     kiiconnect_setting.descripcion,
                                     kiiconnect_setting.icono,
                                     kiiconnect_setting.file,
-                                    kiiconnect_setting.link
+                                    kiiconnect_setting.link,
+                                    'false' AS checked
                                 FROM
                                     kiiconnect_setting
                                  WHERE
