@@ -151,6 +151,7 @@ class wpb_widget extends WP_Widget
 // This is where the action happens
     public function widget($args, $instance)
     {
+        wp_enqueue_script( 'jquery-ui-tabs' );
         $title = apply_filters('widget_title', $instance['title']);
 // before and after widget arguments are defined by themes
         echo $args['before_widget'];
@@ -237,11 +238,7 @@ class wpb_widget extends WP_Widget
                         '<input type="submit" name="publish" id="publish"' +
                         ' class="button button-primary button-large  btn-subir-archivos" value="Subir archivos">' +
                         '</div>';
-                    jQuery('.mostrarcategorias .navbar-header').append(botonVar);
-
-                    jQuery("#ftabs").tabs();
-                    console.log("natas")
-
+                    jQuery('.mostrarcategorias .navbar-header').append(botonVar)
                 });
                 <?php
                     global $current_user;
@@ -281,11 +278,15 @@ class wpb_widget extends WP_Widget
                 }
 
                 #header {
-                    height: 190px !important;
+                    height: 55px !important;
                 }
 
             </style>
             <div class="w3eden">
+                <!--<div class="col-md-12 col-sm-12 col-xs-12">
+                    <input type="submit" name="publish" id="publish"
+                           class="button button-primary button-large  btn-subir-archivos" value="Subir archivos">
+                </div>-->
                 <div class="subir-archiuvos col-md-12 col-sm-12 col-xs-12 margentabla ">
                     <div class="col-md-8 col-sm-12 col-xs-12 margen0">
                         <div class="col-md-12 col-sm-12 col-xs-12 margen0">
@@ -329,6 +330,8 @@ class wpb_widget extends WP_Widget
 
                             post_categories_meta_box($post, $box);
 
+                            //remove_meta_box( 'wpdmcategory', 'slides', 'side' );
+                            //add_meta_box('wpdmcategory',  'Slide Image' , 'post_thumbnail_meta_box', 'slides', 'normal', 'high');
 
                             $file = get_post_meta($post->ID, "_filedata", true);
                             //fin  pone categorias
@@ -381,7 +384,7 @@ class wpb_widget extends WP_Widget
         } else {
             $title = __('', 'wpb_widget_domain');
         }
-        // Widget admin form
+// Widget admin form
         ?>
         <p>
             <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?></label>
@@ -408,9 +411,6 @@ function wpb_load_widget()
 }
 
 add_action('widgets_init', 'wpb_load_widget');
-
 /*Fin Misiva Widget */
 /************************/
-
-
 ?>
