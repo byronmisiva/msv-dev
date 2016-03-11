@@ -54,9 +54,11 @@ if (!isset($_GET["parametro"])){
                                     kiiconnect_categoria.icono AS categoria_icono,
                                     kiiconnect_categoria.filecategoria,
                                     kiiconnect_categoria.filecategoria2
-
                                 FROM
-                                    kiiconnect_categoria ORDER BY orden2", MYSQL_ASSOC);
+                                    kiiconnect_categoria
+                                WHERE
+                                    activo = 1
+                                ORDER BY orden2", MYSQL_ASSOC);
         $temp2 = array();
         foreach ($temp as $index=>$categoria){
             $categoria_id = $categoria['id_categoria'];

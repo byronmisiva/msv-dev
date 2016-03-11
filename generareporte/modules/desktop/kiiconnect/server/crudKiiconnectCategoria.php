@@ -24,6 +24,7 @@ function selectKiiconnect()
                                     kiiconnect_categoria.icono,
                                     kiiconnect_categoria.iconodev,
                                     kiiconnect_categoria.creado,
+                                    kiiconnect_categoria.activo,
                                     kiiconnect_categoria.orden2 FROM kiiconnect_categoria ORDER BY nombre")) {
         // echo $databaseKiiconnect->GetJSON();
         $data = $databaseKiiconnect->RecordsArray();
@@ -46,6 +47,7 @@ function updateKiiconnect()
     $update["icono"] = MySQL::SQLValue($data->icono);
     $update["iconodev"] = MySQL::SQLValue($data->iconodev);
     $update["orden2"] = MySQL::SQLValue($data->orden2);
+    $update["activo"] = MySQL::SQLValue($data->activo);
 
 
     // creamos en variable tag copia de la imagen
@@ -110,6 +112,7 @@ function insertKiiconnect()
                 "nombre" => $data->nombre,
                 "icono" => $data->icono,
                 "iconodev" => $data->iconodev,
+                "activo" => $data->iconodev,
                 "orden2" => $data->orden2
             )
         )

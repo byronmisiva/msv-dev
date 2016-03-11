@@ -61,18 +61,22 @@ function updateKiiconnect()
     $data = json_decode(stripslashes($_POST["data"]));
 
     $update["body"] = MySQL::SQLValue($data->body);
-//    $update["header"] = MySQL::SQLValue($data->header);
-//    $update["p"] = MySQL::SQLValue($data->p);
+    $update["title"] = MySQL::SQLValue($data->title);
+
     $update["l"] = MySQL::SQLValue($data->l);
-    $update["tag"] = MySQL::SQLValue($data->tag);
-//    $update["longuitud"] = MySQL::SQLValue($data->longuitud);
-//    $update["latitud"] = MySQL::SQLValue($data->longuitud);
+    if ($data->tag == "") {
+        $update["tag"] =  "''";
+    } else {
+        $update["tag"] = MySQL::SQLValue($data->tag, MySQL::SQLVALUE_TEXT);
+    }
     $update["richpage"] = MySQL::SQLValue($data->richpage);
     $update["activo"] = MySQL::SQLValue($data->activo);
 
     $where["id"] = MySQL::SQLValue($data->id, "integer");
 
     $databaseKiiconnect->UpdateRows("kiiconnect_mensajes", $update, $where);
+
+    $lastSql =  $databaseKiiconnect->GetLastSQL();
 
     echo json_encode(array(
         "success" => $databaseKiiconnect->ErrorNumber() == 0,
@@ -87,6 +91,7 @@ function insertKiiconnect()
     $data = json_decode(stripslashes($_POST["data"]));
 
     $update["body"] = MySQL::SQLValue($data->body);
+    $update["title"] = MySQL::SQLValue($data->title);
 //    $update["header"] = MySQL::SQLValue($data->header);
 //    $update["p"] = MySQL::SQLValue($data->p);
     $update["l"] = MySQL::SQLValue($data->l);

@@ -344,7 +344,7 @@ HEADER
 #header {
 	display: table; /* vertical align trick */
 	width: 100%;
-	height: 500px;
+	height: 55px;
 	text-align: center;
 	position: relative;
 }

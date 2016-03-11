@@ -5,3 +5,15 @@
 	RewriteCond $1 !^(index\.php|public|tmp|robots\.txt)
 	RewriteRule ^(.*)$ index.php/$1 [L]	
 </IfModule> 
+
+# BEGIN WordPress
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /msv-dev/
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /msv-dev/index.php [L]
+</IfModule>
+
+# END WordPress

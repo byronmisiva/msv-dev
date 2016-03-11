@@ -19,26 +19,39 @@ include("mysql.class.php");
 $databaseKiiconnect = new MySQL();
 global $databaseKiiconnect;
 
-
 if (isset($_GET["secciones"])) {
-
-//    if (isset($_GET["fecha"])) {
-//    $fechaentrada = $_GET["fecha"];
     $fechaentrada = date('Y-m-d H:i:s');
     $fecha = " AND `kiiconnect_mensajes`.`creado`  + INTERVAL 7 DAY  > '$fechaentrada' ";
 
-    //   } else {
-    //    $fecha = "";
-    //   }
     $secciones = $_GET["secciones"];
+
+    //$secciones = eliminartag ('blue_card', $secciones);
+
     if ($secciones == "") {
         echo "[]";
         logMensajes($_GET);
         return;
     }
 
-    $totalsecciones = explode(",", $secciones);
+    // if version
+    if (isset($_GET["version"])) {
+        $version = $_GET["version"];
+        $version = str_replace('.', '', $version);
 
+        $plataforma = $_GET["plataforma"];
+
+        if ($plataforma == 'iOS') {
+            if ($version >= 1111)
+                $secciones = "," . $secciones;
+        }
+
+        if ($plataforma == 'Android') {
+            if ($version >= 118)
+                $secciones = "," . $secciones;
+        }
+    }
+
+    $totalsecciones = explode(",", $secciones);
     /// Recupera y ordena datos de cada seccion
     $noticiasOrden = array();
 
@@ -47,62 +60,63 @@ if (isset($_GET["secciones"])) {
     else $total = 0;
     $secciones2 = explode("/", $secciones);
     $secciones = $secciones2[0];
-
-
     $seccionesNew = '"' . str_replace(',', '","', $secciones) . '"';
 
     // todo , DAYOFYEAR(kiiconnect_mensajes.creado) para el caso de que se quiera hacer que se repita dependiendo del día
+    $seccion = str_replace('interno', '', $seccionesNew);
 
 
     $resultados = array();
 
     foreach ($totalsecciones as $index1 => $seccion) {
-//        echo "<br>" . $seccion . "<br>";
-        if ($databaseKiiconnect->Query("SELECT *,
-                                    kiiconnect_setting.icono,
-                                    kiiconnect_mensajes.id,
-                                    kiiconnect_mensajes.body,
-                                    kiiconnect_mensajes.header,
-                                    kiiconnect_mensajes.p,
-                                    kiiconnect_mensajes.l,
-                                    kiiconnect_mensajes.tag,
-                                    kiiconnect_mensajes.longuitud,
-                                    kiiconnect_mensajes.latitud,
-                                    kiiconnect_mensajes.richpage,
-                                    kiiconnect_mensajes.activo,
-                                    kiiconnect_mensajes.creado,
-                                    kiiconnect_mensajes.tagsetings,
-                                    kiiconnect_setting.nombre,
-                                    kiiconnect_setting.file
+
+
+        $sql = "SELECT kiiconnect_setting.icono,
+                       kiiconnect_mensajes.id,
+                       kiiconnect_mensajes.body,
+                       kiiconnect_mensajes.title,
+                       kiiconnect_mensajes.header,
+                       kiiconnect_mensajes.p,
+                       kiiconnect_mensajes.l,
+                       kiiconnect_mensajes.tag,
+                       kiiconnect_mensajes.longuitud,
+                       kiiconnect_mensajes.latitud,
+                       kiiconnect_mensajes.richpage,
+                       kiiconnect_mensajes.activo,
+                       kiiconnect_mensajes.creado,
+                       kiiconnect_mensajes.tagsetings,
+                       kiiconnect_setting.nombre,
+                       kiiconnect_setting.file
                                 FROM kiiconnect_mensajes INNER JOIN kiiconnect_setting ON kiiconnect_mensajes.tag = kiiconnect_setting.tag
                                 WHERE kiiconnect_mensajes.activo = 1 AND kiiconnect_mensajes.tag IN ('$seccion') $fecha
-                                /*GROUP BY kiiconnect_mensajes.body*/
-                                ORDER BY kiiconnect_mensajes.creado DESC
-                                   ")
+
+                                ORDER BY kiiconnect_mensajes.creado DESC";
+
+        if ($databaseKiiconnect->Query($sql)
         ) {
             if ($databaseKiiconnect->RecordsArray(MYSQL_ASSOC) != 'null') {
                 $data = $databaseKiiconnect->RecordsArray(MYSQL_ASSOC);
                 if ($data) {
-//                    echo json_encode ($data);
                     $resultados = array_merge($resultados, $data);
                 }
-
-//                echo $databaseKiiconnect->GetJSON();
             } else
                 echo "[]";
-
         } else {
             echo "<p>Query Failed</p>";
         }
     }
-
     foreach ($resultados as $key => $arr):
-        //$resultados[$key]['body'] = cortarTexto($arr['body'], 117);
         $resultados[$key]['body'] = $arr['body'];
         $pun[$key] = $arr['creado'];
+        if (isset ($arr['title'])) {
+            if (strlen($arr['title']) > 0) {
+                $resultados[$key]['nombre'] = $arr['title'];
+            }
+        }
+
+
     endforeach;
     array_multisort($pun, SORT_DESC, $resultados);
-
     $jsonNulo = '{
                 "id": "",
                 "body": "",
@@ -188,4 +202,19 @@ function cortarTexto($texto, $numMaxCaract)
     }
 
     return $textoCortado;
+}
+
+function eliminartag ($tag, $secciones ){
+    //eliminar tag blue_card
+    $secciones = str_replace($tag, '', $secciones);
+    $secciones = str_replace(',,', ',', $secciones);
+
+    if (substr($secciones, -1) == ",") {
+        $secciones = substr($secciones, 0, -1);
+    }
+
+    if (substr($secciones, 0, 1) == ",") {
+        $secciones = substr($secciones, 1);
+    }
+    return $secciones;
 }

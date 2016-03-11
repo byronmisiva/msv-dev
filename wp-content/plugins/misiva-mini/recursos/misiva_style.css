@@ -1,0 +1,108 @@
+.campos-reservados, a.popup-with-form {
+    display: none;
+}
+
+.form-send-filezz {
+    display: none;
+    /*border: 1px solid #ccc;
+    padding: 10px;
+    position: fixed;
+     
+    top: 20%;
+    width: 330px;
+    background-color: #fff;
+    z-index: 10000;
+    left: 40%;*/
+}
+
+.widget_wpb_widget {
+    margin: 0 0 5% !important;
+ }
+
+.white-popup-block {
+    background: #FFF;
+    padding: 40px 40px;
+    text-align: left;
+    max-width: 650px;
+    margin: 40px auto;
+    position: relative;
+}
+
+.forma-login-envio {
+    width: 100%;
+}
+
+.forma-login-envio li {
+    list-style: none;
+}
+
+.forma-login-envio ul {
+    margin: 20px;
+}
+ #mensaje-envio {
+    float: right;
+ }
+
+ .subir-archiuvos {
+    display: none;
+ }
+
+
+ .btn-subir-archivos {
+    font-weight: bold;
+    cursor: pointer;
+ }
+
+ .w3eden .table > thead > tr > th, .w3eden .table > tbody > tr > th, .w3eden .table > tfoot > tr > th, .w3eden .table > thead > tr > td, .w3eden .table > tbody > tr > td, .w3eden .table > tfoot > tr > td {
+    border: none;
+}
+.conten-bloked {
+    margin: 150px auto 100px;
+    text-align: center;
+    width: 100%;
+}
+
+.qum-user-forms {
+    width: 100%
+}
+
+.qum-user-forms #loginform {
+    margin: 20px auto;
+    width: 300px;
+}
+
+.widget_text{
+    margin: 20px 0 !important;
+}
+
+.qum-alert {
+    float: right;
+    margin-right: 20px;
+}
+
+.button {
+    background: none repeat scroll 0 0 #efefef;
+    border: medium none;
+    border-radius: 0;
+    color: #282828;
+    cursor: pointer;
+    float: left;
+    padding: 7px 20px;
+    text-transform: uppercase;
+    transition: all 0.3s ease 0s;
+}
+
+.button h3 {
+    margin: 0;
+}
+
+.cabecera-dm
+{
+    margin-top: 0px;
+}
+
+#plupload-browse-button {
+    float: none;
+    text-align: center;
+}
+

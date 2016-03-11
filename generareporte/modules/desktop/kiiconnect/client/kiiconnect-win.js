@@ -281,6 +281,7 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
                 {name: 'nombre', allowBlank: false},
                 {name: 'icono', allowBlank: false},
                 {name: 'iconodev', allowBlank: false},
+                {name: 'activo', allowBlank: false},
                 {name: 'orden2', allowBlank: true}
             ]
         });
@@ -318,6 +319,13 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 30,
                     editor:numberField
+                },
+                {
+                    header: 'Activo',
+                    dataIndex: 'activo',
+                    sortable: true,
+                    width:15,
+                    editor: comboOFAC, renderer: kiiconnectActivo
                 },
 
                 {
@@ -364,7 +372,7 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
             root: 'data',
             fields: [
                 {name: 'body', allowBlank: true},
-
+                {name: 'title', allowBlank: true},
                 {name: 'l', allowBlank: true},
                 {name: 'tag', allowBlank: true},
                 {name: 'richpage', allowBlank: true},
@@ -396,6 +404,13 @@ QoDesk.KiiconnectWindow = Ext.extend(Ext.app.Module, {
                 {
                     header: 'Body',
                     dataIndex: 'body',
+                    sortable: true,
+                    width: 120,
+                    editor: new Ext.form.TextField({allowBlank: true})
+                },
+                {
+                    header: 'Título',
+                    dataIndex: 'title',
                     sortable: true,
                     width: 120,
                     editor: new Ext.form.TextField({allowBlank: true})
